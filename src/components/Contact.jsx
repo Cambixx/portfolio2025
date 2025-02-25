@@ -37,6 +37,8 @@ const Contact = ({ standalone = false }) => {
     message: "",
   });
   const [formError, setFormError] = useState({});
+  // Estado para controlar cuando el formulario está siendo enviado
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -77,33 +79,61 @@ const Contact = ({ standalone = false }) => {
     return isValid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     
     if (validateForm()) {
-      // Simulamos el envío del formulario
-      setFormStatus({
-        submitted: true,
-        success: true,
-        message: "¡Mensaje enviado con éxito! Te contactaré pronto.",
-      });
+      setIsSubmitting(true);
       
-      // Reseteamos el formulario después de enviar
-      setFormData({
-        name: "",
-        email: "",
-        subject: "",
-        message: "",
-      });
-      
-      // Después de 5 segundos, resetear el estado del formulario
-      setTimeout(() => {
+      try {
+        // Netlify Forms procesará este formulario automáticamente
+        // cuando se realiza un submit si tiene el atributo data-netlify="true"
+        const formElement = e.target;
+        const formData = new FormData(formElement);
+        
+        const response = await fetch("/", {
+          method: "POST",
+          headers: { "Content-Type": "application/x-www-form-urlencoded" },
+          body: new URLSearchParams(formData).toString(),
+        });
+        
+        if (!response.ok) {
+          throw new Error("Error al enviar el formulario");
+        }
+        
+        // Formulario enviado exitosamente
         setFormStatus({
-          submitted: false,
-          success: false,
+          submitted: true,
+          success: true,
+          message: "¡Mensaje enviado con éxito! Te contactaré pronto.",
+        });
+        
+        // Resetear el formulario
+        setFormData({
+          name: "",
+          email: "",
+          subject: "",
           message: "",
         });
-      }, 5000);
+      } catch (error) {
+        console.error("Error al enviar formulario:", error);
+        setFormStatus({
+          submitted: true,
+          success: false,
+          message: "Hubo un error al enviar tu mensaje. Por favor, intenta nuevamente.",
+        });
+      } finally {
+        setIsSubmitting(false);
+        
+        // Después de 5 segundos, resetear el estado del formulario
+        setTimeout(() => {
+          setFormStatus({
+            submitted: false,
+            success: false,
+            message: "",
+          });
+        }, 5000);
+      }
     }
   };
 
@@ -254,7 +284,26 @@ const Contact = ({ standalone = false }) => {
             <h3 className="text-2xl font-bold mb-6 text-light-text dark:text-dark-text">
               Envíame un Mensaje
             </h3>
-            <form onSubmit={handleSubmit} className="space-y-4">
+            
+            {/* Formulario con atributos para Netlify Forms */}
+            <form 
+              name="contact"
+              method="POST"
+              data-netlify="true" 
+              netlify-honeypot="bot-field"
+              onSubmit={handleSubmit} 
+              className="space-y-4"
+            >
+              {/* Campo oculto necesario para Netlify */}
+              <input type="hidden" name="form-name" value="contact" />
+              
+              {/* Campo honeypot para evitar spam */}
+              <div className="hidden">
+                <label>
+                  No llenes esto si eres humano: <input name="bot-field" />
+                </label>
+              </div>
+              
               {formStatus.submitted && (
                 <div
                   className={`p-4 rounded-md ${
@@ -379,13 +428,14 @@ const Contact = ({ standalone = false }) => {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
+                disabled={isSubmitting}
                 className={`w-full py-3 px-6 rounded-md text-white font-medium ${
                   theme === "light"
                     ? "bg-highlight hover:bg-highlight-hover"
                     : "bg-highlight hover:bg-highlight-hover"
-                } transition-colors duration-300`}
+                } transition-colors duration-300 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
               >
-                Enviar Mensaje
+                {isSubmitting ? 'Enviando...' : 'Enviar Mensaje'}
               </motion.button>
             </form>
           </motion.div>
