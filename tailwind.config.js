@@ -40,8 +40,19 @@ export default {
       backgroundImage: {
         "hero-pattern-light": "linear-gradient(to right bottom, rgba(229, 231, 235, 0.8), rgba(249, 250, 251, 0.8))",
         "hero-pattern-dark": "linear-gradient(to right bottom, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8))",
+        "gradient-conic": "conic-gradient(var(--tw-gradient-stops))",
       },
     },
   },
-  plugins: [],
+  plugins: [
+    // Plugin para gradientes cónicos
+    function({ addUtilities }) {
+      const newUtilities = {
+        '.bg-gradient-conic': {
+          'background-image': 'conic-gradient(var(--tw-gradient-stops))',
+        },
+      }
+      addUtilities(newUtilities)
+    },
+  ],
 } 

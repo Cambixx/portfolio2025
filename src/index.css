@@ -98,3 +98,30 @@ body {
 .theme-toggle {
   @apply p-2 rounded-full bg-light-tertiary dark:bg-dark-tertiary hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors;
 }
+
+/* Estilos para el efecto Lamp */
+@keyframes lamp-glow {
+  0% {
+    opacity: 0.4;
+    filter: blur(20px);
+  }
+  50% {
+    opacity: 0.6;
+    filter: blur(25px);
+  }
+  100% {
+    opacity: 0.4;
+    filter: blur(20px);
+  }
+}
+
+.lamp-glow {
+  animation: lamp-glow 4s ease-in-out infinite;
+}
+
+/* Estilos para mejorar la visualización en dispositivos móviles */
+@media (max-width: 768px) {
+  .lamp-container {
+    transform: scale(0.85);
+  }
+}

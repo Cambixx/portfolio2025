@@ -1,86 +1,21 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-scroll';
-import { FaGithub, FaLinkedin, FaTwitter } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
+import { BackgroundPaths } from './ui/background-paths';
 
-const Hero = () => {
-  const { theme } = useTheme();
-  
+const Hero = ({ standalone = false }) => {
   return (
     <section 
       id="inicio" 
-      className="relative w-full h-screen mx-auto flex flex-col items-center justify-center overflow-hidden"
+      className={`${standalone ? 'pt-20' : ''} relative w-full h-screen mx-auto flex flex-col items-center justify-center overflow-hidden pt-10 md:pt-16`}
     >
-      <div className="absolute top-[120px] left-0 right-0 bottom-0 bg-hero-pattern-light dark:bg-hero-pattern-dark bg-cover bg-no-repeat bg-center opacity-30 z-[-1]" />
+      {/* Componente BackgroundPaths */}
+      <BackgroundPaths title="Carlos Rábago" />
       
-      {/* Elementos de gradiente para efectos visuales */}
-      <div className="absolute top-20 left-20 w-48 h-48 gradient-01 z-0" />
-      <div className="absolute bottom-40 right-20 w-72 h-72 gradient-02 z-0" />
-      
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 flex flex-col items-center justify-center">
-        <motion.div
-          initial={{ opacity: 0, y: -50 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 1 }}
-          className="text-center"
-        >
-          <h2 className="text-light-text-light dark:text-dark-text-light text-xl sm:text-2xl mb-4">Hola, soy</h2>
-          <h1 className="text-light-text dark:text-dark-text text-4xl sm:text-6xl font-bold mb-6">
-            <span className="text-gradient">Carlos Rábago</span>
-          </h1>
-          <h3 className="text-light-text-light dark:text-dark-text-light text-2xl sm:text-3xl mb-8">
-            Desarrollador Frontend
-          </h3>
-          
-          <p className="text-light-text-light dark:text-dark-text-light text-base sm:text-lg max-w-[800px] mb-12">
-            Especializado en crear experiencias web interactivas y responsivas 
-            con las últimas tecnologías del mercado. Apasionado por el diseño UI/UX
-            y el desarrollo frontend de alto rendimiento.
-          </p>
-          
-          <div className="flex flex-col sm:flex-row gap-5 justify-center">
-            <Link to="proyectos" smooth duration={500}>
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="btn btn-primary"
-              >
-                Ver Proyectos
-              </motion.button>
-            </Link>
-            <Link to="contacto" smooth duration={500}>
-              <motion.button 
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-                className="btn bg-transparent border-2 border-highlight hover:bg-highlight/20 transition-colors duration-300 text-light-text dark:text-dark-text"
-              >
-                Contactar
-              </motion.button>
-            </Link>
-          </div>
-          
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 1, duration: 1 }}
-            className="flex justify-center gap-6 mt-8"
-          >
-            <a href="https://github.com/tuusuario" target="_blank" rel="noopener noreferrer" className="text-light-text dark:text-dark-text hover:text-highlight transition-colors">
-              <FaGithub size={24} />
-            </a>
-            <a href="https://linkedin.com/in/tuusuario" target="_blank" rel="noopener noreferrer" className="text-light-text dark:text-dark-text hover:text-highlight transition-colors">
-              <FaLinkedin size={24} />
-            </a>
-            <a href="https://twitter.com/tuusuario" target="_blank" rel="noopener noreferrer" className="text-light-text dark:text-dark-text hover:text-highlight transition-colors">
-              <FaTwitter size={24} />
-            </a>
-          </motion.div>
-        </motion.div>
-      </div>
-      
-      <div className="absolute xs:bottom-10 bottom-32 w-full flex justify-center items-center">
+      {/* Indicador de scroll */}
+      <div className="absolute xs:bottom-10 bottom-6 w-full flex justify-center items-center z-10">
         <Link to="sobre-mi" smooth duration={500} className="cursor-pointer">
-          <div className="w-[35px] h-[64px] rounded-3xl border-4 border-light-text-light dark:border-dark-text-light flex justify-center items-start p-2">
+          <div className="w-[35px] h-[64px] rounded-3xl border-4 border-white/50 flex justify-center items-start p-2">
             <motion.div
               animate={{
                 y: [0, 24, 0],
@@ -90,7 +25,7 @@ const Hero = () => {
                 repeat: Infinity,
                 repeatType: 'loop',
               }}
-              className="w-3 h-3 rounded-full bg-light-text-light dark:bg-dark-text-light mb-1"
+              className="w-3 h-3 rounded-full bg-white mb-1"
             />
           </div>
         </Link>
