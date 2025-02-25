@@ -86,19 +86,29 @@ const Contact = ({ standalone = false }) => {
       setIsSubmitting(true);
       
       try {
-        // Netlify Forms procesará este formulario automáticamente
-        // cuando se realiza un submit si tiene el atributo data-netlify="true"
+        // Asegurarnos de obtener los datos del formulario correctamente
         const formElement = e.target;
         const formData = new FormData(formElement);
         
+        // Agregar explícitamente el nombre del formulario - esto es crítico para Netlify
+        formData.append("form-name", "contact");
+        
+        // Convertir FormData a string con URLSearchParams
+        const searchParams = new URLSearchParams(formData);
+        
+        console.log("Enviando formulario a Netlify:", Object.fromEntries(searchParams));
+        
         const response = await fetch("/", {
           method: "POST",
-          headers: { "Content-Type": "application/x-www-form-urlencoded" },
-          body: new URLSearchParams(formData).toString(),
+          headers: { 
+            "Content-Type": "application/x-www-form-urlencoded" 
+          },
+          body: searchParams.toString(),
         });
         
         if (!response.ok) {
-          throw new Error("Error al enviar el formulario");
+          console.error("Respuesta no ok:", response.status, response.statusText);
+          throw new Error(`Error al enviar el formulario: ${response.status}`);
         }
         
         // Formulario enviado exitosamente
