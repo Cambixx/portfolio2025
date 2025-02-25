@@ -1,170 +1,188 @@
-import { useState } from 'react';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { FaGithub, FaExternalLinkAlt } from 'react-icons/fa';
+import React from "react";
+import { motion } from "framer-motion";
+import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
+import { useTheme } from "../context/ThemeContext";
+
+// Creamos un efecto de fade-in para las animaciones
+const fadeIn = (direction, type, delay, duration) => ({
+  hidden: {
+    x: direction === "left" ? 100 : direction === "right" ? -100 : 0,
+    y: direction === "up" ? 100 : direction === "down" ? -100 : 0,
+    opacity: 0,
+  },
+  show: {
+    x: 0,
+    y: 0,
+    opacity: 1,
+    transition: {
+      type,
+      delay,
+      duration,
+      ease: "easeOut",
+    },
+  },
+});
 
 const projects = [
   {
-    title: "E-commerce moderno",
-    description: "Plataforma de comercio electrónico completa con carrito de compras, integración de pagos y sistema de autenticación. Diseño responsivo y alto rendimiento.",
-    image: "https://placehold.co/600x400/151030/FFFFFF?text=E-commerce+App",
-    tags: ["React", "Redux", "Node.js", "MongoDB", "Stripe API"],
-    code: "https://github.com/usuario/ecommerce-app",
-    demo: "https://demo-ecommerce.com",
-    featured: true
+    name: "E-commerce App",
+    description:
+      "Una plataforma de e-commerce completa con catálogo de productos, carrito de compras, panel de administración y pasarela de pagos integrada.",
+    tags: ["React", "Node.js", "MongoDB", "Express", "Redux", "Stripe"],
+    image: "/images/projects/project-1.jpg",
+    sourceCode: "https://github.com/username/ecommerce-app",
+    liveDemo: "https://ecommerce-app-demo.netlify.app",
   },
   {
-    title: "Dashboard administrativo",
-    description: "Panel de control para gestión de datos con estadísticas en tiempo real, visualizaciones con gráficos y sistema de roles de usuario.",
-    image: "https://placehold.co/600x400/151030/FFFFFF?text=Admin+Dashboard",
-    tags: ["React", "TypeScript", "Material UI", "Chart.js", "Firebase"],
-    code: "https://github.com/usuario/admin-dashboard",
-    demo: "https://demo-dashboard.com",
-    featured: true
+    name: "Dashboard de Analíticas",
+    description:
+      "Dashboard interactivo que visualiza datos comerciales y métricas clave con gráficos personalizables y reportes exportables.",
+    tags: ["React", "Chart.js", "Firebase", "Tailwind CSS", "Context API"],
+    image: "/images/projects/project-2.jpg",
+    sourceCode: "https://github.com/username/analytics-dashboard",
+    liveDemo: "https://analytics-dashboard-demo.vercel.app",
   },
   {
-    title: "App de gestión de tareas",
-    description: "Aplicación de productividad con funcionalidad de arrastrar y soltar, filtros avanzados y sincronización en la nube.",
-    image: "https://placehold.co/600x400/151030/FFFFFF?text=Task+Manager",
-    tags: ["Vue.js", "Vuex", "Tailwind CSS", "Firebase"],
-    code: "https://github.com/usuario/task-manager",
-    demo: "https://demo-taskmanager.com",
-    featured: false
+    name: "App de Gestión de Tareas",
+    description:
+      "Aplicación para gestionar tareas personales y proyectos con funcionalidades de Drag & Drop, recordatorios y colaboración en equipo.",
+    tags: ["React", "TypeScript", "MongoDB", "Express", "JWT", "Socket.io"],
+    image: "/images/projects/project-3.jpg",
+    sourceCode: "https://github.com/username/task-management-app",
+    liveDemo: "https://task-app-demo.herokuapp.com",
   },
   {
-    title: "Red social para profesionales",
-    description: "Plataforma de networking con perfiles personalizables, sistema de mensajería y foro de discusión para profesionales.",
-    image: "https://placehold.co/600x400/151030/FFFFFF?text=Social+Network",
-    tags: ["React", "Node.js", "MongoDB", "Socket.io", "AWS"],
-    code: "https://github.com/usuario/social-network",
-    demo: "https://demo-socialnetwork.com",
-    featured: true
+    name: "Portfolio Personal",
+    description:
+      "Portfolio web responsivo construido con React y Tailwind CSS, con soporte para temas claro y oscuro, animaciones y vistas optimizadas.",
+    tags: ["React", "Tailwind CSS", "Framer Motion", "Vite"],
+    image: "/images/projects/project-4.jpg",
+    sourceCode: "https://github.com/username/portfolio",
+    liveDemo: "https://my-portfolio-demo.netlify.app",
   },
   {
-    title: "Plataforma de cursos online",
-    description: "Sistema de gestión de aprendizaje con reproducción de video, progreso del curso y certificaciones.",
-    image: "https://placehold.co/600x400/151030/FFFFFF?text=E-Learning",
-    tags: ["Next.js", "TypeScript", "GraphQL", "PostgreSQL"],
-    code: "https://github.com/usuario/elearning-platform",
-    demo: "https://demo-elearning.com",
-    featured: false
+    name: "API de Reservas",
+    description:
+      "API RESTful para un sistema de reservas de hoteles con autenticación, autorización, y documentación Swagger.",
+    tags: ["Node.js", "Express", "MongoDB", "JWT", "Swagger"],
+    image: "/images/projects/project-5.jpg",
+    sourceCode: "https://github.com/username/booking-api",
+    liveDemo: "https://booking-api-docs.netlify.app",
   },
   {
-    title: "Aplicación de clima",
-    description: "App para consultar pronóstico del tiempo en tiempo real con visualizaciones interactivas y alertas meteorológicas.",
-    image: "https://placehold.co/600x400/151030/FFFFFF?text=Weather+App",
-    tags: ["React", "REST API", "D3.js", "PWA"],
-    code: "https://github.com/usuario/weather-app",
-    demo: "https://demo-weatherapp.com",
-    featured: false
-  }
+    name: "App de Clima",
+    description:
+      "Aplicación de pronóstico del tiempo que consume datos de APIs externas para mostrar información meteorológica detallada y alertas.",
+    tags: ["React", "OpenWeather API", "Context API", "CSS Modules"],
+    image: "/images/projects/project-6.jpg",
+    sourceCode: "https://github.com/username/weather-app",
+    liveDemo: "https://weather-app-demo.vercel.app",
+  },
 ];
 
-const ProjectCard = ({ project, index }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.2,
-  });
+const ProjectCard = ({ project }) => {
+  const { theme } = useTheme();
 
   return (
     <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 50 }}
-      animate={inView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-      transition={{ duration: 0.5, delay: index * 0.1 }}
-      className={`card relative flex flex-col ${project.featured ? 'md:col-span-2' : ''}`}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      variants={fadeIn("up", "spring", 0.3, 0.75)}
+      className={`rounded-xl overflow-hidden ${
+        theme === "light"
+          ? "bg-light-secondary shadow-md hover:shadow-xl"
+          : "bg-dark-secondary shadow-md hover:shadow-xl"
+      } transition-all duration-300 hover:-translate-y-2`}
     >
-      <div className="relative w-full h-[200px] overflow-hidden rounded-t-2xl">
-        <img 
-          src={project.image} 
-          alt={project.title}
-          className="w-full h-full object-cover object-center transition-transform duration-500"
-          style={{ transform: isHovered ? 'scale(1.05)' : 'scale(1)' }}
-        />
-        <div 
-          className="absolute inset-0 bg-black bg-opacity-50 transition-opacity duration-300"
-          style={{ opacity: isHovered ? 0.7 : 0 }}
-        />
-        
-        <motion.div 
-          className="absolute bottom-0 left-0 right-0 p-4 flex gap-4 justify-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: isHovered ? 1 : 0, y: isHovered ? 0 : 20 }}
-          transition={{ duration: 0.3 }}
-        >
-          <a 
-            href={project.code} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="bg-tertiary hover:bg-highlight p-3 rounded-full transition-colors duration-300"
-          >
-            <FaGithub className="text-white text-xl" />
-          </a>
-          <a 
-            href={project.demo} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="bg-tertiary hover:bg-highlight p-3 rounded-full transition-colors duration-300"
-          >
-            <FaExternalLinkAlt className="text-white text-xl" />
-          </a>
-        </motion.div>
+      <div className="relative h-48 md:h-56 lg:h-64 overflow-hidden">
+        <div className="w-full h-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
+          <span className="text-lg font-medium">{project.name}</span>
+        </div>
       </div>
-      
-      <div className="p-4">
-        <h3 className="text-white text-xl font-bold mb-2">{project.title}</h3>
-        <p className="text-secondary mb-4">{project.description}</p>
-        
-        <div className="flex flex-wrap gap-2">
-          {project.tags.map((tag, idx) => (
-            <span 
-              key={idx} 
-              className="text-xs bg-tertiary text-secondary px-2 py-1 rounded-full"
+
+      <div className="p-6">
+        <h3 className={`text-xl font-bold mb-2 ${
+          theme === "light" ? "text-light-text" : "text-dark-text"
+        }`}>
+          {project.name}
+        </h3>
+        <p className={`mb-4 text-sm ${
+          theme === "light" ? "text-light-text-light" : "text-dark-text-light"
+        }`}>
+          {project.description}
+        </p>
+
+        <div className="flex flex-wrap gap-2 mb-4">
+          {project.tags.map((tag, tagIndex) => (
+            <span
+              key={tagIndex}
+              className={`text-xs px-2 py-1 rounded-full ${
+                theme === "light"
+                  ? "bg-light-tertiary text-light-text-light"
+                  : "bg-dark-tertiary text-dark-text-light"
+              }`}
             >
               {tag}
             </span>
           ))}
+        </div>
+
+        <div className="flex justify-between mt-4">
+          <a
+            href={project.sourceCode}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors duration-300 ${
+              theme === "light"
+                ? "bg-light-tertiary hover:bg-highlight text-light-text hover:text-white"
+                : "bg-dark-tertiary hover:bg-highlight text-dark-text hover:text-white"
+            }`}
+          >
+            <FaGithub /> Código
+          </a>
+          <a
+            href={project.liveDemo}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors duration-300 ${
+              theme === "light"
+                ? "bg-highlight text-white hover:bg-highlight-hover"
+                : "bg-highlight text-white hover:bg-highlight-hover"
+            }`}
+          >
+            <FaExternalLinkAlt /> Demo
+          </a>
         </div>
       </div>
     </motion.div>
   );
 };
 
-const Projects = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
-  
+const Projects = ({ standalone = false }) => {
+  const { theme } = useTheme();
+
   return (
-    <section id="proyectos" className="py-20 sm:py-32 relative">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
+    <section
+      id="projects"
+      className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-10 bg-light-primary dark:bg-dark-primary`}
+    >
+      <div className="container mx-auto px-4 py-10 max-w-7xl">
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          variants={fadeIn("", "", 0.1, 1)}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.25 }}
+          className="mb-10 text-center"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-white">
-            Mis <span className="text-gradient">Proyectos</span>
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-light-text dark:text-dark-text">
+            Mis <span className="text-highlight">Proyectos</span>
           </h2>
-          <p className="text-secondary text-lg mt-4 max-w-2xl mx-auto">
-            Una selección de los proyectos más recientes y destacados en los que he trabajado.
-            Cada proyecto representa un desafío único y una oportunidad para aprender.
+          <p className="text-light-text-light dark:text-dark-text-light max-w-3xl mx-auto">
+            Una muestra de mis trabajos más recientes. Cada proyecto refleja mi pasión por crear soluciones web de calidad.
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projects.map((project, index) => (
-            <ProjectCard 
-              key={index} 
-              project={project} 
-              index={index}
-            />
+            <ProjectCard key={index} project={project} />
           ))}
         </div>
       </div>

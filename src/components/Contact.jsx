@@ -1,222 +1,392 @@
-import { useState, useRef } from 'react';
-import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { FaEnvelope, FaMapMarkerAlt, FaPhone } from 'react-icons/fa';
+import React, { useState } from "react";
+import { motion } from "framer-motion";
+import { useTheme } from "../context/ThemeContext";
+import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
 
-const Contact = () => {
-  const formRef = useRef();
-  const [form, setForm] = useState({
-    name: '',
-    email: '',
-    message: '',
-  });
-  const [loading, setLoading] = useState(false);
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState(false);
+// Creamos un efecto de fade-in para las animaciones
+const fadeIn = (direction, type, delay, duration) => ({
+  hidden: {
+    x: direction === "left" ? 100 : direction === "right" ? -100 : 0,
+    y: direction === "up" ? 100 : direction === "down" ? -100 : 0,
+    opacity: 0,
+  },
+  show: {
+    x: 0,
+    y: 0,
+    opacity: 1,
+    transition: {
+      type,
+      delay,
+      duration,
+      ease: "easeOut",
+    },
+  },
+});
 
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
+const Contact = ({ standalone = false }) => {
+  const { theme } = useTheme();
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    subject: "",
+    message: "",
   });
+  const [formStatus, setFormStatus] = useState({
+    submitted: false,
+    success: false,
+    message: "",
+  });
+  const [formError, setFormError] = useState({});
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setForm({ ...form, [name]: value });
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+  };
+
+  const validateForm = () => {
+    let errors = {};
+    let isValid = true;
+
+    if (!formData.name.trim()) {
+      errors.name = "El nombre es requerido";
+      isValid = false;
+    }
+
+    if (!formData.email.trim()) {
+      errors.email = "El email es requerido";
+      isValid = false;
+    } else if (!/^\S+@\S+\.\S+$/.test(formData.email)) {
+      errors.email = "El email no es válido";
+      isValid = false;
+    }
+
+    if (!formData.subject.trim()) {
+      errors.subject = "El asunto es requerido";
+      isValid = false;
+    }
+
+    if (!formData.message.trim()) {
+      errors.message = "El mensaje es requerido";
+      isValid = false;
+    }
+
+    setFormError(errors);
+    return isValid;
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-    setSuccess(false);
-    setError(false);
     
-    // Simulación de envío de formulario
-    setTimeout(() => {
-      setLoading(false);
-      setSuccess(true);
-      setForm({
-        name: '',
-        email: '',
-        message: '',
+    if (validateForm()) {
+      // Simulamos el envío del formulario
+      setFormStatus({
+        submitted: true,
+        success: true,
+        message: "¡Mensaje enviado con éxito! Te contactaré pronto.",
       });
-    }, 1500);
+      
+      // Reseteamos el formulario después de enviar
+      setFormData({
+        name: "",
+        email: "",
+        subject: "",
+        message: "",
+      });
+      
+      // Después de 5 segundos, resetear el estado del formulario
+      setTimeout(() => {
+        setFormStatus({
+          submitted: false,
+          success: false,
+          message: "",
+        });
+      }, 5000);
+    }
   };
 
   return (
-    <section id="contacto" className="py-20 sm:py-32 relative">
-      <div className="absolute inset-0 bg-tertiary/10 -z-10" />
-      
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
+    <section
+      id="contact"
+      className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-10 bg-light-secondary dark:bg-dark-secondary`}
+    >
+      <div className="container mx-auto px-4 py-10 max-w-7xl">
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          variants={fadeIn("", "", 0.1, 1)}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.25 }}
+          className="mb-10 text-center"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-white">
-            <span className="text-gradient">Contacto</span>
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-light-text dark:text-dark-text">
+            <span className="text-highlight">Contáctame</span>
           </h2>
-          <p className="text-secondary text-lg mt-4 max-w-2xl mx-auto">
-            ¿Tienes un proyecto en mente? ¿Quieres colaborar conmigo o simplemente charlar? 
-            No dudes en ponerte en contacto.
+          <p className="text-light-text-light dark:text-dark-text-light max-w-3xl mx-auto">
+            ¿Tienes algún proyecto en mente? Estoy disponible para trabajar en proyectos freelance o de tiempo completo.
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
           <motion.div
-            initial={{ opacity: 0, x: -50 }}
-            animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="bg-tertiary rounded-2xl p-8 shadow-card"
+            variants={fadeIn("right", "tween", 0.2, 1)}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.25 }}
           >
-            <h3 className="text-white text-2xl font-semibold mb-6">Información de contacto</h3>
-            
+            <h3 className="text-2xl font-bold mb-6 text-light-text dark:text-dark-text">
+              Información de Contacto
+            </h3>
             <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-highlight/20 flex items-center justify-center">
-                  <FaEnvelope className="text-highlight text-xl" />
+              <div className="flex items-center">
+                <div className={`rounded-full p-3 mr-4 ${
+                  theme === "light"
+                    ? "bg-light-tertiary text-highlight"
+                    : "bg-dark-tertiary text-highlight"
+                }`}>
+                  <FaEnvelope className="text-xl" />
                 </div>
                 <div>
-                  <p className="text-secondary text-sm">Email</p>
-                  <a href="mailto:carlos@ejemplo.com" className="text-white hover:text-highlight transition-colors duration-300">
-                    carlos@ejemplo.com
+                  <h4 className="text-lg font-semibold text-light-text dark:text-dark-text">
+                    Email
+                  </h4>
+                  <a
+                    href="mailto:ejemplo@email.com"
+                    className="text-light-text-light dark:text-dark-text-light hover:text-highlight transition-colors duration-300"
+                  >
+                    ejemplo@email.com
                   </a>
                 </div>
               </div>
-              
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-highlight/20 flex items-center justify-center">
-                  <FaPhone className="text-highlight text-xl" />
+
+              <div className="flex items-center">
+                <div className={`rounded-full p-3 mr-4 ${
+                  theme === "light"
+                    ? "bg-light-tertiary text-highlight"
+                    : "bg-dark-tertiary text-highlight"
+                }`}>
+                  <FaPhoneAlt className="text-xl" />
                 </div>
                 <div>
-                  <p className="text-secondary text-sm">Teléfono</p>
-                  <a href="tel:+52123456789" className="text-white hover:text-highlight transition-colors duration-300">
-                    +52 123 456 789
+                  <h4 className="text-lg font-semibold text-light-text dark:text-dark-text">
+                    Teléfono
+                  </h4>
+                  <a
+                    href="tel:+1234567890"
+                    className="text-light-text-light dark:text-dark-text-light hover:text-highlight transition-colors duration-300"
+                  >
+                    +123 456 7890
                   </a>
                 </div>
               </div>
-              
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-full bg-highlight/20 flex items-center justify-center">
-                  <FaMapMarkerAlt className="text-highlight text-xl" />
+
+              <div className="flex items-center">
+                <div className={`rounded-full p-3 mr-4 ${
+                  theme === "light"
+                    ? "bg-light-tertiary text-highlight"
+                    : "bg-dark-tertiary text-highlight"
+                }`}>
+                  <FaMapMarkerAlt className="text-xl" />
                 </div>
                 <div>
-                  <p className="text-secondary text-sm">Ubicación</p>
-                  <p className="text-white">Ciudad de México, México</p>
+                  <h4 className="text-lg font-semibold text-light-text dark:text-dark-text">
+                    Ubicación
+                  </h4>
+                  <p className="text-light-text-light dark:text-dark-text-light">
+                    Ciudad de México, México
+                  </p>
                 </div>
               </div>
             </div>
-            
-            <div className="mt-12">
-              <h4 className="text-white text-lg font-medium mb-4">Sígueme en redes sociales</h4>
-              <div className="flex gap-4">
-                <a href="#" className="w-10 h-10 rounded-full bg-highlight/20 flex items-center justify-center text-white hover:bg-highlight transition-all duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.012 8.012 0 0 0 16 8c0-4.42-3.58-8-8-8z"/>
-                  </svg>
+
+            <div className="mt-8">
+              <h4 className="text-lg font-semibold mb-4 text-light-text dark:text-dark-text">
+                Sígueme en:
+              </h4>
+              <div className="flex space-x-4">
+                <a
+                  href="https://linkedin.com/in/username"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`rounded-full p-3 ${
+                    theme === "light"
+                      ? "bg-light-tertiary text-highlight hover:bg-highlight hover:text-white"
+                      : "bg-dark-tertiary text-highlight hover:bg-highlight hover:text-white"
+                  } transition-all duration-300`}
+                >
+                  <FaLinkedin className="text-xl" />
                 </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-highlight/20 flex items-center justify-center text-white hover:bg-highlight transition-all duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M0 1.146C0 .513.526 0 1.175 0h13.65C15.474 0 16 .513 16 1.146v13.708c0 .633-.526 1.146-1.175 1.146H1.175C.526 16 0 15.487 0 14.854V1.146zm4.943 12.248V6.169H2.542v7.225h2.401zm-1.2-8.212c.837 0 1.358-.554 1.358-1.248-.015-.709-.52-1.248-1.342-1.248-.822 0-1.359.54-1.359 1.248 0 .694.521 1.248 1.327 1.248h.016zm4.908 8.212V9.359c0-.216.016-.432.08-.586.173-.431.568-.878 1.232-.878.869 0 1.216.662 1.216 1.634v3.865h2.401V9.25c0-2.22-1.184-3.252-2.764-3.252-1.274 0-1.845.7-2.165 1.193v.025h-.016a5.54 5.54 0 0 1 .016-.025V6.169h-2.4c.03.678 0 7.225 0 7.225h2.4z"/>
-                  </svg>
+                <a
+                  href="https://github.com/username"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`rounded-full p-3 ${
+                    theme === "light"
+                      ? "bg-light-tertiary text-highlight hover:bg-highlight hover:text-white"
+                      : "bg-dark-tertiary text-highlight hover:bg-highlight hover:text-white"
+                  } transition-all duration-300`}
+                >
+                  <FaGithub className="text-xl" />
                 </a>
-                <a href="#" className="w-10 h-10 rounded-full bg-highlight/20 flex items-center justify-center text-white hover:bg-highlight transition-all duration-300">
-                  <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 16 16">
-                    <path d="M5.026 15c6.038 0 9.341-5.003 9.341-9.334 0-.14 0-.282-.006-.422A6.685 6.685 0 0 0 16 3.542a6.658 6.658 0 0 1-1.889.518 3.301 3.301 0 0 0 1.447-1.817 6.533 6.533 0 0 1-2.087.793A3.286 3.286 0 0 0 7.875 6.03a9.325 9.325 0 0 1-6.767-3.429 3.289 3.289 0 0 0 1.018 4.382A3.323 3.323 0 0 1 .64 6.575v.045a3.288 3.288 0 0 0 2.632 3.218 3.203 3.203 0 0 1-.865.115 3.23 3.23 0 0 1-.614-.057 3.283 3.283 0 0 0 3.067 2.277A6.588 6.588 0 0 1 .78 13.58a6.32 6.32 0 0 1-.78-.045A9.344 9.344 0 0 0 5.026 15z"/>
-                  </svg>
+                <a
+                  href="https://twitter.com/username"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={`rounded-full p-3 ${
+                    theme === "light"
+                      ? "bg-light-tertiary text-highlight hover:bg-highlight hover:text-white"
+                      : "bg-dark-tertiary text-highlight hover:bg-highlight hover:text-white"
+                  } transition-all duration-300`}
+                >
+                  <FaTwitter className="text-xl" />
                 </a>
               </div>
             </div>
           </motion.div>
-          
+
           <motion.div
-            initial={{ opacity: 0, x: 50 }}
-            animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: 50 }}
-            transition={{ duration: 0.5, delay: 0.4 }}
+            variants={fadeIn("left", "tween", 0.3, 1)}
+            initial="hidden"
+            whileInView="show"
+            viewport={{ once: true, amount: 0.25 }}
           >
-            <form
-              ref={formRef}
-              onSubmit={handleSubmit}
-              className="bg-tertiary rounded-2xl p-8 shadow-card flex flex-col gap-6"
-            >
+            <h3 className="text-2xl font-bold mb-6 text-light-text dark:text-dark-text">
+              Envíame un Mensaje
+            </h3>
+            <form onSubmit={handleSubmit} className="space-y-4">
+              {formStatus.submitted && (
+                <div
+                  className={`p-4 rounded-md ${
+                    formStatus.success
+                      ? "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300"
+                      : "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300"
+                  }`}
+                >
+                  {formStatus.message}
+                </div>
+              )}
+
               <div>
-                <label htmlFor="name" className="text-white font-medium mb-2 block">
-                  Tu nombre
+                <label
+                  htmlFor="name"
+                  className="block mb-2 text-light-text dark:text-dark-text"
+                >
+                  Nombre
                 </label>
                 <input
                   type="text"
-                  name="name"
                   id="name"
-                  value={form.name}
+                  name="name"
+                  value={formData.name}
                   onChange={handleChange}
-                  placeholder="¿Cómo te llamas?"
-                  className="w-full px-4 py-3 bg-black-100 text-white rounded-lg outline-none border border-tertiary focus:border-highlight"
-                  required
+                  className={`w-full p-3 rounded-md ${
+                    theme === "light"
+                      ? "bg-light-primary text-light-text border border-light-tertiary focus:border-highlight"
+                      : "bg-dark-primary text-dark-text border border-dark-tertiary focus:border-highlight"
+                  } focus:outline-none focus:ring-2 focus:ring-highlight focus:ring-opacity-50 transition-colors duration-300`}
+                  placeholder="Tu nombre"
                 />
+                {formError.name && (
+                  <p className="mt-1 text-red-500 dark:text-red-400 text-sm">
+                    {formError.name}
+                  </p>
+                )}
               </div>
-              
+
               <div>
-                <label htmlFor="email" className="text-white font-medium mb-2 block">
-                  Tu email
+                <label
+                  htmlFor="email"
+                  className="block mb-2 text-light-text dark:text-dark-text"
+                >
+                  Email
                 </label>
                 <input
                   type="email"
-                  name="email"
                   id="email"
-                  value={form.email}
+                  name="email"
+                  value={formData.email}
                   onChange={handleChange}
-                  placeholder="¿Cuál es tu correo electrónico?"
-                  className="w-full px-4 py-3 bg-black-100 text-white rounded-lg outline-none border border-tertiary focus:border-highlight"
-                  required
+                  className={`w-full p-3 rounded-md ${
+                    theme === "light"
+                      ? "bg-light-primary text-light-text border border-light-tertiary focus:border-highlight"
+                      : "bg-dark-primary text-dark-text border border-dark-tertiary focus:border-highlight"
+                  } focus:outline-none focus:ring-2 focus:ring-highlight focus:ring-opacity-50 transition-colors duration-300`}
+                  placeholder="Tu email"
                 />
+                {formError.email && (
+                  <p className="mt-1 text-red-500 dark:text-red-400 text-sm">
+                    {formError.email}
+                  </p>
+                )}
               </div>
-              
+
               <div>
-                <label htmlFor="message" className="text-white font-medium mb-2 block">
-                  Tu mensaje
+                <label
+                  htmlFor="subject"
+                  className="block mb-2 text-light-text dark:text-dark-text"
+                >
+                  Asunto
+                </label>
+                <input
+                  type="text"
+                  id="subject"
+                  name="subject"
+                  value={formData.subject}
+                  onChange={handleChange}
+                  className={`w-full p-3 rounded-md ${
+                    theme === "light"
+                      ? "bg-light-primary text-light-text border border-light-tertiary focus:border-highlight"
+                      : "bg-dark-primary text-dark-text border border-dark-tertiary focus:border-highlight"
+                  } focus:outline-none focus:ring-2 focus:ring-highlight focus:ring-opacity-50 transition-colors duration-300`}
+                  placeholder="Asunto del mensaje"
+                />
+                {formError.subject && (
+                  <p className="mt-1 text-red-500 dark:text-red-400 text-sm">
+                    {formError.subject}
+                  </p>
+                )}
+              </div>
+
+              <div>
+                <label
+                  htmlFor="message"
+                  className="block mb-2 text-light-text dark:text-dark-text"
+                >
+                  Mensaje
                 </label>
                 <textarea
-                  name="message"
                   id="message"
-                  rows="5"
-                  value={form.message}
+                  name="message"
+                  value={formData.message}
                   onChange={handleChange}
-                  placeholder="¿Qué quieres decirme?"
-                  className="w-full px-4 py-3 bg-black-100 text-white rounded-lg outline-none border border-tertiary focus:border-highlight resize-none"
-                  required
-                />
+                  rows="5"
+                  className={`w-full p-3 rounded-md ${
+                    theme === "light"
+                      ? "bg-light-primary text-light-text border border-light-tertiary focus:border-highlight"
+                      : "bg-dark-primary text-dark-text border border-dark-tertiary focus:border-highlight"
+                  } focus:outline-none focus:ring-2 focus:ring-highlight focus:ring-opacity-50 transition-colors duration-300`}
+                  placeholder="Tu mensaje"
+                ></textarea>
+                {formError.message && (
+                  <p className="mt-1 text-red-500 dark:text-red-400 text-sm">
+                    {formError.message}
+                  </p>
+                )}
               </div>
-              
+
               <motion.button
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
                 type="submit"
-                className="btn btn-primary self-start mt-2"
-                disabled={loading}
+                className={`w-full py-3 px-6 rounded-md text-white font-medium ${
+                  theme === "light"
+                    ? "bg-highlight hover:bg-highlight-hover"
+                    : "bg-highlight hover:bg-highlight-hover"
+                } transition-colors duration-300`}
               >
-                {loading ? 'Enviando...' : 'Enviar mensaje'}
+                Enviar Mensaje
               </motion.button>
-              
-              {success && (
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-green-500 mt-2"
-                >
-                  ¡Mensaje enviado con éxito! Me pondré en contacto contigo pronto.
-                </motion.p>
-              )}
-              
-              {error && (
-                <motion.p
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  className="text-red-500 mt-2"
-                >
-                  Hubo un error al enviar tu mensaje. Por favor, inténtalo de nuevo.
-                </motion.p>
-              )}
             </form>
           </motion.div>
         </div>

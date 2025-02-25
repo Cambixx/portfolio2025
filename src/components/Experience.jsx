@@ -1,105 +1,186 @@
+import React from 'react';
 import { motion } from 'framer-motion';
-import { useInView } from 'react-intersection-observer';
-import { BriefcaseIcon } from '@heroicons/react/24/outline';
+import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeline-component';
+import 'react-vertical-timeline-component/style.min.css';
+import { FaBriefcase, FaGraduationCap } from 'react-icons/fa';
+import { useTheme } from '../context/ThemeContext';
 
+// Creamos un efecto de fade-in para las animaciones
+const fadeIn = (direction, type, delay, duration) => ({
+  hidden: {
+    x: direction === "left" ? 100 : direction === "right" ? -100 : 0,
+    y: direction === "up" ? 100 : direction === "down" ? -100 : 0,
+    opacity: 0,
+  },
+  show: {
+    x: 0,
+    y: 0,
+    opacity: 1,
+    transition: {
+      type,
+      delay,
+      duration,
+      ease: "easeOut",
+    },
+  },
+});
+
+// Datos de experiencia
 const experiences = [
   {
     title: "Desarrollador Frontend Senior",
-    company: "TechInnovations",
-    date: "2022 - Presente",
-    description: "Desarrollo de aplicaciones web complejas utilizando React, NextJS y TypeScript. Implementación de arquitecturas escalables y optimización de rendimiento. Liderazgo técnico de un equipo de 4 desarrolladores.",
-    technologies: ["React", "Next.js", "TypeScript", "Redux", "Tailwind CSS"]
+    company_name: "Tech Innovations",
+    location: "Ciudad de México",
+    icon: <FaBriefcase />,
+    iconBg: "#383E56",
+    date: "Marzo 2022 - Presente",
+    points: [
+      "Desarrollo y mantenimiento de aplicaciones web utilizando React.js y otras tecnologías relacionadas.",
+      "Colaboración con equipos de diseño, producto y otros desarrolladores para crear productos de alta calidad.",
+      "Implementación de diseño responsivo y asegurando compatibilidad entre navegadores.",
+      "Participación en revisiones de código y proporcionando retroalimentación constructiva a otros desarrolladores."
+    ],
+    technologies: ["React", "Next.js", "Redux", "Tailwind CSS", "GraphQL"]
+  },
+  {
+    title: "Desarrollador Web Full Stack",
+    company_name: "Digital Solutions",
+    location: "Guadalajara",
+    icon: <FaBriefcase />,
+    iconBg: "#E6DEDD",
+    date: "Enero 2020 - Febrero 2022",
+    points: [
+      "Desarrollo de aplicaciones web completas desde el frontend hasta el backend.",
+      "Creación de APIs RESTful y integración con servicios de terceros.",
+      "Optimización de aplicaciones para máxima velocidad y escalabilidad.",
+      "Mentoría a desarrolladores junior y liderazgo en proyectos pequeños."
+    ],
+    technologies: ["React", "Node.js", "Express", "MongoDB", "Docker"]
   },
   {
     title: "Desarrollador Frontend",
-    company: "WebSolutions Inc.",
-    date: "2020 - 2022",
-    description: "Desarrollo de componentes reutilizables y páginas con Vue.js. Integración con APIs RESTful. Implementación de diseños responsive y animaciones interactivas.",
-    technologies: ["Vue.js", "JavaScript", "SASS", "Vuex", "Jest"]
+    company_name: "WebSolutions Co",
+    location: "Remoto",
+    icon: <FaBriefcase />,
+    iconBg: "#383E56",
+    date: "Julio 2018 - Diciembre 2019",
+    points: [
+      "Desarrollo de interfaces de usuario con HTML, CSS y JavaScript.",
+      "Trabajo con frameworks como React y Vue.js para crear experiencias interactivas.",
+      "Implementación de diseños responsivos y accesibles según estándares web.",
+      "Colaboración estrecha con diseñadores UX/UI y backend developers."
+    ],
+    technologies: ["HTML5", "CSS3", "JavaScript", "Vue.js", "Sass"]
   },
   {
-    title: "Desarrollador Web Junior",
-    company: "CreativeDigital",
-    date: "2018 - 2020",
-    description: "Desarrollo de sitios web responsivos. Maquetación HTML/CSS a partir de diseños en Figma. Implementación de funcionalidades interactivas con JavaScript.",
-    technologies: ["HTML", "CSS", "JavaScript", "jQuery", "Bootstrap"]
+    title: "Ingeniería en Sistemas Computacionales",
+    company_name: "Universidad Tecnológica",
+    location: "Ciudad de México",
+    icon: <FaGraduationCap />,
+    iconBg: "#E6DEDD",
+    date: "2014 - 2018",
+    points: [
+      "Formación en fundamentos de programación, estructuras de datos y algoritmos.",
+      "Especialización en desarrollo web y aplicaciones móviles.",
+      "Proyecto final: Desarrollo de una aplicación web para gestión de proyectos.",
+      "Participación en hackathons y competencias de programación."
+    ],
+    technologies: ["Java", "C++", "JavaScript", "MySQL", "Git"]
   },
 ];
 
 const ExperienceCard = ({ experience, index }) => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.2,
-  });
-
-  const fadeIn = {
-    hidden: { opacity: 0, y: 50 },
-    visible: { opacity: 1, y: 0 },
-  };
-
+  const { theme } = useTheme();
+  const isDarkTheme = theme === "dark";
+  
   return (
-    <motion.div
-      ref={ref}
-      initial="hidden"
-      animate={inView ? 'visible' : 'hidden'}
-      variants={fadeIn}
-      transition={{ duration: 0.5, delay: index * 0.2 }}
-      className="card hover:shadow-xl transition-shadow duration-300"
+    <VerticalTimelineElement
+      contentStyle={{
+        background: isDarkTheme ? "#1f2937" : "#f3f4f6",
+        color: isDarkTheme ? "#f9fafb" : "#111827",
+        boxShadow: isDarkTheme 
+          ? "0 10px 30px -15px rgba(0, 0, 0, 0.7)" 
+          : "0 10px 30px -15px rgba(0, 0, 0, 0.1)"
+      }}
+      contentArrowStyle={{ borderRight: `7px solid ${isDarkTheme ? "#1f2937" : "#f3f4f6"}` }}
+      date={experience.date}
+      dateClassName={isDarkTheme ? "text-dark-text-light" : "text-light-text-light"}
+      iconStyle={{ background: experience.iconBg, color: isDarkTheme ? "#f9fafb" : "#111827" }}
+      icon={experience.icon}
     >
-      <div className="flex items-start gap-4">
-        <div className="flex-shrink-0 bg-highlight rounded-full p-3">
-          <BriefcaseIcon className="w-6 h-6 text-white" />
-        </div>
-        <div>
-          <h3 className="text-white text-xl font-semibold">{experience.title}</h3>
-          <p className="text-secondary">{experience.company}</p>
-          <p className="text-highlight text-sm my-2">{experience.date}</p>
-          <p className="text-secondary mb-4">{experience.description}</p>
-          <div className="flex flex-wrap gap-2">
-            {experience.technologies.map((tech, idx) => (
-              <span 
-                key={idx} 
-                className="bg-tertiary border border-highlight text-sm text-white px-3 py-1 rounded-full"
-              >
-                {tech}
-              </span>
-            ))}
-          </div>
-        </div>
+      <div>
+        <h3 className="text-xl font-bold" style={{ color: isDarkTheme ? "#f9fafb" : "#111827" }}>
+          {experience.title}
+        </h3>
+        <p className="text-base font-semibold" style={{ margin: 0, color: isDarkTheme ? "#d1d5db" : "#4b5563" }}>
+          {experience.company_name} • {experience.location}
+        </p>
       </div>
-    </motion.div>
+
+      <ul className="mt-4 list-disc ml-5 space-y-2">
+        {experience.points.map((point, index) => (
+          <li
+            key={`experience-point-${index}`}
+            className="text-sm"
+            style={{ color: isDarkTheme ? "#d1d5db" : "#4b5563" }}
+          >
+            {point}
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-4 flex flex-wrap gap-2">
+        {experience.technologies.map((tech, index) => (
+          <span
+            key={`tech-${index}`}
+            className={`text-xs px-2 py-1 rounded-full ${
+              isDarkTheme 
+                ? "bg-dark-tertiary text-dark-text-light" 
+                : "bg-light-tertiary text-light-text-light"
+            }`}
+          >
+            {tech}
+          </span>
+        ))}
+      </div>
+    </VerticalTimelineElement>
   );
 };
 
-const Experience = () => {
-  const [ref, inView] = useInView({
-    triggerOnce: true,
-    threshold: 0.1,
-  });
+const Experience = ({ standalone = false }) => {
+  const { theme } = useTheme();
 
   return (
-    <section id="experiencia" className="py-20 sm:py-32 relative">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8">
+    <section 
+      id="experience"
+      className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-10 bg-light-primary dark:bg-dark-primary`}
+    >
+      <div className="container mx-auto px-4 py-10 max-w-7xl">
         <motion.div
-          ref={ref}
-          initial={{ opacity: 0 }}
-          animate={inView ? { opacity: 1 } : { opacity: 0 }}
-          transition={{ duration: 0.8 }}
-          className="text-center mb-16"
+          variants={fadeIn("", "", 0.1, 1)}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, amount: 0.25 }}
+          className="mb-10 text-center"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold text-white">
-            Mi <span className="text-gradient">Experiencia</span>
+          <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-light-text dark:text-dark-text">
+            Mi <span className="text-highlight">Experiencia</span>
           </h2>
-          <p className="text-secondary text-lg mt-4 max-w-2xl mx-auto">
-            Mi trayectoria profesional como desarrollador frontend, donde he participado
-            en proyectos desafiantes y he adquirido diversas habilidades.
+          <p className="text-light-text-light dark:text-dark-text-light max-w-3xl mx-auto">
+            Mi trayectoria profesional y educación. Un recorrido por mi camino en el desarrollo web.
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 gap-8">
-          {experiences.map((experience, index) => (
-            <ExperienceCard key={index} experience={experience} index={index} />
-          ))}
+        <div className="mt-10">
+          <VerticalTimeline lineColor={theme === "dark" ? "#374151" : "#e5e7eb"}>
+            {experiences.map((experience, index) => (
+              <ExperienceCard
+                key={index}
+                experience={experience}
+                index={index}
+              />
+            ))}
+          </VerticalTimeline>
         </div>
       </div>
     </section>

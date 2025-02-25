@@ -4,15 +4,22 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --transition-duration: 0.3s;
+}
+
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   scroll-behavior: smooth;
+  transition: background-color var(--transition-duration) ease-in-out, 
+              color var(--transition-duration) ease-in-out,
+              border-color var(--transition-duration) ease-in-out;
 }
 
-html, body {
-  @apply bg-primary text-white-100;
+body {
+  @apply bg-light-primary text-light-text dark:bg-dark-primary dark:text-dark-text;
 }
 
 .hash-span {
@@ -23,51 +30,41 @@ html, body {
 
 /* Estilos para secciones con degradados */
 .gradient-01 {
-  background-image: linear-gradient(
-    270deg,
-    rgba(145, 94, 255, 0.5) 0%,
-    rgba(21, 16, 48, 0.5) 100%
-  );
+  @apply bg-gradient-to-r from-light-tertiary/50 to-light-secondary/50 dark:from-dark-tertiary/50 dark:to-dark-secondary/50;
   filter: blur(125px);
 }
 
 .gradient-02 {
-  background-image: linear-gradient(
-    180deg,
-    rgba(10, 8, 20, 0.75) 0%,
-    rgba(145, 94, 255, 0.5) 100%
-  );
+  @apply bg-gradient-to-t from-light-tertiary/75 to-light-secondary/50 dark:from-dark-tertiary/75 dark:to-dark-secondary/50;
   filter: blur(80px);
 }
 
 /* Estilos para los botones */
 .btn {
-  @apply py-3 px-8 rounded-xl outline-none text-white font-bold shadow-md shadow-primary;
+  @apply py-3 px-8 rounded-xl outline-none font-bold shadow-md transition-all duration-300;
 }
 
 .btn-primary {
-  @apply bg-tertiary hover:bg-highlight transition-colors duration-300;
+  @apply bg-light-tertiary text-light-text hover:bg-highlight dark:bg-dark-tertiary dark:text-dark-text dark:hover:bg-highlight-hover;
 }
 
 /* Estilos para las tarjetas */
 .card {
-  @apply bg-tertiary rounded-2xl p-5 sm:w-[360px] w-full shadow-card;
+  @apply bg-light-tertiary rounded-2xl p-5 sm:w-[360px] w-full shadow-card dark:bg-dark-tertiary dark:shadow-card-dark;
 }
 
 /* Estilos para el texto destacado */
 .text-gradient {
-  background: linear-gradient(90deg, #915EFF, #4A30BD);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
+  @apply text-light-accent dark:text-dark-accent font-bold;
 }
 
 /* Estilos para la barra de navegación */
 .nav-item {
-  @apply text-secondary hover:text-white-100 text-[18px] font-medium cursor-pointer;
+  @apply text-light-text-light hover:text-light-text text-[18px] font-medium cursor-pointer dark:text-dark-text-light dark:hover:text-dark-text;
 }
 
 .nav-item.active {
-  @apply text-white-100;
+  @apply text-light-text dark:text-dark-text;
 }
 
 /* Estilos para la sección de habilidades */
@@ -89,10 +86,15 @@ html, body {
 /* Estilos para hacer el sitio responsive */
 @media screen and (max-width: 640px) {
   .nav-menu {
-    @apply fixed top-0 right-0 w-[70vw] h-screen bg-tertiary p-10 z-50 flex flex-col justify-start items-end transition-transform duration-300 transform translate-x-full;
+    @apply fixed top-0 right-0 w-[70vw] h-screen bg-light-tertiary p-10 z-50 flex flex-col justify-start items-end transition-transform duration-300 transform translate-x-full dark:bg-dark-tertiary;
   }
   
   .nav-menu.open {
     @apply translate-x-0;
   }
+}
+
+/* Estilos para el botón de cambio de tema */
+.theme-toggle {
+  @apply p-2 rounded-full bg-light-tertiary dark:bg-dark-tertiary hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors;
 }
