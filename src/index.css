@@ -1,0 +1,98 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+html, body {
+  @apply bg-primary text-white-100;
+}
+
+.hash-span {
+  margin-top: -100px;
+  padding-bottom: 100px;
+  display: block;
+}
+
+/* Estilos para secciones con degradados */
+.gradient-01 {
+  background-image: linear-gradient(
+    270deg,
+    rgba(145, 94, 255, 0.5) 0%,
+    rgba(21, 16, 48, 0.5) 100%
+  );
+  filter: blur(125px);
+}
+
+.gradient-02 {
+  background-image: linear-gradient(
+    180deg,
+    rgba(10, 8, 20, 0.75) 0%,
+    rgba(145, 94, 255, 0.5) 100%
+  );
+  filter: blur(80px);
+}
+
+/* Estilos para los botones */
+.btn {
+  @apply py-3 px-8 rounded-xl outline-none text-white font-bold shadow-md shadow-primary;
+}
+
+.btn-primary {
+  @apply bg-tertiary hover:bg-highlight transition-colors duration-300;
+}
+
+/* Estilos para las tarjetas */
+.card {
+  @apply bg-tertiary rounded-2xl p-5 sm:w-[360px] w-full shadow-card;
+}
+
+/* Estilos para el texto destacado */
+.text-gradient {
+  background: linear-gradient(90deg, #915EFF, #4A30BD);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Estilos para la barra de navegación */
+.nav-item {
+  @apply text-secondary hover:text-white-100 text-[18px] font-medium cursor-pointer;
+}
+
+.nav-item.active {
+  @apply text-white-100;
+}
+
+/* Estilos para la sección de habilidades */
+.skill-icon {
+  @apply w-12 h-12 object-contain;
+}
+
+/* Animaciones */
+.fade-in {
+  @apply opacity-0;
+  animation: fadeIn 1s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Estilos para hacer el sitio responsive */
+@media screen and (max-width: 640px) {
+  .nav-menu {
+    @apply fixed top-0 right-0 w-[70vw] h-screen bg-tertiary p-10 z-50 flex flex-col justify-start items-end transition-transform duration-300 transform translate-x-full;
+  }
+  
+  .nav-menu.open {
+    @apply translate-x-0;
+  }
+}
