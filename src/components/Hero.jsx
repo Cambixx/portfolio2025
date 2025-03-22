@@ -7,7 +7,7 @@ const Hero = ({ standalone = false }) => {
   return (
     <section 
       id="inicio" 
-      className={`${standalone ? 'pt-20' : ''} relative w-full h-screen mx-auto flex flex-col items-center justify-center overflow-hidden pt-10 md:pt-16`}
+      className={`${standalone ? 'pt-20' : ''} relative w-full h-screen mx-auto flex flex-col items-center justify-center overflow-hidden`}
     >
       {/* Componente BackgroundPaths */}
       <BackgroundPaths title="Carlos Rábago" />
