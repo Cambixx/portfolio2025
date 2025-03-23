@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
+import emailjs from '@emailjs/browser';
+import { emailjsConfig } from '../lib/emailjs';
 
 // Creamos un efecto de fade-in para las animaciones
 const fadeIn = (direction, type, delay, duration) => ({
@@ -25,6 +27,7 @@ const fadeIn = (direction, type, delay, duration) => ({
 
 const Contact = ({ standalone = false }) => {
   const { theme } = useTheme();
+  const formRef = useRef();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -86,30 +89,15 @@ const Contact = ({ standalone = false }) => {
       setIsSubmitting(true);
       
       try {
-        // Asegurarnos de obtener los datos del formulario correctamente
-        const formElement = e.target;
-        const formData = new FormData(formElement);
+        // Enviar formulario usando EmailJS
+        const result = await emailjs.sendForm(
+          emailjsConfig.serviceId,
+          emailjsConfig.templateId,
+          formRef.current,
+          emailjsConfig.publicKey
+        );
         
-        // Agregar explícitamente el nombre del formulario - esto es crítico para Netlify
-        formData.append("form-name", "contact");
-        
-        // Convertir FormData a string con URLSearchParams
-        const searchParams = new URLSearchParams(formData);
-        
-        console.log("Enviando formulario a Netlify:", Object.fromEntries(searchParams));
-        
-        const response = await fetch("/", {
-          method: "POST",
-          headers: { 
-            "Content-Type": "application/x-www-form-urlencoded" 
-          },
-          body: searchParams.toString(),
-        });
-        
-        if (!response.ok) {
-          console.error("Respuesta no ok:", response.status, response.statusText);
-          throw new Error(`Error al enviar el formulario: ${response.status}`);
-        }
+        console.log('Resultado:', result.text);
         
         // Formulario enviado exitosamente
         setFormStatus({
@@ -295,25 +283,12 @@ const Contact = ({ standalone = false }) => {
               Envíame un Mensaje
             </h3>
             
-            {/* Formulario con atributos para Netlify Forms */}
+            {/* Formulario con EmailJS */}
             <form 
-              name="contact"
-              method="POST"
-              data-netlify="true" 
-              netlify-honeypot="bot-field"
+              ref={formRef}
               onSubmit={handleSubmit} 
               className="space-y-4"
             >
-              {/* Campo oculto necesario para Netlify */}
-              <input type="hidden" name="form-name" value="contact" />
-              
-              {/* Campo honeypot para evitar spam */}
-              <div className="hidden">
-                <label>
-                  No llenes esto si eres humano: <input name="bot-field" />
-                </label>
-              </div>
-              
               {formStatus.submitted && (
                 <div
                   className={`p-4 rounded-md ${
