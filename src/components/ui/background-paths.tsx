@@ -3,6 +3,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { Button } from "./button";
+import { useLanguage } from "../../context/LanguageContext";
 
 function FloatingPaths({ position }: { position: number }) {
     const paths = Array.from({ length: 36 }, (_, i) => ({
@@ -56,6 +57,7 @@ export function BackgroundPaths({
 }: {
     title?: string;
 }) {
+    const { t } = useLanguage();
     const words = title.split(" ");
 
     return (
@@ -84,9 +86,7 @@ export function BackgroundPaths({
                                         initial={{ y: 100, opacity: 0 }}
                                         animate={{ y: 0, opacity: 1 }}
                                         transition={{
-                                            delay:
-                                                wordIndex * 0.1 +
-                                                letterIndex * 0.03,
+                                            delay: letterIndex * 0.03,
                                             type: "spring",
                                             stiffness: 150,
                                             damping: 25,

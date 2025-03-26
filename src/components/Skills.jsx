@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { useTheme } from "../context/ThemeContext";
+import { useLanguage } from "../context/LanguageContext";
 import { 
   FaHtml5, 
   FaCss3Alt, 
@@ -50,92 +51,92 @@ const skills = [
   {
     name: "HTML5",
     icon: <FaHtml5 />,
-    category: "Frontend"
+    category: "frontend"
   },
   {
     name: "CSS3",
     icon: <FaCss3Alt />,
-    category: "Frontend"
+    category: "frontend"
   },
   {
     name: "JavaScript",
     icon: <FaJs />,
-    category: "Frontend"
+    category: "frontend"
   },
   {
     name: "TypeScript",
     icon: <SiTypescript />,
-    category: "Frontend"
+    category: "frontend"
   },
   {
     name: "React",
     icon: <FaReact />,
-    category: "Frontend"
+    category: "frontend"
   },
   {
     name: "Three.js",
     icon: <SiThreedotjs />,
-    category: "Frontend"
+    category: "frontend"
   },
   {
     name: "Tailwind CSS",
     icon: <SiTailwindcss />,
-    category: "Frontend"
+    category: "frontend"
   },
   {
     name: "Bootstrap",
     icon: <FaBootstrap />,
-    category: "Frontend"
+    category: "frontend"
   },
   {
     name: "Node.js",
     icon: <FaNodeJs />,
-    category: "Backend"
+    category: "backend"
   },
   {
     name: "PHP",
     icon: <FaPhp />,
-    category: "Backend"
+    category: "backend"
   },
   {
     name: "MySQL",
     icon: <SiMysql />,
-    category: "Backend"
+    category: "backend"
   },
   {
     name: "Git",
     icon: <FaGitAlt />,
-    category: "Herramientas"
+    category: "tools"
   },
   {
     name: "GitHub",
     icon: <FaGithub />,
-    category: "Herramientas"
+    category: "tools"
   },
   {
     name: "Docker",
     icon: <FaDocker />,
-    category: "Herramientas"
+    category: "tools"
   },
   {
     name: "Vite",
     icon: <SiVite />,
-    category: "Herramientas"
+    category: "tools"
   },
   {
     name: "Webpack",
     icon: <SiWebpack />,
-    category: "Herramientas"
+    category: "tools"
   },
   {
     name: "Figma",
     icon: <FaFigma />,
-    category: "Herramientas"
+    category: "tools"
   },
   {
     name: "AWS",
     icon: <FaAws />,
-    category: "Herramientas"
+    category: "tools"
   }
 ];
 
@@ -155,7 +156,7 @@ const SkillCard = ({ name, icon }) => {
   );
 };
 
-const CategorySection = ({ title, skills }) => {
+const CategorySection = ({ title, skills, t }) => {
   return (
     <motion.div
       variants={fadeIn("up", "spring", 0.3, 0.75)}
@@ -163,7 +164,7 @@ const CategorySection = ({ title, skills }) => {
     >
       <h3 className="text-2xl font-bold text-light-text dark:text-dark-text mb-8 flex items-center">
         <span className="text-highlight mr-2">#</span>
-        {title}
+        {t.skills[title.toLowerCase()]}
       </h3>
       <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
         {skills.map((skill) => (
@@ -175,10 +176,11 @@ const CategorySection = ({ title, skills }) => {
 };
 
 const Skills = ({ standalone = false }) => {
+  const { t } = useLanguage();
   const categories = {
-    Frontend: skills.filter(skill => skill.category === "Frontend"),
-    Backend: skills.filter(skill => skill.category === "Backend"),
-    Herramientas: skills.filter(skill => skill.category === "Herramientas")
+    frontend: skills.filter(skill => skill.category === "frontend"),
+    backend: skills.filter(skill => skill.category === "backend"),
+    tools: skills.filter(skill => skill.category === "tools")
   };
 
   return (
@@ -195,16 +197,16 @@ const Skills = ({ standalone = false }) => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-light-text dark:text-dark-text">
-            Mis <span className="text-highlight">Habilidades</span>
+            {t.nav.habilidades}
           </h2>
           <p className="text-light-text-light dark:text-dark-text-light max-w-2xl mx-auto text-lg">
-            Un conjunto de tecnologías y herramientas que domino para crear experiencias web excepcionales.
+            {t.skills.description}
           </p>
         </motion.div>
 
         <div className="space-y-16">
           {Object.entries(categories).map(([category, skills]) => (
-            <CategorySection key={category} title={category} skills={skills} />
+            <CategorySection key={category} title={category} skills={skills} t={t} />
           ))}
         </div>
       </div>

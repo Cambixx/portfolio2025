@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "inicio": "Inicio",
+    "sobreMi": "Sobre Mí",
+    "experiencia": "Experiencia",
+    "habilidades": "Habilidades",
+    "proyectos": "Proyectos",
+    "contacto": "Contacto"
+  },
+  "hero": {
+    "name": "Carlos Rábago",
+    "role": "Desarrollador Web"
+  },
+  "about": {
+    "title": "Sobre Mí",
+    "role": "Desarrollador Web",
+    "description": "Ingeniero Industrial con grado superior en Desarrollo de Aplicaciones Web. Tras una sólida experiencia en gestión y logística, decidí reorientar mi carrera hacia el desarrollo web. Me considero una persona proactiva, versátil y con habilidades tanto en diseño como en programación.",
+    "skillsTitle": "Habilidades y Objetivos",
+    "skillsDescription": "Actualmente especializado en tecnologías frontend como React, JavaScript, HTML5, CSS3, Three.js y GSAP Motion, junto con frameworks CSS como Tailwind y Bootstrap. También cuento con experiencia en backend con Node.js, PHP y MySQL, y herramientas de desarrollo como Vite, Webpack, Git y GitHub.",
+    "objectives": "Mi objetivo es aplicar mis conocimientos en proyectos innovadores, contribuir al crecimiento de los equipos y seguir aprendiendo continuamente. Busco oportunidades que me permitan combinar mi experiencia en gestión con mis habilidades técnicas en desarrollo web."
+  },
+  "projects": {
+    "title": "Proyectos",
+    "viewProject": "Ver Proyecto"
+  },
+  "contact": {
+    "title": "Contacto",
+    "description": "¿Tienes alguna pregunta o propuesta?",
+    "name": "Nombre",
+    "email": "Correo electrónico",
+    "message": "Mensaje",
+    "send": "Enviar mensaje"
+  },
+  "skills": {
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "tools": "Herramientas",
+    "description": "Un conjunto de tecnologías y herramientas que domino para crear experiencias web excepcionales."
+  },
+  "experience": {
+    "title": "Trayectoria Académica y Profesional",
+    "description": "Mi formación y experiencia en desarrollo web",
+    "present": "Actualidad",
+    "role": "Cargo",
+    "company": "Empresa",
+    "date": "Fecha",
+    "location": "Ubicación",
+    "description": "Descripción"
+  }
+} 

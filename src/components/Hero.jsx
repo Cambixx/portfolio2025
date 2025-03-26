@@ -1,16 +1,19 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-scroll';
 import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
 import { BackgroundPaths } from './ui/background-paths';
 
 const Hero = ({ standalone = false }) => {
+  const { t } = useLanguage();
+
   return (
     <section 
       id="inicio" 
       className={`${standalone ? 'pt-20' : ''} relative w-full h-screen mx-auto flex flex-col items-center justify-center overflow-hidden`}
     >
       {/* Componente BackgroundPaths */}
-      <BackgroundPaths title="Carlos Rábago" />
+      <BackgroundPaths title={t.hero.name} />
       
       {/* Indicador de scroll */}
       <div className="absolute xs:bottom-10 bottom-6 w-full flex justify-center items-center z-10">

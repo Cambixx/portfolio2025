@@ -3,19 +3,21 @@ import { Link } from 'react-scroll';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import ThemeToggle from './ThemeToggle';
-
-const navLinks = [
-  { id: 'sobre-mi', title: 'Sobre Mí' },
-  { id: 'experiencia', title: 'Experiencia' },
-  { id: 'habilidades', title: 'Habilidades' },
-  { id: 'proyectos', title: 'Proyectos' },
-  { id: 'contacto', title: 'Contacto' },
-];
+import { useLanguage } from '../context/LanguageContext';
 
 const Navbar = () => {
   const [active, setActive] = useState('');
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { language, toggleLanguage, t } = useLanguage();
+
+  const navLinks = [
+    { id: 'sobre-mi', title: t.nav.sobreMi },
+    { id: 'experiencia', title: t.nav.experiencia },
+    { id: 'habilidades', title: t.nav.habilidades },
+    { id: 'proyectos', title: t.nav.proyectos },
+    { id: 'contacto', title: t.nav.contacto },
+  ];
 
   // Manejar scroll
   useEffect(() => {
@@ -39,6 +41,31 @@ const Navbar = () => {
   const closeMenu = () => {
     setIsOpen(false);
   };
+
+  const LanguageToggle = () => (
+    <div className="flex items-center space-x-2">
+      <button
+        onClick={() => toggleLanguage('es')}
+        className={`px-2 py-1 rounded-md text-sm font-medium transition-colors duration-200 ${
+          language === 'es'
+            ? 'bg-highlight text-white'
+            : 'text-light-text-light dark:text-dark-text-light hover:text-light-text dark:hover:text-dark-text'
+        }`}
+      >
+        ES
+      </button>
+      <button
+        onClick={() => toggleLanguage('en')}
+        className={`px-2 py-1 rounded-md text-sm font-medium transition-colors duration-200 ${
+          language === 'en'
+            ? 'bg-highlight text-white'
+            : 'text-light-text-light dark:text-dark-text-light hover:text-light-text dark:hover:text-dark-text'
+        }`}
+      >
+        EN
+      </button>
+    </div>
+  );
 
   return (
     <nav
@@ -81,7 +108,10 @@ const Navbar = () => {
                 {link.title}
               </Link>
             ))}
-            <ThemeToggle />
+            <div className="flex items-center space-x-4">
+              <LanguageToggle />
+              <ThemeToggle />
+            </div>
           </div>
 
           {/* Botón menú móvil */}
@@ -157,7 +187,8 @@ const Navbar = () => {
                 </div>
 
                 {/* Footer del menú */}
-                <div className="p-4 border-t border-light-secondary dark:border-dark-secondary">
+                <div className="p-4 border-t border-light-secondary dark:border-dark-secondary flex items-center justify-between">
+                  <LanguageToggle />
                   <ThemeToggle />
                 </div>
               </div>

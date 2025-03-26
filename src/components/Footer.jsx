@@ -54,16 +54,16 @@ const Footer = () => {
               ¿Tienes un proyecto en mente? ¡Hablemos!
             </p>
             <a
-              href="mailto:carlos@ejemplo.com"
+              href="mailto:carlosmiguel40@gmail.com"
               className="text-highlight hover:text-light-text dark:hover:text-dark-text transition-colors duration-300"
             >
-              carlos@ejemplo.com
+              carlosmiguel40@gmail.com
             </a>
             
             <div className="mt-6">
               <div className="flex gap-4">
                 <a
-                  href="https://github.com/tuusuario"
+                  href="https://github.com/Cambixx"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-light-text-light dark:text-dark-text-light hover:text-highlight transition-colors duration-300"
@@ -78,22 +78,6 @@ const Footer = () => {
                 >
                   <FaLinkedin size={20} />
                 </a>
-                <a
-                  href="https://twitter.com/tuusuario"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-light-text-light dark:text-dark-text-light hover:text-highlight transition-colors duration-300"
-                >
-                  <FaTwitter size={20} />
-                </a>
-                <a
-                  href="https://codepen.io/tuusuario"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-light-text-light dark:text-dark-text-light hover:text-highlight transition-colors duration-300"
-                >
-                  <FaCodepen size={20} />
-                </a>
               </div>
             </div>
           </div>
@@ -102,9 +86,6 @@ const Footer = () => {
         <div className="border-t border-light-text/10 dark:border-dark-text/10 pt-8 text-center">
           <p className="text-light-text-light dark:text-dark-text-light">
             &copy; {currentYear} Carlos Rábago. Todos los derechos reservados.
-          </p>
-          <p className="text-light-text-light dark:text-dark-text-light mt-2 flex items-center justify-center">
-            Hecho con <FaHeart className="mx-2 text-red-500" /> y React
           </p>
         </div>
       </div>

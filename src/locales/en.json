@@ -1,0 +1,50 @@
+{
+  "nav": {
+    "inicio": "Home",
+    "sobreMi": "About Me",
+    "experiencia": "Experience",
+    "habilidades": "Skills",
+    "proyectos": "Projects",
+    "contacto": "Contact"
+  },
+  "hero": {
+    "name": "Carlos Rábago",
+    "role": "Web Developer"
+  },
+  "about": {
+    "title": "About Me",
+    "role": "Web Developer",
+    "description": "Industrial Engineer with a higher degree in Web Application Development. After solid experience in management and logistics, I decided to redirect my career towards web development. I consider myself a proactive and versatile person with skills in both design and programming.",
+    "skillsTitle": "Skills and Goals",
+    "skillsDescription": "Currently specialized in frontend technologies such as React, JavaScript, HTML5, CSS3, Three.js, and GSAP Motion, along with CSS frameworks like Tailwind and Bootstrap. I also have backend experience with Node.js, PHP, and MySQL, and development tools like Vite, Webpack, Git, and GitHub.",
+    "objectives": "My goal is to apply my knowledge in innovative projects, contribute to team growth, and continue learning continuously. I seek opportunities that allow me to combine my management experience with my technical skills in web development."
+  },
+  "projects": {
+    "title": "Projects",
+    "viewProject": "View Project"
+  },
+  "contact": {
+    "title": "Contact",
+    "description": "Have any questions or proposals?",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send message"
+  },
+  "skills": {
+    "frontend": "Frontend",
+    "backend": "Backend",
+    "tools": "Tools",
+    "description": "A set of technologies and tools that I master to create exceptional web experiences."
+  },
+  "experience": {
+    "title": "Academic and Professional Background",
+    "description": "My education and experience in web development",
+    "present": "Present",
+    "role": "Role",
+    "company": "Company",
+    "date": "Date",
+    "location": "Location",
+    "description": "Description"
+  }
+} 

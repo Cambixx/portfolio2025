@@ -1,0 +1,54 @@
+{
+  "experiences": [
+    {
+      "company": "DOERS DF",
+      "period": "2023 - Actualidad",
+      "responsibilities": [
+        "Desarrollo de soluciones web, adaptadas a procesos empresariales.",
+        "Desarrollo Front-end - React, JavaScript, HTML5 y CSS3.",
+        "Creación de interfaces interactivas con WordPress y tecnologías modernas.",
+        "Adaptación de proyectos según necesidades específicas del cliente.",
+        "Colaboración en la integración con bases de datos y back-end en PHP."
+      ]
+    },
+    {
+      "company": "EDIX",
+      "period": "2021 - 2023",
+      "responsibilities": [
+        "Desarrollo de aplicaciones web.",
+        "Diseño y optimización de interfaces de usuario."
+      ]
+    },
+    {
+      "company": "MERCADONA",
+      "period": "2016 - 2021",
+      "responsibilities": [
+        "Planificación de entregas y gestión de stock.",
+        "Programación de rutas de transporte y facturación.",
+        "Análisis de reportes de ventas y supervisión de productos."
+      ]
+    },
+    {
+      "company": "DREX TELECOM",
+      "period": "2014 - 2016",
+      "responsibilities": [
+        "Encargado de tiendas de servicios.",
+        "Atención al cliente."
+      ]
+    },
+    {
+      "company": "IBERIA",
+      "period": "2007 - 2013",
+      "responsibilities": [
+        "Supervisor comercial."
+      ]
+    },
+    {
+      "company": "CAVIM",
+      "period": "2005 - 2007",
+      "responsibilities": [
+        "Control de calidad."
+      ]
+    }
+  ]
+} 

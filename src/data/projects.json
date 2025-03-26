@@ -1,43 +1,79 @@
 {
   "projects": [
     {
-      "name": "Nexho",
-      "description": "Una plataforma de e-commerce completa con catálogo de productos, carrito de compras, panel de administración y pasarela de pagos integrada.",
+      "name": {
+        "es": "Nexho",
+        "en": "Nexho"
+      },
+      "description": {
+        "es": "Una plataforma de e-commerce completa con catálogo de productos, carrito de compras, panel de administración y pasarela de pagos integrada.",
+        "en": "A complete e-commerce platform with product catalog, shopping cart, admin panel, and integrated payment gateway."
+      },
       "tags": ["React", "Node.js", "MongoDB", "Express", "Redux", "Stripe"],
       "image": "/images/projects/nexho-desktop.png",
       "liveDemo": "https://ecommerce-app-demo.netlify.app"
     },
     {
-      "name": "Dashboard de Analíticas",
-      "description": "Dashboard interactivo que visualiza datos comerciales y métricas clave con gráficos personalizables y reportes exportables.",
+      "name": {
+        "es": "Dashboard de Analíticas",
+        "en": "Analytics Dashboard"
+      },
+      "description": {
+        "es": "Dashboard interactivo que visualiza datos comerciales y métricas clave con gráficos personalizables y reportes exportables.",
+        "en": "Interactive dashboard that visualizes business data and key metrics with customizable charts and exportable reports."
+      },
       "tags": ["React", "Chart.js", "Firebase", "Tailwind CSS", "Context API"],
       "image": "/images/projects/project-2.jpg",
       "liveDemo": "https://analytics-dashboard-demo.vercel.app"
     },
     {
-      "name": "App de Gestión de Tareas",
-      "description": "Aplicación para gestionar tareas personales y proyectos con funcionalidades de Drag & Drop, recordatorios y colaboración en equipo.",
+      "name": {
+        "es": "App de Gestión de Tareas",
+        "en": "Task Management App"
+      },
+      "description": {
+        "es": "Aplicación para gestionar tareas personales y proyectos con funcionalidades de Drag & Drop, recordatorios y colaboración en equipo.",
+        "en": "Application for managing personal tasks and projects with Drag & Drop functionality, reminders, and team collaboration."
+      },
       "tags": ["React", "TypeScript", "MongoDB", "Express", "JWT", "Socket.io"],
       "image": "/images/projects/project-3.jpg",
       "liveDemo": "https://task-app-demo.herokuapp.com"
     },
     {
-      "name": "Portfolio Personal",
-      "description": "Portfolio web responsivo construido con React y Tailwind CSS, con soporte para temas claro y oscuro, animaciones y vistas optimizadas.",
+      "name": {
+        "es": "Portfolio Personal",
+        "en": "Personal Portfolio"
+      },
+      "description": {
+        "es": "Portfolio web responsivo construido con React y Tailwind CSS, con soporte para temas claro y oscuro, animaciones y vistas optimizadas.",
+        "en": "Responsive web portfolio built with React and Tailwind CSS, featuring light and dark themes, animations, and optimized views."
+      },
       "tags": ["React", "Tailwind CSS", "Framer Motion", "Vite"],
       "image": "/images/projects/project-4.jpg",
       "liveDemo": "https://my-portfolio-demo.netlify.app"
     },
     {
-      "name": "API de Reservas",
-      "description": "API RESTful para un sistema de reservas de hoteles con autenticación, autorización, y documentación Swagger.",
+      "name": {
+        "es": "API de Reservas",
+        "en": "Booking API"
+      },
+      "description": {
+        "es": "API RESTful para un sistema de reservas de hoteles con autenticación, autorización, y documentación Swagger.",
+        "en": "RESTful API for a hotel booking system with authentication, authorization, and Swagger documentation."
+      },
       "tags": ["Node.js", "Express", "MongoDB", "JWT", "Swagger"],
       "image": "/images/projects/project-5.jpg",
       "liveDemo": "https://booking-api-docs.netlify.app"
     },
     {
-      "name": "App de Clima",
-      "description": "Aplicación de pronóstico del tiempo que consume datos de APIs externas para mostrar información meteorológica detallada y alertas.",
+      "name": {
+        "es": "App de Clima",
+        "en": "Weather App"
+      },
+      "description": {
+        "es": "Aplicación de pronóstico del tiempo que consume datos de APIs externas para mostrar información meteorológica detallada y alertas.",
+        "en": "Weather forecast application that consumes external APIs to display detailed weather information and alerts."
+      },
       "tags": ["React", "OpenWeather API", "Context API", "CSS Modules"],
       "image": "/images/projects/project-6.jpg",
       "liveDemo": "https://weather-app-demo.vercel.app"

@@ -180,10 +180,10 @@ const Contact = ({ standalone = false }) => {
                     Email
                   </h4>
                   <a
-                    href="mailto:ejemplo@email.com"
+                    href="mailto:carlosmiguel40@gmail.com"
                     className="text-light-text-light dark:text-dark-text-light hover:text-highlight transition-colors duration-300"
                   >
-                    ejemplo@email.com
+                    carlosmiguel40@gmail.com
                   </a>
                 </div>
               </div>
@@ -204,7 +204,7 @@ const Contact = ({ standalone = false }) => {
                     href="tel:+1234567890"
                     className="text-light-text-light dark:text-dark-text-light hover:text-highlight transition-colors duration-300"
                   >
-                    +123 456 7890
+                    +34 603 72 82 43
                   </a>
                 </div>
               </div>
@@ -222,7 +222,7 @@ const Contact = ({ standalone = false }) => {
                     Ubicación
                   </h4>
                   <p className="text-light-text-light dark:text-dark-text-light">
-                    Ciudad de México, México
+                    Madrid 28018, España
                   </p>
                 </div>
               </div>
@@ -246,7 +246,7 @@ const Contact = ({ standalone = false }) => {
                   <FaLinkedin className="text-xl" />
                 </a>
                 <a
-                  href="https://github.com/username"
+                  href="https://github.com/Cambixx"
                   target="_blank"
                   rel="noopener noreferrer"
                   className={`rounded-full p-3 ${
@@ -256,18 +256,6 @@ const Contact = ({ standalone = false }) => {
                   } transition-all duration-300`}
                 >
                   <FaGithub className="text-xl" />
-                </a>
-                <a
-                  href="https://twitter.com/username"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className={`rounded-full p-3 ${
-                    theme === "light"
-                      ? "bg-light-tertiary text-highlight hover:bg-highlight hover:text-white"
-                      : "bg-dark-tertiary text-highlight hover:bg-highlight hover:text-white"
-                  } transition-all duration-300`}
-                >
-                  <FaTwitter className="text-xl" />
                 </a>
               </div>
             </div>

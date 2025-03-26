@@ -4,8 +4,8 @@ import { VerticalTimeline, VerticalTimelineElement } from 'react-vertical-timeli
 import 'react-vertical-timeline-component/style.min.css';
 import { FaBriefcase, FaGraduationCap } from 'react-icons/fa';
 import { useTheme } from '../context/ThemeContext';
+import { useLanguage } from '../context/LanguageContext';
 
-// Creamos un efecto de fade-in para las animaciones
 const fadeIn = (direction, type, delay, duration) => ({
   hidden: {
     x: direction === "left" ? 100 : direction === "right" ? -100 : 0,
@@ -25,71 +25,7 @@ const fadeIn = (direction, type, delay, duration) => ({
   },
 });
 
-// Datos de experiencia
-const experiences = [
-  {
-    title: "Desarrollador Frontend Senior",
-    company_name: "Tech Innovations",
-    location: "Ciudad de México",
-    icon: <FaBriefcase />,
-    iconBg: "#383E56",
-    date: "Marzo 2022 - Presente",
-    points: [
-      "Desarrollo y mantenimiento de aplicaciones web utilizando React.js y otras tecnologías relacionadas.",
-      "Colaboración con equipos de diseño, producto y otros desarrolladores para crear productos de alta calidad.",
-      "Implementación de diseño responsivo y asegurando compatibilidad entre navegadores.",
-      "Participación en revisiones de código y proporcionando retroalimentación constructiva a otros desarrolladores."
-    ],
-    technologies: ["React", "Next.js", "Redux", "Tailwind CSS", "GraphQL"]
-  },
-  {
-    title: "Desarrollador Web Full Stack",
-    company_name: "Digital Solutions",
-    location: "Guadalajara",
-    icon: <FaBriefcase />,
-    iconBg: "#E6DEDD",
-    date: "Enero 2020 - Febrero 2022",
-    points: [
-      "Desarrollo de aplicaciones web completas desde el frontend hasta el backend.",
-      "Creación de APIs RESTful y integración con servicios de terceros.",
-      "Optimización de aplicaciones para máxima velocidad y escalabilidad.",
-      "Mentoría a desarrolladores junior y liderazgo en proyectos pequeños."
-    ],
-    technologies: ["React", "Node.js", "Express", "MongoDB", "Docker"]
-  },
-  {
-    title: "Desarrollador Frontend",
-    company_name: "WebSolutions Co",
-    location: "Remoto",
-    icon: <FaBriefcase />,
-    iconBg: "#383E56",
-    date: "Julio 2018 - Diciembre 2019",
-    points: [
-      "Desarrollo de interfaces de usuario con HTML, CSS y JavaScript.",
-      "Trabajo con frameworks como React y Vue.js para crear experiencias interactivas.",
-      "Implementación de diseños responsivos y accesibles según estándares web.",
-      "Colaboración estrecha con diseñadores UX/UI y backend developers."
-    ],
-    technologies: ["HTML5", "CSS3", "JavaScript", "Vue.js", "Sass"]
-  },
-  {
-    title: "Ingeniería en Sistemas Computacionales",
-    company_name: "Universidad Tecnológica",
-    location: "Ciudad de México",
-    icon: <FaGraduationCap />,
-    iconBg: "#E6DEDD",
-    date: "2014 - 2018",
-    points: [
-      "Formación en fundamentos de programación, estructuras de datos y algoritmos.",
-      "Especialización en desarrollo web y aplicaciones móviles.",
-      "Proyecto final: Desarrollo de una aplicación web para gestión de proyectos.",
-      "Participación en hackathons y competencias de programación."
-    ],
-    technologies: ["Java", "C++", "JavaScript", "MySQL", "Git"]
-  },
-];
-
-const ExperienceCard = ({ experience, index }) => {
+const TimelineElement = ({ item, t }) => {
   const { theme } = useTheme();
   const isDarkTheme = theme === "dark";
   
@@ -103,56 +39,142 @@ const ExperienceCard = ({ experience, index }) => {
           : "0 10px 30px -15px rgba(0, 0, 0, 0.1)"
       }}
       contentArrowStyle={{ borderRight: `7px solid ${isDarkTheme ? "#1f2937" : "#f3f4f6"}` }}
-      date={experience.date}
+      date={item.period}
       dateClassName={isDarkTheme ? "text-dark-text-light" : "text-light-text-light"}
-      iconStyle={{ background: experience.iconBg, color: isDarkTheme ? "#f9fafb" : "#111827" }}
-      icon={experience.icon}
+      iconStyle={{ 
+        background: isDarkTheme ? "#374151" : "#e5e7eb", 
+        color: isDarkTheme ? "#f9fafb" : "#111827" 
+      }}
+      icon={item.type === 'education' ? <FaGraduationCap /> : <FaBriefcase />}
     >
       <div>
         <h3 className="text-xl font-bold" style={{ color: isDarkTheme ? "#f9fafb" : "#111827" }}>
-          {experience.title}
+          {item.title}
         </h3>
-        <p className="text-base font-semibold" style={{ margin: 0, color: isDarkTheme ? "#d1d5db" : "#4b5563" }}>
-          {experience.company_name} • {experience.location}
-        </p>
+        <h4 className="text-base font-semibold" style={{ color: isDarkTheme ? "#d1d5db" : "#4b5563" }}>
+          {item.company}
+        </h4>
       </div>
 
       <ul className="mt-4 list-disc ml-5 space-y-2">
-        {experience.points.map((point, index) => (
+        {item.responsibilities.map((responsibility, index) => (
           <li
-            key={`experience-point-${index}`}
+            key={`point-${index}`}
             className="text-sm"
             style={{ color: isDarkTheme ? "#d1d5db" : "#4b5563" }}
           >
-            {point}
+            {responsibility}
           </li>
         ))}
       </ul>
-
-      <div className="mt-4 flex flex-wrap gap-2">
-        {experience.technologies.map((tech, index) => (
-          <span
-            key={`tech-${index}`}
-            className={`text-xs px-2 py-1 rounded-full ${
-              isDarkTheme 
-                ? "bg-dark-tertiary text-dark-text-light" 
-                : "bg-light-tertiary text-light-text-light"
-            }`}
-          >
-            {tech}
-          </span>
-        ))}
-      </div>
     </VerticalTimelineElement>
   );
 };
 
 const Experience = ({ standalone = false }) => {
   const { theme } = useTheme();
+  const { t, language } = useLanguage();
+
+  const timelineItems = {
+    es: [
+      {
+        type: 'education',
+        title: 'Desarrollo de aplicaciones web',
+        company: 'Edix',
+        period: '2023',
+        responsibilities: [
+          'Formación especializada en desarrollo web frontend y backend',
+          'Tecnologías modernas como React, Node.js, y bases de datos',
+          'Proyectos prácticos y desarrollo de aplicaciones web completas'
+        ]
+      },
+      {
+        type: 'education',
+        title: 'Ingeniería Industrial',
+        company: 'Universidad Yacambú',
+        period: '2009',
+        responsibilities: [
+          'Fundamentos de gestión y optimización de procesos',
+          'Desarrollo de habilidades analíticas y de resolución de problemas',
+          'Base sólida en matemáticas y pensamiento lógico'
+        ]
+      },
+      {
+        type: 'work',
+        title: 'Desarrollador Web',
+        company: 'DOERS DF',
+        period: '2023 - Actualidad',
+        responsibilities: [
+          'Desarrollo de soluciones web adaptadas a procesos empresariales',
+          'Desarrollo Front-end - React, JavaScript, HTML5 y CSS3',
+          'Creación de interfaces interactivas con WordPress y tecnologías modernas',
+          'Adaptación de proyectos según necesidades específicas del cliente',
+          'Colaboración en la integración con bases de datos y back-end en PHP'
+        ]
+      },
+      {
+        type: 'work',
+        title: 'Desarrollador Web',
+        company: 'EDIX',
+        period: '2021 - 2023',
+        responsibilities: [
+          'Desarrollo de aplicaciones web',
+          'Diseño y optimización de interfaces de usuario'
+        ]
+      }
+    ],
+    en: [
+      {
+        type: 'education',
+        title: 'Web Application Development',
+        company: 'Edix',
+        period: '2023',
+        responsibilities: [
+          'Specialized training in frontend and backend web development',
+          'Modern technologies like React, Node.js, and databases',
+          'Practical projects and complete web application development'
+        ]
+      },
+      {
+        type: 'education',
+        title: 'Industrial Engineering',
+        company: 'Yacambú University',
+        period: '2009',
+        responsibilities: [
+          'Fundamentals of process management and optimization',
+          'Development of analytical and problem-solving skills',
+          'Solid foundation in mathematics and logical thinking'
+        ]
+      },
+      {
+        type: 'work',
+        title: 'Web Developer',
+        company: 'DOERS DF',
+        period: '2023 - Present',
+        responsibilities: [
+          'Development of web solutions adapted to business processes',
+          'Front-end development - React, JavaScript, HTML5, and CSS3',
+          'Creation of interactive interfaces with WordPress and modern technologies',
+          'Project adaptation according to specific client needs',
+          'Collaboration in database and PHP back-end integration'
+        ]
+      },
+      {
+        type: 'work',
+        title: 'Web Developer',
+        company: 'EDIX',
+        period: '2021 - 2023',
+        responsibilities: [
+          'Web application development',
+          'User interface design and optimization'
+        ]
+      }
+    ]
+  };
 
   return (
-    <section 
-      id="experience"
+    <section
+      id="experiencia"
       className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-10 bg-light-primary dark:bg-dark-primary`}
     >
       <div className="container mx-auto px-4 py-10 max-w-7xl">
@@ -163,21 +185,21 @@ const Experience = ({ standalone = false }) => {
           viewport={{ once: true, amount: 0.25 }}
           className="mb-10 text-center"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-light-text dark:text-dark-text">
-            Mi <span className="text-highlight">Experiencia</span>
+          <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-light-text dark:text-dark-text">
+            {t.experience.title}
           </h2>
-          <p className="text-light-text-light dark:text-dark-text-light max-w-3xl mx-auto">
-            Mi trayectoria profesional y educación. Un recorrido por mi camino en el desarrollo web.
+          <p className="text-light-text-light dark:text-dark-text-light max-w-2xl mx-auto text-lg">
+            {t.experience.description}
           </p>
         </motion.div>
 
         <div className="mt-10">
           <VerticalTimeline lineColor={theme === "dark" ? "#374151" : "#e5e7eb"}>
-            {experiences.map((experience, index) => (
-              <ExperienceCard
+            {timelineItems[language].map((item, index) => (
+              <TimelineElement
                 key={index}
-                experience={experience}
-                index={index}
+                item={item}
+                t={t}
               />
             ))}
           </VerticalTimeline>

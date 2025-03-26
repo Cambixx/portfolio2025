@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { useTheme } from "../context/ThemeContext";
+import { useLanguage } from "../context/LanguageContext";
 import projectsData from "../data/projects.json";
 
 // Creamos un efecto de fade-in para las animaciones
@@ -24,8 +25,9 @@ const fadeIn = (direction, type, delay, duration) => ({
   },
 });
 
-const ProjectCard = ({ project }) => {
+const ProjectCard = ({ project, t }) => {
   const { theme } = useTheme();
+  const { language } = useLanguage();
 
   return (
     <motion.div
@@ -40,13 +42,13 @@ const ProjectCard = ({ project }) => {
         {project.image && (
           <img
             src={project.image}
-            alt={project.name}
+            alt={project.name[language]}
             className="w-full h-full object-cover"
           />
         )}
         {!project.image && (
           <div className="w-full h-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
-            <span className="text-lg font-medium">{project.name}</span>
+            <span className="text-lg font-medium">{project.name[language]}</span>
           </div>
         )}
       </div>
@@ -55,12 +57,12 @@ const ProjectCard = ({ project }) => {
         <h3 className={`text-xl font-bold mb-2 ${
           theme === "light" ? "text-light-text" : "text-dark-text"
         }`}>
-          {project.name}
+          {project.name[language]}
         </h3>
         <p className={`mb-4 text-sm ${
           theme === "light" ? "text-light-text-light" : "text-dark-text-light"
         }`}>
-          {project.description}
+          {project.description[language]}
         </p>
 
         <div className="flex flex-wrap gap-2 mb-4">
@@ -89,7 +91,7 @@ const ProjectCard = ({ project }) => {
                 : "bg-highlight text-white hover:bg-highlight-hover"
             }`}
           >
-            <FaExternalLinkAlt /> Sitio Web
+            <FaExternalLinkAlt /> {t.projects.viewProject}
           </a>
         </div>
       </div>
@@ -99,6 +101,7 @@ const ProjectCard = ({ project }) => {
 
 const Projects = ({ standalone = false }) => {
   const { theme } = useTheme();
+  const { t } = useLanguage();
 
   return (
     <section
@@ -114,16 +117,16 @@ const Projects = ({ standalone = false }) => {
           className="mb-10 text-center"
         >
           <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-light-text dark:text-dark-text">
-            <span className="text-highlight">Proyectos</span>
+            {t.projects.title}
           </h2>
           <p className="text-light-text-light dark:text-dark-text-light max-w-2xl mx-auto text-lg">
-            Proyectos en los que estoy trabajando actualmente.
+            {t.projects.description}
           </p>
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {projectsData.projects.map((project, index) => (
-            <ProjectCard key={index} project={project} />
+            <ProjectCard key={index} project={project} t={t} />
           ))}
         </div>
       </div>
