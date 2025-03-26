@@ -53,7 +53,7 @@ const ProjectCard = ({ project, t }) => {
         )}
       </div>
 
-      <div className="p-6">
+      <div className="p-6 flex flex-col h-[calc(100%-12rem)] md:h-[calc(100%-14rem)] lg:h-[calc(100%-16rem)]">
         <h3 className={`text-xl font-bold mb-2 ${
           theme === "light" ? "text-light-text" : "text-dark-text"
         }`}>
@@ -80,18 +80,18 @@ const ProjectCard = ({ project, t }) => {
           ))}
         </div>
 
-        <div className="flex justify-end mt-4">
+        <div className="mt-auto">
           <a
             href={project.liveDemo}
             target="_blank"
             rel="noopener noreferrer"
-            className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors duration-300 ${
+            className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm transition-colors duration-300 w-fit ml-auto ${
               theme === "light"
                 ? "bg-highlight text-white hover:bg-highlight-hover"
                 : "bg-highlight text-white hover:bg-highlight-hover"
             }`}
           >
-            <FaExternalLinkAlt /> {t.projects.viewProject}
+            <FaExternalLinkAlt className="text-xs" /> {t.projects.viewProject}
           </a>
         </div>
       </div>

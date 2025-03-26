@@ -6,77 +6,77 @@
         "en": "Nexho"
       },
       "description": {
-        "es": "Una plataforma de e-commerce completa con catálogo de productos, carrito de compras, panel de administración y pasarela de pagos integrada.",
-        "en": "A complete e-commerce platform with product catalog, shopping cart, admin panel, and integrated payment gateway."
+        "es": "Mantenimiento y desarrollo de la Web para hosteleros de Mahou San Miguel",
+        "en": "Maintenance and development of the Web for Mahou San Miguel hoteliers"
       },
-      "tags": ["React", "Node.js", "MongoDB", "Express", "Redux", "Stripe"],
+      "tags": ["PHP", "HTML", "SASS", "Javascript", "Docker", "MySQL"],
       "image": "/images/projects/nexho-desktop.png",
-      "liveDemo": "https://ecommerce-app-demo.netlify.app"
+      "liveDemo": "https://www.somosnexho.com/"
     },
     {
       "name": {
-        "es": "Dashboard de Analíticas",
-        "en": "Analytics Dashboard"
+        "es": "Olas de calor - Greenpeace",
+        "en": "Heatwaves - Greenpeace"
       },
       "description": {
-        "es": "Dashboard interactivo que visualiza datos comerciales y métricas clave con gráficos personalizables y reportes exportables.",
-        "en": "Interactive dashboard that visualizes business data and key metrics with customizable charts and exportable reports."
+        "es": "Desarrollo de landing para la campaña de Greenpeace de Olas de calor",
+        "en": "Development of landing for Greenpeace's heatwaves campaign"
       },
-      "tags": ["React", "Chart.js", "Firebase", "Tailwind CSS", "Context API"],
-      "image": "/images/projects/project-2.jpg",
-      "liveDemo": "https://analytics-dashboard-demo.vercel.app"
+      "tags": ["React", "HTML", "CSS", "Javascript"],
+      "image": "/images/projects/olas-calor.png",
+      "liveDemo": "https://es.greenpeace.org/es/trabajamos-en/cambio-climatico/olas-de-calor/"
     },
     {
       "name": {
-        "es": "App de Gestión de Tareas",
-        "en": "Task Management App"
+        "es": "OXFAM - Tejiendo derechos",
+        "en": "OXFAM - Weaving rights"
       },
       "description": {
-        "es": "Aplicación para gestionar tareas personales y proyectos con funcionalidades de Drag & Drop, recordatorios y colaboración en equipo.",
-        "en": "Application for managing personal tasks and projects with Drag & Drop functionality, reminders, and team collaboration."
+        "es": "Desarrollo y diseño de la web para OXFAM - Tejiendo derechos",
+        "en": "Development and design of the website for OXFAM - Weaving rights"
       },
-      "tags": ["React", "TypeScript", "MongoDB", "Express", "JWT", "Socket.io"],
-      "image": "/images/projects/project-3.jpg",
-      "liveDemo": "https://task-app-demo.herokuapp.com"
+      "tags": ["React", "Wordpress", "Timber", "Twig", "HTML", "CSS", "Javascript"],
+      "image": "/images/projects/oxfam.png",
+      "liveDemo": "https://tejiendoderechos.oxfamintermon.org/"
     },
     {
       "name": {
-        "es": "Portfolio Personal",
-        "en": "Personal Portfolio"
+        "es": "ICA Iconsejeros",
+        "en": "ICA Iconsejeros"
       },
       "description": {
-        "es": "Portfolio web responsivo construido con React y Tailwind CSS, con soporte para temas claro y oscuro, animaciones y vistas optimizadas.",
-        "en": "Responsive web portfolio built with React and Tailwind CSS, featuring light and dark themes, animations, and optimized views."
+        "es": "Desarrollo y mantenimiento de la web de ICA Iconsejeros",
+        "en": "Development and maintenance of the ICA Iconsejeros website"
       },
-      "tags": ["React", "Tailwind CSS", "Framer Motion", "Vite"],
-      "image": "/images/projects/project-4.jpg",
-      "liveDemo": "https://my-portfolio-demo.netlify.app"
+      "tags": ["React", "Tailwind CSS", "Wordpress"],
+      "image": "/images/projects/ica.png",
+      "liveDemo": "https://www.iconsejeros.com/"
     },
     {
       "name": {
-        "es": "API de Reservas",
-        "en": "Booking API"
+        "es": "Misstake",
+        "en": "Misstake"
       },
       "description": {
-        "es": "API RESTful para un sistema de reservas de hoteles con autenticación, autorización, y documentación Swagger.",
-        "en": "RESTful API for a hotel booking system with authentication, authorization, and Swagger documentation."
+        "es": "Desarrollo de la web para Misstake",
+        "en": "Development of the website for Misstake"
       },
-      "tags": ["Node.js", "Express", "MongoDB", "JWT", "Swagger"],
-      "image": "/images/projects/project-5.jpg",
-      "liveDemo": "https://booking-api-docs.netlify.app"
+      "tags": ["Wordpress", "HTML", "CSS", "Javascrip", "Timber", "Twig"],
+      "image": "/images/projects/misstake.png",
+      "liveDemo": "https://misstake.es/"
     },
     {
       "name": {
-        "es": "App de Clima",
-        "en": "Weather App"
+        "es": "Doers DF",
+        "en": "Doers DF"
       },
       "description": {
-        "es": "Aplicación de pronóstico del tiempo que consume datos de APIs externas para mostrar información meteorológica detallada y alertas.",
-        "en": "Weather forecast application that consumes external APIs to display detailed weather information and alerts."
+        "es": "Desarrollo de la web para Doers DF",
+        "en": "Development of the website for Doers DF"
       },
-      "tags": ["React", "OpenWeather API", "Context API", "CSS Modules"],
-      "image": "/images/projects/project-6.jpg",
-      "liveDemo": "https://weather-app-demo.vercel.app"
+      "tags": ["React", "HTML", "CSS", "Javascriipt", "Threejs"],
+      "image": "/images/projects/doers.png",
+      "liveDemo": "https://doersdf.com/"
     }
   ]
 } 
