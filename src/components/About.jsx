@@ -46,12 +46,14 @@ const About = ({ standalone = false }) => {
         </motion.div>
 
         <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row gap-8 items-center md:items-start">
+          <div className="flex flex-col md:flex-row gap-8 items-stretch">
             <motion.div
               variants={fadeIn("right", "tween", 0.2, 1)}
-              className="w-64 h-64 shrink-0"
+              className="md:w-64 shrink-0"
             >
-              <div className="w-full h-full rounded-lg overflow-hidden shadow-lg">
+              <div className={`h-full rounded-2xl overflow-hidden shadow-lg ${
+                theme === "light" ? "bg-light-secondary" : "bg-dark-secondary"
+              }`}>
                 <img
                   src="/images/foto-perfil.png"
                   alt="Carlos Rábago"
@@ -64,24 +66,15 @@ const About = ({ standalone = false }) => {
               variants={fadeIn("left", "tween", 0.3, 1)}
               className="flex-1"
             >
-              <div className="mb-8">
+              <div className={`h-full p-6 rounded-2xl ${
+                theme === "light" ? "bg-light-secondary" : "bg-dark-secondary"
+              } shadow-md`}>
                 <h3 className="text-2xl font-bold mb-4 text-light-text dark:text-dark-text md:text-left text-center">
                   {t.about.role}
                 </h3>
-                <p className="text-light-text-light dark:text-dark-text-light">
-                  {t.about.description}
-                </p>
-              </div>
-
-              <div className={`p-6 rounded-xl ${
-                theme === "light" ? "bg-light-secondary" : "bg-dark-secondary"
-              } shadow-md`}>
-                <h3 className="text-xl font-bold mb-4 text-light-text dark:text-dark-text">
-                  {t.about.skillsTitle}
-                </h3>
                 <div className="space-y-4">
                   <p className="text-light-text-light dark:text-dark-text-light">
-                    {t.about.skillsDescription}
+                    {t.about.description}
                   </p>
                   <p className="text-light-text-light dark:text-dark-text-light">
                     {t.about.objectives}

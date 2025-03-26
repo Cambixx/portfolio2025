@@ -15,7 +15,8 @@ import {
   FaAws, 
   FaGitAlt,
   FaBootstrap,
-  FaPhp 
+  FaPhp,
+  FaSass 
 } from "react-icons/fa";
 import { 
   SiTypescript, 
@@ -56,6 +57,11 @@ const skills = [
   {
     name: "CSS3",
     icon: <FaCss3Alt />,
+    category: "frontend"
+  },
+  {
+    name: "Sass",
+    icon: <FaSass />,
     category: "frontend"
   },
   {
