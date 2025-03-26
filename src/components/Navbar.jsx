@@ -43,23 +43,23 @@ const Navbar = () => {
   };
 
   const LanguageToggle = () => (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center space-x-1">
       <button
         onClick={() => toggleLanguage('es')}
-        className={`px-2 py-1 rounded-md text-sm font-medium transition-colors duration-200 ${
+        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${
           language === 'es'
-            ? 'bg-highlight text-white'
-            : 'text-light-text-light dark:text-dark-text-light hover:text-light-text dark:hover:text-dark-text'
+            ? 'bg-light-text dark:bg-dark-text text-white dark:text-neutral-900'
+            : 'text-light-text/70 dark:text-dark-text/70 hover:text-light-text dark:hover:text-dark-text'
         }`}
       >
         ES
       </button>
       <button
         onClick={() => toggleLanguage('en')}
-        className={`px-2 py-1 rounded-md text-sm font-medium transition-colors duration-200 ${
+        className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${
           language === 'en'
-            ? 'bg-highlight text-white'
-            : 'text-light-text-light dark:text-dark-text-light hover:text-light-text dark:hover:text-dark-text'
+            ? 'bg-light-text dark:bg-dark-text text-white dark:text-neutral-900'
+            : 'text-light-text/70 dark:text-dark-text/70 hover:text-light-text dark:hover:text-dark-text'
         }`}
       >
         EN
@@ -69,9 +69,9 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
         scrolled 
-          ? 'bg-white/90 dark:bg-neutral-900/90 backdrop-blur-md shadow-lg' 
+          ? 'bg-white/80 dark:bg-neutral-900/80 backdrop-blur-xl shadow-lg' 
           : 'bg-transparent'
       }`}
     >
@@ -82,14 +82,14 @@ const Navbar = () => {
             to="inicio" 
             smooth 
             duration={500} 
-            className="flex items-center cursor-pointer"
+            className="flex items-center cursor-pointer group"
             onClick={closeMenu}
           >
-            <span className="text-highlight text-2xl">&lt;</span>
-            <span className="text-gradient font-bold text-2xl">
+            <span className="text-light-text/80 dark:text-dark-text/80 text-2xl transition-colors duration-300 group-hover:text-light-text dark:group-hover:text-dark-text">&lt;</span>
+            <span className="font-bold text-2xl bg-gradient-to-r from-light-text/90 to-light-text dark:from-dark-text/90 dark:to-dark-text bg-clip-text text-transparent">
               Carlos Rábago
             </span>
-            <span className="text-highlight text-2xl">/&gt;</span>
+            <span className="text-light-text/80 dark:text-dark-text/80 text-2xl transition-colors duration-300 group-hover:text-light-text dark:group-hover:text-dark-text">/&gt;</span>
           </Link>
 
           {/* Enlaces de navegación - Desktop */}
@@ -101,14 +101,14 @@ const Navbar = () => {
                 smooth
                 duration={500}
                 spy={true}
-                activeClass="active"
-                className="cursor-pointer text-light-text-light dark:text-dark-text-light hover:text-light-text dark:hover:text-dark-text transition-colors duration-200 text-sm font-medium"
+                activeClass="text-light-text dark:text-dark-text"
+                className="cursor-pointer text-light-text/70 dark:text-dark-text/70 hover:text-light-text dark:hover:text-dark-text transition-all duration-300 text-sm font-medium"
                 onSetActive={() => setActive(link.id)}
               >
                 {link.title}
               </Link>
             ))}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-6 pl-6 border-l border-light-text/10 dark:border-dark-text/10">
               <LanguageToggle />
               <ThemeToggle />
             </div>
@@ -117,7 +117,7 @@ const Navbar = () => {
           {/* Botón menú móvil */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-md text-light-text dark:text-dark-text hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors cursor-pointer"
+            className="md:hidden p-2 rounded-lg text-light-text/70 dark:text-dark-text/70 hover:text-light-text dark:hover:text-dark-text hover:bg-light-text/5 dark:hover:bg-dark-text/5 transition-all duration-300 cursor-pointer"
             aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
           >
             {isOpen ? (
@@ -138,8 +138,8 @@ const Navbar = () => {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.2 }}
-              className="fixed inset-0 bg-black/50 z-40 md:hidden"
+              transition={{ duration: 0.3 }}
+              className="fixed inset-0 bg-black/20 backdrop-blur-sm z-40 md:hidden"
               onClick={closeMenu}
             />
 
@@ -148,18 +148,18 @@ const Navbar = () => {
               initial={{ x: '100%' }}
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
-              transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed top-0 right-0 bottom-0 w-72 bg-white dark:bg-neutral-900 z-50 md:hidden shadow-xl"
+              transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+              className="fixed top-0 right-0 bottom-0 w-80 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl z-50 md:hidden shadow-2xl"
             >
               <div className="flex flex-col h-full">
                 {/* Encabezado del menú */}
-                <div className="flex items-center justify-between p-4 border-b border-light-secondary dark:border-dark-secondary">
+                <div className="flex items-center justify-between p-4">
                   <span className="text-light-text dark:text-dark-text font-medium text-lg">
                     Menú
                   </span>
                   <button
                     onClick={closeMenu}
-                    className="p-2 rounded-md text-light-text dark:text-dark-text hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors"
+                    className="p-2 rounded-lg text-light-text/70 dark:text-dark-text/70 hover:text-light-text dark:hover:text-dark-text hover:bg-light-text/5 dark:hover:bg-dark-text/5 transition-all duration-300"
                     aria-label="Cerrar menú"
                   >
                     <XMarkIcon className="h-6 w-6" />
@@ -168,7 +168,7 @@ const Navbar = () => {
 
                 {/* Enlaces de navegación */}
                 <div className="flex-1 overflow-y-auto py-4">
-                  <div className="flex flex-col space-y-2 px-4">
+                  <div className="flex flex-col space-y-1 px-4">
                     {navLinks.map((link) => (
                       <Link
                         key={link.id}
@@ -176,8 +176,8 @@ const Navbar = () => {
                         smooth
                         duration={500}
                         spy={true}
-                        activeClass="bg-highlight text-white"
-                        className="cursor-pointer px-4 py-3 rounded-xl text-light-text dark:text-dark-text hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors duration-200 text-base font-medium"
+                        activeClass="bg-light-text/10 dark:bg-dark-text/10 text-light-text dark:text-dark-text"
+                        className="cursor-pointer px-4 py-3 rounded-xl text-light-text/70 dark:text-dark-text/70 hover:bg-light-text/5 dark:hover:bg-dark-text/5 hover:text-light-text dark:hover:text-dark-text transition-all duration-300 text-base font-medium"
                         onClick={closeMenu}
                       >
                         {link.title}
@@ -187,7 +187,7 @@ const Navbar = () => {
                 </div>
 
                 {/* Footer del menú */}
-                <div className="p-4 border-t border-light-secondary dark:border-dark-secondary flex items-center justify-between">
+                <div className="p-4 border-t border-light-text/5 dark:border-dark-text/5 flex items-center justify-between bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm">
                   <LanguageToggle />
                   <ThemeToggle />
                 </div>
