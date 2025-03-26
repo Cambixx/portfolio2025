@@ -8,20 +8,21 @@ import {
   FaReact, 
   FaNodeJs, 
   FaGithub, 
-  FaDatabase, 
   FaDocker, 
   FaFigma, 
   FaNpm, 
   FaAws, 
-  FaGitAlt 
+  FaGitAlt,
+  FaBootstrap,
+  FaPhp 
 } from "react-icons/fa";
 import { 
   SiTypescript, 
-  SiRedux, 
   SiTailwindcss, 
-  SiExpress, 
-  SiMongodb, 
-  SiPostgresql 
+  SiThreedotjs,
+  SiMysql,
+  SiVite,
+  SiWebpack
 } from "react-icons/si";
 
 // Creamos un efecto de fade-in para las animaciones
@@ -49,139 +50,131 @@ const skills = [
   {
     name: "HTML5",
     icon: <FaHtml5 />,
-    category: "Frontend",
-    level: 95
+    category: "Frontend"
   },
   {
     name: "CSS3",
     icon: <FaCss3Alt />,
-    category: "Frontend",
-    level: 90
+    category: "Frontend"
   },
   {
     name: "JavaScript",
     icon: <FaJs />,
-    category: "Frontend",
-    level: 92
+    category: "Frontend"
   },
   {
     name: "TypeScript",
     icon: <SiTypescript />,
-    category: "Frontend",
-    level: 85
+    category: "Frontend"
   },
   {
     name: "React",
     icon: <FaReact />,
-    category: "Frontend",
-    level: 95
+    category: "Frontend"
   },
   {
-    name: "Redux",
-    icon: <SiRedux />,
-    category: "Frontend",
-    level: 88
+    name: "Three.js",
+    icon: <SiThreedotjs />,
+    category: "Frontend"
   },
   {
     name: "Tailwind CSS",
     icon: <SiTailwindcss />,
-    category: "Frontend",
-    level: 90
+    category: "Frontend"
+  },
+  {
+    name: "Bootstrap",
+    icon: <FaBootstrap />,
+    category: "Frontend"
   },
   {
     name: "Node.js",
     icon: <FaNodeJs />,
-    category: "Backend",
-    level: 85
+    category: "Backend"
   },
   {
-    name: "Express",
-    icon: <SiExpress />,
-    category: "Backend",
-    level: 80
+    name: "PHP",
+    icon: <FaPhp />,
+    category: "Backend"
   },
   {
-    name: "MongoDB",
-    icon: <SiMongodb />,
-    category: "Backend",
-    level: 78
-  },
-  {
-    name: "PostgreSQL",
-    icon: <SiPostgresql />,
-    category: "Backend",
-    level: 75
+    name: "MySQL",
+    icon: <SiMysql />,
+    category: "Backend"
   },
   {
     name: "Git",
     icon: <FaGitAlt />,
-    category: "Herramientas",
-    level: 90
+    category: "Herramientas"
   },
   {
     name: "GitHub",
     icon: <FaGithub />,
-    category: "Herramientas",
-    level: 88
+    category: "Herramientas"
   },
   {
     name: "Docker",
     icon: <FaDocker />,
-    category: "Herramientas",
-    level: 70
+    category: "Herramientas"
+  },
+  {
+    name: "Vite",
+    icon: <SiVite />,
+    category: "Herramientas"
+  },
+  {
+    name: "Webpack",
+    icon: <SiWebpack />,
+    category: "Herramientas"
   },
   {
     name: "Figma",
     icon: <FaFigma />,
-    category: "Herramientas",
-    level: 75
+    category: "Herramientas"
   },
   {
     name: "AWS",
     icon: <FaAws />,
-    category: "Herramientas",
-    level: 65
-  },
+    category: "Herramientas"
+  }
 ];
 
-const SkillCard = ({ name, icon, level }) => {
-  const { theme } = useTheme();
-  
+const SkillCard = ({ name, icon }) => {
   return (
-    <div className={`p-4 rounded-xl flex flex-col items-center justify-center transition-all duration-300 hover:scale-105 ${
-      theme === "light" 
-        ? "bg-light-secondary shadow-md hover:shadow-xl" 
-        : "bg-dark-secondary shadow-md hover:shadow-xl"
-    }`}>
-      <div className={`text-4xl mb-3 ${
-        theme === "light" ? "text-highlight" : "text-highlight"
-      }`}>
+    <motion.div
+      whileHover={{ y: -5 }}
+      className="flex flex-col items-center justify-center p-4 transition-all duration-300"
+    >
+      <div className="text-4xl mb-3 text-highlight">
         {icon}
       </div>
-      <h3 className={`text-base font-medium ${
-        theme === "light" ? "text-light-text" : "text-dark-text"
-      }`}>
+      <h3 className="text-base font-medium text-light-text dark:text-dark-text">
         {name}
       </h3>
-      <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mt-3">
-        <div 
-          className="bg-highlight h-2.5 rounded-full" 
-          style={{ width: `${level}%` }}
-        ></div>
+    </motion.div>
+  );
+};
+
+const CategorySection = ({ title, skills }) => {
+  return (
+    <motion.div
+      variants={fadeIn("up", "spring", 0.3, 0.75)}
+      className="mb-12 last:mb-0"
+    >
+      <h3 className="text-2xl font-bold text-light-text dark:text-dark-text mb-8 flex items-center">
+        <span className="text-highlight mr-2">#</span>
+        {title}
+      </h3>
+      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-6">
+        {skills.map((skill) => (
+          <SkillCard key={skill.name} name={skill.name} icon={skill.icon} />
+        ))}
       </div>
-      <span className={`text-xs mt-1 ${
-        theme === "light" ? "text-light-text-light" : "text-dark-text-light"
-      }`}>
-        {level}%
-      </span>
-    </div>
+    </motion.div>
   );
 };
 
 const Skills = ({ standalone = false }) => {
-  const { theme } = useTheme();
-
-  // Agrupar habilidades por categoría
   const categories = {
     Frontend: skills.filter(skill => skill.category === "Frontend"),
     Backend: skills.filter(skill => skill.category === "Backend"),
@@ -190,49 +183,30 @@ const Skills = ({ standalone = false }) => {
 
   return (
     <section 
-      id="skills"
-      className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-10 bg-light-secondary dark:bg-dark-secondary`}
+      id="habilidades"
+      className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-16 bg-light-secondary dark:bg-dark-secondary`}
     >
-      <div className="container mx-auto px-4 py-10 max-w-7xl">
+      <div className="container mx-auto px-4 py-16 max-w-7xl">
         <motion.div
           variants={fadeIn("", "", 0.1, 1)}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.25 }}
-          className="mb-10 text-center"
+          className="text-center mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-light-text dark:text-dark-text">
+          <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-light-text dark:text-dark-text">
             Mis <span className="text-highlight">Habilidades</span>
           </h2>
-          <p className="text-light-text-light dark:text-dark-text-light max-w-3xl mx-auto">
+          <p className="text-light-text-light dark:text-dark-text-light max-w-2xl mx-auto text-lg">
             Un conjunto de tecnologías y herramientas que domino para crear experiencias web excepcionales.
           </p>
         </motion.div>
 
-        {Object.entries(categories).map(([category, categorySkills], index) => (
-          <motion.div
-            key={category}
-            variants={fadeIn("up", "tween", 0.2 + index * 0.1, 0.8)}
-            initial="hidden"
-            whileInView="show"
-            viewport={{ once: true, amount: 0.25 }}
-            className="mb-12"
-          >
-            <h3 className="text-2xl font-semibold mb-6 text-light-text dark:text-dark-text">
-              {category}
-            </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-              {categorySkills.map((skill, skillIndex) => (
-                <SkillCard
-                  key={skillIndex}
-                  name={skill.name}
-                  icon={skill.icon}
-                  level={skill.level}
-                />
-              ))}
-            </div>
-          </motion.div>
-        ))}
+        <div className="space-y-16">
+          {Object.entries(categories).map(([category, skills]) => (
+            <CategorySection key={category} title={category} skills={skills} />
+          ))}
+        </div>
       </div>
     </section>
   );

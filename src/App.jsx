@@ -1,4 +1,3 @@
-import { useState, useEffect } from 'react';
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
@@ -11,7 +10,6 @@ import Skills from './components/Skills';
 import Projects from './components/Projects';
 import Contact from './components/Contact';
 import Footer from './components/Footer';
-import Loader from './components/Loader';
 import NotFound from './components/NotFound';
 
 // Componente para la página de inicio con todas las secciones
@@ -37,19 +35,6 @@ const Home = () => {
 };
 
 const App = () => {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Simulamos una carga inicial
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  }, []);
-
-  if (loading) {
-    return <Loader />;
-  }
-
   return (
     <ThemeProvider>
       <BrowserRouter>

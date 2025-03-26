@@ -1,6 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { FaGithub, FaExternalLinkAlt } from "react-icons/fa";
+import { FaExternalLinkAlt } from "react-icons/fa";
 import { useTheme } from "../context/ThemeContext";
 
 // Creamos un efecto de fade-in para las animaciones
@@ -125,19 +125,7 @@ const ProjectCard = ({ project }) => {
           ))}
         </div>
 
-        <div className="flex justify-between mt-4">
-          <a
-            href={project.sourceCode}
-            target="_blank"
-            rel="noopener noreferrer"
-            className={`flex items-center gap-2 px-3 py-2 rounded-md text-sm transition-colors duration-300 ${
-              theme === "light"
-                ? "bg-light-tertiary hover:bg-highlight text-light-text hover:text-white"
-                : "bg-dark-tertiary hover:bg-highlight text-dark-text hover:text-white"
-            }`}
-          >
-            <FaGithub /> Código
-          </a>
+        <div className="flex justify-end mt-4">
           <a
             href={project.liveDemo}
             target="_blank"
@@ -148,7 +136,7 @@ const ProjectCard = ({ project }) => {
                 : "bg-highlight text-white hover:bg-highlight-hover"
             }`}
           >
-            <FaExternalLinkAlt /> Demo
+            <FaExternalLinkAlt /> Sitio Web
           </a>
         </div>
       </div>
@@ -161,7 +149,7 @@ const Projects = ({ standalone = false }) => {
 
   return (
     <section
-      id="projects"
+      id="proyectos"
       className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-10 bg-light-primary dark:bg-dark-primary`}
     >
       <div className="container mx-auto px-4 py-10 max-w-7xl">
@@ -172,11 +160,11 @@ const Projects = ({ standalone = false }) => {
           viewport={{ once: true, amount: 0.25 }}
           className="mb-10 text-center"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-light-text dark:text-dark-text">
-            Mis <span className="text-highlight">Proyectos</span>
+          <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-light-text dark:text-dark-text">
+            <span className="text-highlight">Proyectos</span>
           </h2>
-          <p className="text-light-text-light dark:text-dark-text-light max-w-3xl mx-auto">
-            Una muestra de mis trabajos más recientes. Cada proyecto refleja mi pasión por crear soluciones web de calidad.
+          <p className="text-light-text-light dark:text-dark-text-light max-w-2xl mx-auto text-lg">
+            Proyectos en los que estoy trabajando actualmente.
           </p>
         </motion.div>
 

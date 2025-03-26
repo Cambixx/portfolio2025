@@ -1,0 +1,46 @@
+{
+  "projects": [
+    {
+      "name": "E-commerce App",
+      "description": "Una plataforma de e-commerce completa con catálogo de productos, carrito de compras, panel de administración y pasarela de pagos integrada.",
+      "tags": ["React", "Node.js", "MongoDB", "Express", "Redux", "Stripe"],
+      "image": "/images/projects/project-1.jpg",
+      "liveDemo": "https://ecommerce-app-demo.netlify.app"
+    },
+    {
+      "name": "Dashboard de Analíticas",
+      "description": "Dashboard interactivo que visualiza datos comerciales y métricas clave con gráficos personalizables y reportes exportables.",
+      "tags": ["React", "Chart.js", "Firebase", "Tailwind CSS", "Context API"],
+      "image": "/images/projects/project-2.jpg",
+      "liveDemo": "https://analytics-dashboard-demo.vercel.app"
+    },
+    {
+      "name": "App de Gestión de Tareas",
+      "description": "Aplicación para gestionar tareas personales y proyectos con funcionalidades de Drag & Drop, recordatorios y colaboración en equipo.",
+      "tags": ["React", "TypeScript", "MongoDB", "Express", "JWT", "Socket.io"],
+      "image": "/images/projects/project-3.jpg",
+      "liveDemo": "https://task-app-demo.herokuapp.com"
+    },
+    {
+      "name": "Portfolio Personal",
+      "description": "Portfolio web responsivo construido con React y Tailwind CSS, con soporte para temas claro y oscuro, animaciones y vistas optimizadas.",
+      "tags": ["React", "Tailwind CSS", "Framer Motion", "Vite"],
+      "image": "/images/projects/project-4.jpg",
+      "liveDemo": "https://my-portfolio-demo.netlify.app"
+    },
+    {
+      "name": "API de Reservas",
+      "description": "API RESTful para un sistema de reservas de hoteles con autenticación, autorización, y documentación Swagger.",
+      "tags": ["Node.js", "Express", "MongoDB", "JWT", "Swagger"],
+      "image": "/images/projects/project-5.jpg",
+      "liveDemo": "https://booking-api-docs.netlify.app"
+    },
+    {
+      "name": "App de Clima",
+      "description": "Aplicación de pronóstico del tiempo que consume datos de APIs externas para mostrar información meteorológica detallada y alertas.",
+      "tags": ["React", "OpenWeather API", "Context API", "CSS Modules"],
+      "image": "/images/projects/project-6.jpg",
+      "liveDemo": "https://weather-app-demo.vercel.app"
+    }
+  ]
+} 
