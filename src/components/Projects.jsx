@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { FaExternalLinkAlt } from "react-icons/fa";
 import { useTheme } from "../context/ThemeContext";
+import projectsData from "../data/projects.json";
 
 // Creamos un efecto de fade-in para las animaciones
 const fadeIn = (direction, type, delay, duration) => ({
@@ -23,63 +24,6 @@ const fadeIn = (direction, type, delay, duration) => ({
   },
 });
 
-const projects = [
-  {
-    name: "E-commerce App",
-    description:
-      "Una plataforma de e-commerce completa con catálogo de productos, carrito de compras, panel de administración y pasarela de pagos integrada.",
-    tags: ["React", "Node.js", "MongoDB", "Express", "Redux", "Stripe"],
-    image: "/images/projects/project-1.jpg",
-    sourceCode: "https://github.com/username/ecommerce-app",
-    liveDemo: "https://ecommerce-app-demo.netlify.app",
-  },
-  {
-    name: "Dashboard de Analíticas",
-    description:
-      "Dashboard interactivo que visualiza datos comerciales y métricas clave con gráficos personalizables y reportes exportables.",
-    tags: ["React", "Chart.js", "Firebase", "Tailwind CSS", "Context API"],
-    image: "/images/projects/project-2.jpg",
-    sourceCode: "https://github.com/username/analytics-dashboard",
-    liveDemo: "https://analytics-dashboard-demo.vercel.app",
-  },
-  {
-    name: "App de Gestión de Tareas",
-    description:
-      "Aplicación para gestionar tareas personales y proyectos con funcionalidades de Drag & Drop, recordatorios y colaboración en equipo.",
-    tags: ["React", "TypeScript", "MongoDB", "Express", "JWT", "Socket.io"],
-    image: "/images/projects/project-3.jpg",
-    sourceCode: "https://github.com/username/task-management-app",
-    liveDemo: "https://task-app-demo.herokuapp.com",
-  },
-  {
-    name: "Portfolio Personal",
-    description:
-      "Portfolio web responsivo construido con React y Tailwind CSS, con soporte para temas claro y oscuro, animaciones y vistas optimizadas.",
-    tags: ["React", "Tailwind CSS", "Framer Motion", "Vite"],
-    image: "/images/projects/project-4.jpg",
-    sourceCode: "https://github.com/username/portfolio",
-    liveDemo: "https://my-portfolio-demo.netlify.app",
-  },
-  {
-    name: "API de Reservas",
-    description:
-      "API RESTful para un sistema de reservas de hoteles con autenticación, autorización, y documentación Swagger.",
-    tags: ["Node.js", "Express", "MongoDB", "JWT", "Swagger"],
-    image: "/images/projects/project-5.jpg",
-    sourceCode: "https://github.com/username/booking-api",
-    liveDemo: "https://booking-api-docs.netlify.app",
-  },
-  {
-    name: "App de Clima",
-    description:
-      "Aplicación de pronóstico del tiempo que consume datos de APIs externas para mostrar información meteorológica detallada y alertas.",
-    tags: ["React", "OpenWeather API", "Context API", "CSS Modules"],
-    image: "/images/projects/project-6.jpg",
-    sourceCode: "https://github.com/username/weather-app",
-    liveDemo: "https://weather-app-demo.vercel.app",
-  },
-];
-
 const ProjectCard = ({ project }) => {
   const { theme } = useTheme();
 
@@ -93,9 +37,18 @@ const ProjectCard = ({ project }) => {
       } transition-all duration-300 hover:-translate-y-2`}
     >
       <div className="relative h-48 md:h-56 lg:h-64 overflow-hidden">
-        <div className="w-full h-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
-          <span className="text-lg font-medium">{project.name}</span>
-        </div>
+        {project.image && (
+          <img
+            src={project.image}
+            alt={project.name}
+            className="w-full h-full object-cover"
+          />
+        )}
+        {!project.image && (
+          <div className="w-full h-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
+            <span className="text-lg font-medium">{project.name}</span>
+          </div>
+        )}
       </div>
 
       <div className="p-6">
@@ -169,7 +122,7 @@ const Projects = ({ standalone = false }) => {
         </motion.div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {projects.map((project, index) => (
+          {projectsData.projects.map((project, index) => (
             <ProjectCard key={index} project={project} />
           ))}
         </div>

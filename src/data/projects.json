@@ -1,10 +1,10 @@
 {
   "projects": [
     {
-      "name": "E-commerce App",
+      "name": "Nexho",
       "description": "Una plataforma de e-commerce completa con catálogo de productos, carrito de compras, panel de administración y pasarela de pagos integrada.",
       "tags": ["React", "Node.js", "MongoDB", "Express", "Redux", "Stripe"],
-      "image": "/images/projects/project-1.jpg",
+      "image": "/images/projects/nexho-desktop.png",
       "liveDemo": "https://ecommerce-app-demo.netlify.app"
     },
     {
