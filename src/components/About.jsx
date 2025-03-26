@@ -32,27 +32,29 @@ const About = ({ standalone = false }) => {
       id="sobre-mi"
       className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-10 bg-light-primary dark:bg-dark-primary`}
     >
-      <div className="container mx-auto px-4 py-10 max-w-7xl">
+      <div className="container mx-auto px-4 py-16 max-w-7xl">
         <motion.div
           variants={fadeIn("", "", 0.1, 1)}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.25 }}
-          className="text-center mb-12"
+          className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-light-text dark:text-dark-text">
+          <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-light-text dark:text-dark-text tracking-tight">
             {t.about.title}
           </h2>
         </motion.div>
 
-        <div className="max-w-5xl mx-auto">
-          <div className="flex flex-col md:flex-row gap-8 items-stretch">
+        <div className="max-w-6xl mx-auto">
+          <div className="flex flex-col md:flex-row gap-12 items-stretch">
             <motion.div
               variants={fadeIn("right", "tween", 0.2, 1)}
-              className="md:w-64 shrink-0"
+              className="md:w-72 shrink-0 mx-auto md:mx-0"
             >
-              <div className={`h-full rounded-2xl overflow-hidden shadow-lg ${
-                theme === "light" ? "bg-light-secondary" : "bg-dark-secondary"
+              <div className={`h-full rounded-3xl overflow-hidden shadow-xl transform transition-transform duration-300 hover:scale-[1.02] ${
+                theme === "light" 
+                  ? "bg-light-secondary ring-1 ring-black/5" 
+                  : "bg-dark-secondary ring-1 ring-white/10"
               }`}>
                 <img
                   src="/images/foto-perfil.png"
@@ -66,17 +68,19 @@ const About = ({ standalone = false }) => {
               variants={fadeIn("left", "tween", 0.3, 1)}
               className="flex-1"
             >
-              <div className={`h-full p-6 rounded-2xl ${
-                theme === "light" ? "bg-light-secondary" : "bg-dark-secondary"
-              } shadow-md`}>
-                <h3 className="text-2xl font-bold mb-4 text-light-text dark:text-dark-text md:text-left text-center">
+              <div className={`h-full p-8 rounded-3xl transform transition-transform duration-300 hover:scale-[1.01] ${
+                theme === "light" 
+                  ? "bg-light-secondary shadow-xl ring-1 ring-black/5" 
+                  : "bg-dark-secondary shadow-xl ring-1 ring-white/10"
+              }`}>
+                <h3 className="text-3xl font-bold mb-6 text-light-text dark:text-dark-text md:text-left text-center tracking-tight">
                   {t.about.role}
                 </h3>
-                <div className="space-y-4">
-                  <p className="text-light-text-light dark:text-dark-text-light">
+                <div className="space-y-6">
+                  <p className="text-lg text-light-text-light dark:text-dark-text-light leading-relaxed">
                     {t.about.description}
                   </p>
-                  <p className="text-light-text-light dark:text-dark-text-light">
+                  <p className="text-lg text-light-text-light dark:text-dark-text-light leading-relaxed">
                     {t.about.objectives}
                   </p>
                 </div>

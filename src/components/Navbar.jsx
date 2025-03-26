@@ -102,7 +102,7 @@ const Navbar = () => {
                 duration={500}
                 spy={true}
                 activeClass="active"
-                className="text-light-text-light dark:text-dark-text-light hover:text-light-text dark:hover:text-dark-text transition-colors duration-200 text-sm font-medium"
+                className="cursor-pointer text-light-text-light dark:text-dark-text-light hover:text-light-text dark:hover:text-dark-text transition-colors duration-200 text-sm font-medium"
                 onSetActive={() => setActive(link.id)}
               >
                 {link.title}
@@ -117,7 +117,7 @@ const Navbar = () => {
           {/* Botón menú móvil */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-md text-light-text dark:text-dark-text hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors"
+            className="md:hidden p-2 rounded-md text-light-text dark:text-dark-text hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors cursor-pointer"
             aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
           >
             {isOpen ? (
@@ -149,12 +149,12 @@ const Navbar = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'tween', duration: 0.3 }}
-              className="fixed top-0 right-0 bottom-0 w-64 bg-white dark:bg-neutral-900 z-50 md:hidden shadow-xl"
+              className="fixed top-0 right-0 bottom-0 w-72 bg-white dark:bg-neutral-900 z-50 md:hidden shadow-xl"
             >
               <div className="flex flex-col h-full">
                 {/* Encabezado del menú */}
                 <div className="flex items-center justify-between p-4 border-b border-light-secondary dark:border-dark-secondary">
-                  <span className="text-light-text dark:text-dark-text font-medium">
+                  <span className="text-light-text dark:text-dark-text font-medium text-lg">
                     Menú
                   </span>
                   <button
@@ -162,13 +162,13 @@ const Navbar = () => {
                     className="p-2 rounded-md text-light-text dark:text-dark-text hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors"
                     aria-label="Cerrar menú"
                   >
-                    <XMarkIcon className="h-5 w-5" />
+                    <XMarkIcon className="h-6 w-6" />
                   </button>
                 </div>
 
                 {/* Enlaces de navegación */}
                 <div className="flex-1 overflow-y-auto py-4">
-                  <div className="flex flex-col space-y-1 px-3">
+                  <div className="flex flex-col space-y-2 px-4">
                     {navLinks.map((link) => (
                       <Link
                         key={link.id}
@@ -176,8 +176,8 @@ const Navbar = () => {
                         smooth
                         duration={500}
                         spy={true}
-                        activeClass="bg-light-secondary dark:bg-dark-secondary text-light-text dark:text-dark-text"
-                        className="px-4 py-3 text-light-text-light dark:text-dark-text-light hover:bg-light-secondary dark:hover:bg-dark-secondary rounded-md transition-colors duration-200 text-sm font-medium"
+                        activeClass="bg-highlight text-white"
+                        className="cursor-pointer px-4 py-3 rounded-xl text-light-text dark:text-dark-text hover:bg-light-secondary dark:hover:bg-dark-secondary transition-colors duration-200 text-base font-medium"
                         onClick={closeMenu}
                       >
                         {link.title}
