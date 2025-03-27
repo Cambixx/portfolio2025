@@ -5,7 +5,8 @@ const CONFIG = {
   // Partículas
   PARTICLE_SIZE_MIN: 0.5,      // Tamaño mínimo de partícula
   PARTICLE_SIZE_MAX: 1.5,      // Tamaño máximo de partícula
-  PARTICLE_COLOR: '#ffffff',   // Color de las partículas
+  PARTICLE_COLOR_DARK: '#ffffff',   // Color de las partículas en modo oscuro
+  PARTICLE_COLOR_LIGHT: '#333333',  // Color de las partículas en modo claro
   PARTICLE_DENSITY: 3,         // Densidad de partículas (más alto = menos partículas)
   
   // Física
@@ -33,7 +34,7 @@ const CONFIG = {
   IMPLOSION_STAGGER: 5         // Retraso entre partículas (reducido considerablemente)
 };
 
-const ParticleTextEffect = ({ text, subtitle = "WEB DEVELOPER" }) => {
+const ParticleTextEffect = ({ text, subtitle = "WEB DEVELOPER", isDarkMode = true }) => {
   const canvasRef = useRef(null);
   const particlesRef = useRef([]);
   const mouseRef = useRef({ x: -1000, y: -1000 }); // Inicializar fuera de pantalla
@@ -114,7 +115,7 @@ const ParticleTextEffect = ({ text, subtitle = "WEB DEVELOPER" }) => {
         this.size = Math.random() * 
           (CONFIG.PARTICLE_SIZE_MAX - CONFIG.PARTICLE_SIZE_MIN) + 
           CONFIG.PARTICLE_SIZE_MIN;
-        this.color = CONFIG.PARTICLE_COLOR;
+        this.color = isDarkMode ? CONFIG.PARTICLE_COLOR_DARK : CONFIG.PARTICLE_COLOR_LIGHT;
         this.vx = 0;
         this.vy = 0;
         this.friction = CONFIG.FRICTION;
@@ -354,7 +355,7 @@ const ParticleTextEffect = ({ text, subtitle = "WEB DEVELOPER" }) => {
       window.removeEventListener('click', debugInfo);
       cancelAnimationFrame(frameRef.current);
     };
-  }, [text, subtitle]);
+  }, [text, subtitle, isDarkMode]);
   
   return (
     <div className="relative w-full h-full flex items-center justify-center">

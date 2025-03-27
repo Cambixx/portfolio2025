@@ -13,6 +13,7 @@ const SHADER_TYPE = 'fluid';
 
 const Hero = ({ standalone = false }) => {
   const { t } = useLanguage();
+  const { theme } = useTheme();
 
   // Función para renderizar el shader seleccionado
   const renderShader = () => {
@@ -38,7 +39,7 @@ const Hero = ({ standalone = false }) => {
       
       {/* Texto formado por partículas */}
       <div className="absolute inset-0 flex items-center justify-center z-10">
-        <ParticleTextEffect text={t.hero.name} />
+        <ParticleTextEffect text={t.hero.name} isDarkMode={theme === 'dark'} />
       </div>
       
       {/* Indicador de scroll */}
