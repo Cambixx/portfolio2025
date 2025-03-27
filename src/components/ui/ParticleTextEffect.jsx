@@ -14,12 +14,14 @@ const CONFIG = {
   DAMPING: 0.8,                // Factor de amortiguación para reducir oscilaciones
   
   // Efecto repulsión del cursor
-  REPULSION_RADIUS: 200,       // Radio de repulsión en píxeles (aumentado)
+  REPULSION_RADIUS: 70,       // Radio de repulsión en píxeles (aumentado)
   REPULSION_FORCE: 12,         // Fuerza de repulsión (aumentada considerablemente)
   
   // Texto
   FONT_FAMILY: 'sans-serif',   // Familia de fuente
   ALPHA_THRESHOLD: 128,        // Umbral para detectar píxeles de texto (0-255)
+  SUBTITLE_SCALE: 0.3,         // Escala del subtítulo respecto al título
+  SUBTITLE_VERTICAL_OFFSET: 0.7, // Desplazamiento vertical del subtítulo (en relación con la altura de la fuente del título)
   
   // Rendimiento
   ANIMATION_DELAY: 100,        // Retraso inicial para la animación en ms
@@ -31,7 +33,7 @@ const CONFIG = {
   IMPLOSION_STAGGER: 5         // Retraso entre partículas (reducido considerablemente)
 };
 
-const ParticleTextEffect = ({ text }) => {
+const ParticleTextEffect = ({ text, subtitle = "WEB DEVELOPER" }) => {
   const canvasRef = useRef(null);
   const particlesRef = useRef([]);
   const mouseRef = useRef({ x: -1000, y: -1000 }); // Inicializar fuera de pantalla
@@ -56,8 +58,6 @@ const ParticleTextEffect = ({ text }) => {
     const handleMouseMove = (e) => {
       mouseRef.current.x = e.clientX;
       mouseRef.current.y = e.clientY;
-      // Debug
-      // console.log(`Mouse movido a: ${e.clientX}, ${e.clientY}`);
     };
     
     // Manejar eventos táctiles para dispositivos móviles
@@ -245,18 +245,27 @@ const ParticleTextEffect = ({ text }) => {
       const textCtx = textCanvas.getContext('2d');
       
       // Determinar el tamaño adecuado basado en el ancho de la ventana
-      const fontSize = Math.min(window.innerWidth / (text.length * 0.7), 150);
-      textCanvas.width = window.innerWidth;
-      textCanvas.height = fontSize * 1.5;
+      const titleFontSize = Math.min(window.innerWidth / (text.length * 0.7), 150);
+      const subtitleFontSize = titleFontSize * CONFIG.SUBTITLE_SCALE;
       
-      // Configurar el estilo de texto
-      textCtx.font = `bold ${fontSize}px ${CONFIG.FONT_FAMILY}`;
+      // Calcular altura total para ambos textos
+      const textTotalHeight = titleFontSize + subtitleFontSize + (titleFontSize * CONFIG.SUBTITLE_VERTICAL_OFFSET);
+      
+      textCanvas.width = window.innerWidth;
+      textCanvas.height = textTotalHeight * 1.5;
+      
+      // Dibujar el título
+      textCtx.font = `bold ${titleFontSize}px ${CONFIG.FONT_FAMILY}`;
       textCtx.fillStyle = 'white';
       textCtx.textAlign = 'center';
       textCtx.textBaseline = 'middle';
+      const titleY = (textCanvas.height / 2) - (subtitleFontSize / 2);
+      textCtx.fillText(text, textCanvas.width / 2, titleY);
       
-      // Dibujar el texto en el centro del canvas
-      textCtx.fillText(text, textCanvas.width / 2, textCanvas.height / 2);
+      // Dibujar el subtítulo
+      textCtx.font = `bold ${subtitleFontSize}px ${CONFIG.FONT_FAMILY}`;
+      const subtitleY = titleY + (titleFontSize * CONFIG.SUBTITLE_VERTICAL_OFFSET);
+      textCtx.fillText(subtitle, textCanvas.width / 2, subtitleY);
       
       // Obtener los datos de los píxeles del canvas
       const imageData = textCtx.getImageData(0, 0, textCanvas.width, textCanvas.height);
@@ -345,7 +354,7 @@ const ParticleTextEffect = ({ text }) => {
       window.removeEventListener('click', debugInfo);
       cancelAnimationFrame(frameRef.current);
     };
-  }, [text]);
+  }, [text, subtitle]);
   
   return (
     <div className="relative w-full h-full flex items-center justify-center">
