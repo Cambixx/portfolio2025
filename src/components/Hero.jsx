@@ -6,6 +6,7 @@ import { useLanguage } from '../context/LanguageContext';
 import ShaderCanvas from './ui/ShaderCanvas';
 import BlackholeShaderCanvas from './ui/BlackholeShaderCanvas';
 import FluidShaderCanvas from './ui/FluidShaderCanvas';
+import ParticleTextEffect from './ui/ParticleTextEffect';
 
 // Cambia el tipo de shader: 'abstract', 'blackhole' o 'fluid'
 const SHADER_TYPE = 'fluid'; 
@@ -35,9 +36,9 @@ const Hero = ({ standalone = false }) => {
       {/* Shader Canvas - Cambia SHADER_TYPE arriba para alternar entre shaders */}
       {renderShader()}
       
-      {/* Texto superpuesto */}
-      <div className="absolute inset-0 flex flex-col items-center justify-center z-10">
-        <h1 className="text-5xl font-bold text-white mb-4">{t.hero.name}</h1>
+      {/* Texto formado por partículas */}
+      <div className="absolute inset-0 flex items-center justify-center z-10">
+        <ParticleTextEffect text={t.hero.name} />
       </div>
       
       {/* Indicador de scroll */}
