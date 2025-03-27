@@ -3,18 +3,18 @@ import { useRef, useEffect } from 'react';
 // Constantes configurables para ajustes
 const CONFIG = {
   // Partículas
-  PARTICLE_SIZE_MIN: 0.8,      // Tamaño mínimo de partícula
+  PARTICLE_SIZE_MIN: 0.5,      // Tamaño mínimo de partícula
   PARTICLE_SIZE_MAX: 1.5,      // Tamaño máximo de partícula
   PARTICLE_COLOR: '#ffffff',   // Color de las partículas
   PARTICLE_DENSITY: 3,         // Densidad de partículas (más alto = menos partículas)
   
   // Física
   SPRING_FACTOR: 0.015,        // Velocidad de retorno a posición original (reducido para evitar temblores)
-  FRICTION: 0.97,              // Fricción de las partículas (aumentada para más amortiguación)
-  DAMPING: 0.8,                // Factor de amortiguación para reducir oscilaciones
+  FRICTION: 0.50,              // Fricción de las partículas (aumentada para más amortiguación)
+  DAMPING: 0.9,                // Factor de amortiguación para reducir oscilaciones
   
   // Efecto repulsión del cursor
-  REPULSION_RADIUS: 70,       // Radio de repulsión en píxeles (aumentado)
+  REPULSION_RADIUS: 50,       // Radio de repulsión en píxeles (aumentado)
   REPULSION_FORCE: 12,         // Fuerza de repulsión (aumentada considerablemente)
   
   // Texto
@@ -28,7 +28,7 @@ const CONFIG = {
   
   // Animación de implosión inicial
   IMPLOSION_ENABLED: true,     // Activar efecto de implosión al cargar
-  IMPLOSION_DISTANCE: 500,     // Distancia inicial de dispersión (px)
+  IMPLOSION_DISTANCE: 800,     // Distancia inicial de dispersión (px)
   IMPLOSION_SPEED: 0.12,       // Velocidad de convergencia (aumentada considerablemente)
   IMPLOSION_STAGGER: 5         // Retraso entre partículas (reducido considerablemente)
 };
