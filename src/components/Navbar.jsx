@@ -80,7 +80,9 @@ const Navbar = () => {
           {/* Logo */}
           <Link 
             to="inicio" 
-            smooth 
+            spy={true}
+            smooth={true} 
+            offset={-70}
             duration={500} 
             className="flex items-center cursor-pointer group"
             onClick={closeMenu}
@@ -98,9 +100,10 @@ const Navbar = () => {
               <Link
                 key={link.id}
                 to={link.id}
-                smooth
-                duration={500}
                 spy={true}
+                smooth={true}
+                offset={-70}
+                duration={500}
                 activeClass="text-light-text dark:text-dark-text"
                 className="cursor-pointer text-light-text/70 dark:text-dark-text/70 hover:text-light-text dark:hover:text-dark-text transition-all duration-300 text-sm font-medium"
                 onSetActive={() => setActive(link.id)}
@@ -149,45 +152,46 @@ const Navbar = () => {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', stiffness: 300, damping: 30 }}
-              className="fixed top-0 right-0 bottom-0 w-80 bg-white/90 dark:bg-neutral-900/90 backdrop-blur-xl z-50 md:hidden shadow-2xl"
+              className="fixed top-0 right-0 bottom-0 w-80 bg-white dark:bg-neutral-900 z-50 md:hidden shadow-2xl"
             >
-              <div className="flex flex-col h-full">
-                {/* Encabezado del menú */}
-                <div className="flex items-center justify-between p-4">
-                  <span className="text-light-text dark:text-dark-text font-medium text-lg">
-                    Menú
-                  </span>
-                  <button
-                    onClick={closeMenu}
-                    className="p-2 rounded-lg text-light-text/70 dark:text-dark-text/70 hover:text-light-text dark:hover:text-dark-text hover:bg-light-text/5 dark:hover:bg-dark-text/5 transition-all duration-300"
-                    aria-label="Cerrar menú"
-                  >
-                    <XMarkIcon className="h-6 w-6" />
-                  </button>
-                </div>
+              {/* Encabezado del menú */}
+              <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700">
+                <span className="text-gray-900 dark:text-white font-medium text-lg">
+                  Menú
+                </span>
+                <button
+                  onClick={closeMenu}
+                  className="p-2 rounded-lg text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-300"
+                  aria-label="Cerrar menú"
+                >
+                  <XMarkIcon className="h-6 w-6" />
+                </button>
+              </div>
 
-                {/* Enlaces de navegación */}
-                <div className="flex-1 overflow-y-auto py-4">
-                  <div className="flex flex-col space-y-1 px-4">
-                    {navLinks.map((link) => (
-                      <Link
-                        key={link.id}
-                        to={link.id}
-                        smooth
-                        duration={500}
-                        spy={true}
-                        activeClass="bg-light-text/10 dark:bg-dark-text/10 text-light-text dark:text-dark-text"
-                        className="cursor-pointer px-4 py-3 rounded-xl text-light-text/70 dark:text-dark-text/70 hover:bg-light-text/5 dark:hover:bg-dark-text/5 hover:text-light-text dark:hover:text-dark-text transition-all duration-300 text-base font-medium"
-                        onClick={closeMenu}
-                      >
-                        {link.title}
-                      </Link>
-                    ))}
-                  </div>
+              {/* Enlaces de navegación */}
+              <div className="flex-1 overflow-y-auto py-4 bg-white dark:bg-neutral-900">
+                <div className="flex flex-col space-y-1 px-4">
+                  {navLinks.map((link) => (
+                    <Link
+                      key={link.id}
+                      to={link.id}
+                      spy={true}
+                      smooth={true}
+                      offset={-70}
+                      duration={500}
+                      onClick={closeMenu}
+                      activeClass="bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white"
+                      className="cursor-pointer px-4 py-3 rounded-xl text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800/50 hover:text-gray-900 dark:hover:text-white transition-all duration-300 text-base font-medium"
+                    >
+                      {link.title}
+                    </Link>
+                  ))}
                 </div>
+              </div>
 
-                {/* Footer del menú */}
-                <div className="p-4 border-t border-light-text/5 dark:border-dark-text/5 flex items-center justify-between bg-white/50 dark:bg-neutral-800/50 backdrop-blur-sm">
+              {/* Footer del menú */}
+              <div className="p-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-neutral-800">
+                <div className="flex items-center justify-between">
                   <LanguageToggle />
                   <ThemeToggle />
                 </div>

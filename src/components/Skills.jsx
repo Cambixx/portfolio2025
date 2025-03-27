@@ -147,15 +147,18 @@ const skills = [
 ];
 
 const SkillCard = ({ name, icon }) => {
+  const { theme } = useTheme();
   return (
     <motion.div
       whileHover={{ y: -5 }}
-      className="flex flex-col items-center justify-center p-4 transition-all duration-300"
+      className={`project-card ${theme === "light" ? "light" : "dark"} flex flex-col items-center justify-center p-4 backdrop-blur-sm border border-gray-200/20 bg-white/30 dark:bg-[#1f2937]/50 shadow-lg`}
     >
       <div className="text-4xl mb-3 text-highlight">
         {icon}
       </div>
-      <h3 className="text-base font-medium text-light-text dark:text-dark-text">
+      <h3 className={`text-base font-medium ${
+        theme === "light" ? "text-gray-900" : "text-white"
+      }`}>
         {name}
       </h3>
     </motion.div>
@@ -163,12 +166,15 @@ const SkillCard = ({ name, icon }) => {
 };
 
 const CategorySection = ({ title, skills, t }) => {
+  const { theme } = useTheme();
   return (
     <motion.div
       variants={fadeIn("up", "spring", 0.3, 0.75)}
       className="mb-12 last:mb-0"
     >
-      <h3 className="text-2xl font-bold text-light-text dark:text-dark-text mb-8 flex items-center">
+      <h3 className={`text-2xl font-bold ${
+        theme === "light" ? "text-gray-900" : "text-white"
+      } mb-8 flex items-center`}>
         <span className="text-highlight mr-2">#</span>
         {t.skills[title.toLowerCase()]}
       </h3>
@@ -183,6 +189,7 @@ const CategorySection = ({ title, skills, t }) => {
 
 const Skills = ({ standalone = false }) => {
   const { t } = useLanguage();
+  const { theme } = useTheme();
   const categories = {
     frontend: skills.filter(skill => skill.category === "frontend"),
     backend: skills.filter(skill => skill.category === "backend"),
@@ -192,9 +199,9 @@ const Skills = ({ standalone = false }) => {
   return (
     <section 
       id="habilidades"
-      className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-16 bg-light-secondary dark:bg-dark-secondary`}
+      className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-16 bg-white dark:bg-[#111827] overflow-hidden`}
     >
-      <div className="container mx-auto px-4 py-16 max-w-7xl">
+      <div className="container relative mx-auto px-4 py-16 max-w-7xl">
         <motion.div
           variants={fadeIn("", "", 0.1, 1)}
           initial="hidden"
@@ -202,7 +209,7 @@ const Skills = ({ standalone = false }) => {
           viewport={{ once: true, amount: 0.25 }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-light-text dark:text-dark-text">
+          <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-light-text dark:text-dark-text tracking-tight">
             {t.nav.habilidades}
           </h2>
           <p className="text-light-text-light dark:text-dark-text-light max-w-2xl mx-auto text-lg">

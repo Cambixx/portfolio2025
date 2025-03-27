@@ -32,47 +32,44 @@ const ProjectCard = ({ project, t }) => {
   return (
     <motion.div
       variants={fadeIn("up", "spring", 0.3, 0.75)}
-      className={`rounded-xl overflow-hidden ${
-        theme === "light"
-          ? "bg-light-secondary shadow-md hover:shadow-xl"
-          : "bg-dark-secondary shadow-md hover:shadow-xl"
-      } transition-all duration-300 hover:-translate-y-2`}
+      className={`project-card ${theme === "light" ? "light" : "dark"}`}
     >
-      <div className="relative h-48 md:h-56 lg:h-64 overflow-hidden">
+      <div className="relative h-48 md:h-56 lg:h-64 overflow-hidden rounded-t-2xl">
         {project.image && (
           <img
             src={project.image}
             alt={project.name[language]}
-            className="w-full h-full object-cover"
+            className="w-full h-full object-cover transition-transform duration-500 hover:scale-105"
           />
         )}
         {!project.image && (
-          <div className="w-full h-full bg-gray-300 dark:bg-gray-700 flex items-center justify-center text-gray-500 dark:text-gray-400">
-            <span className="text-lg font-medium">{project.name[language]}</span>
+          <div className="w-full h-full bg-gray-300/50 dark:bg-[#1f2937]/70 backdrop-blur-md flex items-center justify-center">
+            <span className="text-lg font-medium text-gray-600 dark:text-gray-300">{project.name[language]}</span>
           </div>
         )}
       </div>
 
       <div className="p-6 flex flex-col h-[calc(100%-12rem)] md:h-[calc(100%-14rem)] lg:h-[calc(100%-16rem)]">
-        <h3 className={`text-xl font-bold mb-2 ${
-          theme === "light" ? "text-light-text" : "text-dark-text"
+        <h3 className={`text-xl font-bold tracking-tight ${
+          theme === "light" ? "text-gray-900" : "text-white"
         }`}>
           {project.name[language]}
         </h3>
-        <p className={`mb-4 text-sm ${
-          theme === "light" ? "text-light-text-light" : "text-dark-text-light"
+        
+        <p className={`mt-2 text-sm leading-relaxed ${
+          theme === "light" ? "text-gray-600" : "text-gray-300"
         }`}>
           {project.description[language]}
         </p>
 
-        <div className="flex flex-wrap gap-2 mb-4">
+        <div className="flex flex-wrap gap-2 mt-4">
           {project.tags.map((tag, tagIndex) => (
             <span
               key={tagIndex}
-              className={`text-xs px-2 py-1 rounded-full ${
+              className={`text-xs px-3 py-1 rounded-full backdrop-blur-md ${
                 theme === "light"
-                  ? "bg-light-tertiary text-light-text-light"
-                  : "bg-dark-tertiary text-dark-text-light"
+                  ? "bg-gray-200/80 text-gray-800 border border-gray-300/50"
+                  : "bg-[#1f2937]/70 text-gray-100 border border-white/10"
               }`}
             >
               {tag}
@@ -80,15 +77,15 @@ const ProjectCard = ({ project, t }) => {
           ))}
         </div>
 
-        <div className="mt-auto">
+        <div className="mt-auto pt-4">
           <a
             href={project.liveDemo}
             target="_blank"
             rel="noopener noreferrer"
-            className={`flex items-center gap-2 px-4 py-2 rounded-md text-sm transition-colors duration-300 w-fit ml-auto ${
+            className={`inline-flex items-center gap-2 px-4 py-2 rounded-lg text-sm font-medium transition-all duration-300 ${
               theme === "light"
-                ? "bg-highlight text-white hover:bg-highlight-hover"
-                : "bg-highlight text-white hover:bg-highlight-hover"
+                ? "bg-black/90 text-white hover:bg-black"
+                : "bg-white/90 text-black hover:bg-white"
             }`}
           >
             <FaExternalLinkAlt className="text-xs" /> {t.projects.viewProject}
@@ -106,17 +103,17 @@ const Projects = ({ standalone = false }) => {
   return (
     <section
       id="proyectos"
-      className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-10 bg-light-primary dark:bg-dark-primary`}
+      className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-16 bg-gray-50/80 dark:bg-[#1e293b]/90 overflow-hidden`}
     >
-      <div className="container mx-auto px-4 py-10 max-w-7xl">
+      <div className="container relative mx-auto px-4 py-16 max-w-7xl">
         <motion.div
           variants={fadeIn("", "", 0.1, 1)}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.25 }}
-          className="mb-10 text-center"
+          className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-light-text dark:text-dark-text">
+          <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-light-text dark:text-dark-text tracking-tight">
             {t.projects.title}
           </h2>
           <p className="text-light-text-light dark:text-dark-text-light max-w-2xl mx-auto text-lg">
@@ -124,7 +121,7 @@ const Projects = ({ standalone = false }) => {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
           {projectsData.projects.map((project, index) => (
             <ProjectCard key={index} project={project} t={t} />
           ))}

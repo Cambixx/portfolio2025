@@ -4,6 +4,7 @@ import { useTheme } from "../context/ThemeContext";
 import { FaEnvelope, FaPhoneAlt, FaMapMarkerAlt, FaLinkedin, FaGithub, FaTwitter } from "react-icons/fa";
 import emailjs from '@emailjs/browser';
 import { emailjsConfig } from '../lib/emailjs';
+import { useLanguage } from "../context/LanguageContext";
 
 // Creamos un efecto de fade-in para las animaciones
 const fadeIn = (direction, type, delay, duration) => ({
@@ -26,6 +27,7 @@ const fadeIn = (direction, type, delay, duration) => ({
 });
 
 const Contact = ({ standalone = false }) => {
+  const { t } = useLanguage();
   const { theme } = useTheme();
   const formRef = useRef();
   const [formData, setFormData] = useState({
@@ -137,22 +139,22 @@ const Contact = ({ standalone = false }) => {
 
   return (
     <section
-      id="contact"
-      className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-10 bg-light-secondary dark:bg-dark-secondary`}
+      id="contacto"
+      className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-16 overflow-hidden bg-gray-50/80 dark:bg-[#1e293b]/90`}
     >
-      <div className="container mx-auto px-4 py-10 max-w-7xl">
+      <div className="container mx-auto px-4 py-16 max-w-7xl">
         <motion.div
           variants={fadeIn("", "", 0.1, 1)}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.25 }}
-          className="mb-10 text-center"
+          className="text-center mb-16"
         >
-          <h2 className="text-3xl sm:text-4xl font-bold mb-4 text-light-text dark:text-dark-text">
-            <span className="text-highlight">Contáctame</span>
+          <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-light-text dark:text-dark-text tracking-tight">
+            {t.nav.contacto}
           </h2>
-          <p className="text-light-text-light dark:text-dark-text-light max-w-3xl mx-auto">
-            ¿Tienes algún proyecto en mente? Estoy disponible para trabajar en proyectos freelance o de tiempo completo.
+          <p className="text-light-text-light dark:text-dark-text-light max-w-2xl mx-auto text-lg">
+            {t.contact.description}
           </p>
         </motion.div>
 
@@ -162,16 +164,17 @@ const Contact = ({ standalone = false }) => {
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.25 }}
+            className={`about-card ${theme === "light" ? "light" : "dark"} p-8 rounded-xl backdrop-blur-sm border border-gray-200/20 bg-white/30 dark:bg-[#1f2937]/50 shadow-lg`}
           >
-            <h3 className="text-2xl font-bold mb-6 text-light-text dark:text-dark-text">
+            <h3 className="text-2xl font-bold mb-8 text-light-text dark:text-dark-text">
               Información de Contacto
             </h3>
-            <div className="space-y-6">
+            <div className="space-y-8">
               <div className="flex items-center">
-                <div className={`rounded-full p-3 mr-4 ${
+                <div className={`rounded-full p-3 mr-4 backdrop-blur-sm ${
                   theme === "light"
-                    ? "bg-light-tertiary text-highlight"
-                    : "bg-dark-tertiary text-highlight"
+                    ? "bg-white/50 text-gray-800"
+                    : "bg-[#1f2937]/70 text-gray-100"
                 }`}>
                   <FaEnvelope className="text-xl" />
                 </div>
@@ -189,10 +192,10 @@ const Contact = ({ standalone = false }) => {
               </div>
 
               <div className="flex items-center">
-                <div className={`rounded-full p-3 mr-4 ${
+                <div className={`rounded-full p-3 mr-4 backdrop-blur-sm ${
                   theme === "light"
-                    ? "bg-light-tertiary text-highlight"
-                    : "bg-dark-tertiary text-highlight"
+                    ? "bg-white/50 text-gray-800"
+                    : "bg-[#1f2937]/70 text-gray-100"
                 }`}>
                   <FaPhoneAlt className="text-xl" />
                 </div>
@@ -201,7 +204,7 @@ const Contact = ({ standalone = false }) => {
                     Teléfono
                   </h4>
                   <a
-                    href="tel:+1234567890"
+                    href="tel:+34603728243"
                     className="text-light-text-light dark:text-dark-text-light hover:text-highlight transition-colors duration-300"
                   >
                     +34 603 72 82 43
@@ -210,10 +213,10 @@ const Contact = ({ standalone = false }) => {
               </div>
 
               <div className="flex items-center">
-                <div className={`rounded-full p-3 mr-4 ${
+                <div className={`rounded-full p-3 mr-4 backdrop-blur-sm ${
                   theme === "light"
-                    ? "bg-light-tertiary text-highlight"
-                    : "bg-dark-tertiary text-highlight"
+                    ? "bg-white/50 text-gray-800"
+                    : "bg-[#1f2937]/70 text-gray-100"
                 }`}>
                   <FaMapMarkerAlt className="text-xl" />
                 </div>
@@ -237,11 +240,11 @@ const Contact = ({ standalone = false }) => {
                   href="https://linkedin.com/in/username"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`rounded-full p-3 ${
+                  className={`rounded-full p-3 backdrop-blur-sm transition-all duration-300 ${
                     theme === "light"
-                      ? "bg-light-tertiary text-highlight hover:bg-highlight hover:text-white"
-                      : "bg-dark-tertiary text-highlight hover:bg-highlight hover:text-white"
-                  } transition-all duration-300`}
+                      ? "bg-white/50 text-gray-800 hover:bg-highlight hover:text-white"
+                      : "bg-[#1f2937]/70 text-gray-100 hover:bg-highlight hover:text-white"
+                  }`}
                 >
                   <FaLinkedin className="text-xl" />
                 </a>
@@ -249,11 +252,11 @@ const Contact = ({ standalone = false }) => {
                   href="https://github.com/Cambixx"
                   target="_blank"
                   rel="noopener noreferrer"
-                  className={`rounded-full p-3 ${
+                  className={`rounded-full p-3 backdrop-blur-sm transition-all duration-300 ${
                     theme === "light"
-                      ? "bg-light-tertiary text-highlight hover:bg-highlight hover:text-white"
-                      : "bg-dark-tertiary text-highlight hover:bg-highlight hover:text-white"
-                  } transition-all duration-300`}
+                      ? "bg-white/50 text-gray-800 hover:bg-highlight hover:text-white"
+                      : "bg-[#1f2937]/70 text-gray-100 hover:bg-highlight hover:text-white"
+                  }`}
                 >
                   <FaGithub className="text-xl" />
                 </a>
@@ -266,8 +269,9 @@ const Contact = ({ standalone = false }) => {
             initial="hidden"
             whileInView="show"
             viewport={{ once: true, amount: 0.25 }}
+            className={`about-card ${theme === "light" ? "light" : "dark"} p-8 rounded-xl backdrop-blur-sm border border-gray-200/20 bg-white/30 dark:bg-[#1f2937]/50 shadow-lg`}
           >
-            <h3 className="text-2xl font-bold mb-6 text-light-text dark:text-dark-text">
+            <h3 className="text-2xl font-bold mb-8 text-light-text dark:text-dark-text">
               Envíame un Mensaje
             </h3>
             
@@ -275,14 +279,14 @@ const Contact = ({ standalone = false }) => {
             <form 
               ref={formRef}
               onSubmit={handleSubmit} 
-              className="space-y-4"
+              className="space-y-6"
             >
               {formStatus.submitted && (
                 <div
                   className={`p-4 rounded-md ${
                     formStatus.success
-                      ? "bg-green-100 dark:bg-green-900 text-green-700 dark:text-green-300"
-                      : "bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-300"
+                      ? "bg-green-100/50 dark:bg-green-900/50 text-green-700 dark:text-green-300 backdrop-blur-sm"
+                      : "bg-red-100/50 dark:bg-red-900/50 text-red-700 dark:text-red-300 backdrop-blur-sm"
                   }`}
                 >
                   {formStatus.message}
@@ -302,11 +306,11 @@ const Contact = ({ standalone = false }) => {
                   name="name"
                   value={formData.name}
                   onChange={handleChange}
-                  className={`w-full p-3 rounded-md ${
+                  className={`w-full p-3 rounded-lg backdrop-blur-sm ${
                     theme === "light"
-                      ? "bg-light-primary text-light-text border border-light-tertiary focus:border-highlight"
-                      : "bg-dark-primary text-dark-text border border-dark-tertiary focus:border-highlight"
-                  } focus:outline-none focus:ring-2 focus:ring-highlight focus:ring-opacity-50 transition-colors duration-300`}
+                      ? "bg-white/50 text-gray-800 border border-gray-200/50 focus:border-gray-300/50"
+                      : "bg-[#1f2937]/70 text-gray-100 border border-gray-600/50 focus:border-gray-500/50"
+                  } focus:outline-none transition-colors duration-300`}
                   placeholder="Tu nombre"
                 />
                 {formError.name && (
@@ -329,11 +333,11 @@ const Contact = ({ standalone = false }) => {
                   name="email"
                   value={formData.email}
                   onChange={handleChange}
-                  className={`w-full p-3 rounded-md ${
+                  className={`w-full p-3 rounded-lg backdrop-blur-sm ${
                     theme === "light"
-                      ? "bg-light-primary text-light-text border border-light-tertiary focus:border-highlight"
-                      : "bg-dark-primary text-dark-text border border-dark-tertiary focus:border-highlight"
-                  } focus:outline-none focus:ring-2 focus:ring-highlight focus:ring-opacity-50 transition-colors duration-300`}
+                      ? "bg-white/50 text-gray-800 border border-gray-200/50 focus:border-gray-300/50"
+                      : "bg-[#1f2937]/70 text-gray-100 border border-gray-600/50 focus:border-gray-500/50"
+                  } focus:outline-none transition-colors duration-300`}
                   placeholder="Tu email"
                 />
                 {formError.email && (
@@ -356,11 +360,11 @@ const Contact = ({ standalone = false }) => {
                   name="subject"
                   value={formData.subject}
                   onChange={handleChange}
-                  className={`w-full p-3 rounded-md ${
+                  className={`w-full p-3 rounded-lg backdrop-blur-sm ${
                     theme === "light"
-                      ? "bg-light-primary text-light-text border border-light-tertiary focus:border-highlight"
-                      : "bg-dark-primary text-dark-text border border-dark-tertiary focus:border-highlight"
-                  } focus:outline-none focus:ring-2 focus:ring-highlight focus:ring-opacity-50 transition-colors duration-300`}
+                      ? "bg-white/50 text-gray-800 border border-gray-200/50 focus:border-gray-300/50"
+                      : "bg-[#1f2937]/70 text-gray-100 border border-gray-600/50 focus:border-gray-500/50"
+                  } focus:outline-none transition-colors duration-300`}
                   placeholder="Asunto del mensaje"
                 />
                 {formError.subject && (
@@ -383,11 +387,11 @@ const Contact = ({ standalone = false }) => {
                   value={formData.message}
                   onChange={handleChange}
                   rows="5"
-                  className={`w-full p-3 rounded-md ${
+                  className={`w-full p-3 rounded-lg backdrop-blur-sm ${
                     theme === "light"
-                      ? "bg-light-primary text-light-text border border-light-tertiary focus:border-highlight"
-                      : "bg-dark-primary text-dark-text border border-dark-tertiary focus:border-highlight"
-                  } focus:outline-none focus:ring-2 focus:ring-highlight focus:ring-opacity-50 transition-colors duration-300`}
+                      ? "bg-white/50 text-gray-800 border border-gray-200/50 focus:border-gray-300/50"
+                      : "bg-[#1f2937]/70 text-gray-100 border border-gray-600/50 focus:border-gray-500/50"
+                  } focus:outline-none transition-colors duration-300`}
                   placeholder="Tu mensaje"
                 ></textarea>
                 {formError.message && (
@@ -402,11 +406,11 @@ const Contact = ({ standalone = false }) => {
                 whileTap={{ scale: 0.98 }}
                 type="submit"
                 disabled={isSubmitting}
-                className={`w-full py-3 px-6 rounded-md text-white font-medium ${
+                className={`w-full py-3 px-6 rounded-lg text-sm font-medium transition-all duration-300 ${
                   theme === "light"
-                    ? "bg-highlight hover:bg-highlight-hover"
-                    : "bg-highlight hover:bg-highlight-hover"
-                } transition-colors duration-300 ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
+                    ? "bg-black/90 text-white hover:bg-black"
+                    : "bg-white/90 text-black hover:bg-white"
+                } ${isSubmitting ? 'opacity-70 cursor-not-allowed' : ''}`}
               >
                 {isSubmitting ? 'Enviando...' : 'Enviar Mensaje'}
               </motion.button>

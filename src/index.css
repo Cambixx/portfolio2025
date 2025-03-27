@@ -28,17 +28,6 @@ body {
   display: block;
 }
 
-/* Estilos para secciones con degradados */
-.gradient-01 {
-  @apply bg-gradient-to-r from-light-tertiary/50 to-light-secondary/50 dark:from-dark-tertiary/50 dark:to-dark-secondary/50;
-  filter: blur(125px);
-}
-
-.gradient-02 {
-  @apply bg-gradient-to-t from-light-tertiary/75 to-light-secondary/50 dark:from-dark-tertiary/75 dark:to-dark-secondary/50;
-  filter: blur(80px);
-}
-
 /* Estilos para los botones */
 .btn {
   @apply py-3 px-8 rounded-xl outline-none font-bold shadow-md transition-all duration-300;
@@ -51,6 +40,65 @@ body {
 /* Estilos para las tarjetas */
 .card {
   @apply bg-light-tertiary rounded-2xl p-5 sm:w-[360px] w-full shadow-card dark:bg-dark-tertiary dark:shadow-card-dark;
+}
+
+/* Estilos para las tarjetas de proyectos con efecto de vidrio esmerilado */
+.project-card {
+  @apply relative overflow-hidden rounded-2xl;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  transform: translateY(0);
+  transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+  will-change: transform, box-shadow;
+}
+
+.project-card::before {
+  content: '';
+  @apply absolute inset-0 z-[-1];
+  background: linear-gradient(
+    to bottom right,
+    rgba(255, 255, 255, 0.2),
+    rgba(255, 255, 255, 0.05)
+  );
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.project-card.light {
+  background: rgba(255, 255, 255, 0.7);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06),
+    0 0 0 1px rgba(255, 255, 255, 0.3) inset,
+    0 0 20px rgba(0, 0, 0, 0.03);
+}
+
+.project-card.dark {
+  background: rgba(17, 24, 39, 0.7);
+  box-shadow: 
+    0 4px 6px -1px rgba(0, 0, 0, 0.2),
+    0 2px 4px -1px rgba(0, 0, 0, 0.1),
+    0 0 0 1px rgba(255, 255, 255, 0.1) inset,
+    0 0 20px rgba(0, 0, 0, 0.2);
+}
+
+.project-card:hover {
+  transform: translateY(-5px);
+}
+
+.project-card.light:hover {
+  box-shadow: 
+    0 12px 20px -5px rgba(0, 0, 0, 0.1),
+    0 8px 10px -5px rgba(0, 0, 0, 0.04),
+    0 0 0 1px rgba(255, 255, 255, 0.4) inset,
+    0 0 25px rgba(147, 51, 234, 0.07);
+}
+
+.project-card.dark:hover {
+  box-shadow: 
+    0 12px 20px -5px rgba(0, 0, 0, 0.3),
+    0 8px 10px -5px rgba(0, 0, 0, 0.2),
+    0 0 0 1px rgba(255, 255, 255, 0.15) inset,
+    0 0 25px rgba(139, 92, 246, 0.15);
 }
 
 /* Estilos para el texto destacado */

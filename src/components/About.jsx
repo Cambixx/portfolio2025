@@ -24,15 +24,15 @@ const fadeIn = (direction, type, delay, duration) => ({
 });
 
 const About = ({ standalone = false }) => {
-  const { theme } = useTheme();
   const { t } = useLanguage();
+  const { theme } = useTheme();
 
   return (
     <section
       id="sobre-mi"
-      className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-10 bg-light-primary dark:bg-dark-primary`}
+      className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-16 overflow-hidden bg-white dark:bg-[#111827]`}
     >
-      <div className="container mx-auto px-4 py-16 max-w-7xl">
+      <div className="container relative mx-auto px-4 py-16 max-w-7xl">
         <motion.div
           variants={fadeIn("", "", 0.1, 1)}
           initial="hidden"
@@ -41,38 +41,30 @@ const About = ({ standalone = false }) => {
           className="text-center mb-16"
         >
           <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-light-text dark:text-dark-text tracking-tight">
-            {t.about.title}
+            {t.nav.sobreMi}
           </h2>
         </motion.div>
 
         <div className="max-w-6xl mx-auto">
           <div className="flex flex-col md:flex-row gap-12 items-stretch">
             <motion.div
-              variants={fadeIn("right", "tween", 0.2, 1)}
+              variants={fadeIn("right", "spring", 0.3, 0.75)}
               className="md:w-72 shrink-0 mx-auto md:mx-0"
             >
-              <div className={`h-full rounded-3xl overflow-hidden shadow-xl transform transition-transform duration-300 hover:scale-[1.02] ${
-                theme === "light" 
-                  ? "bg-light-secondary ring-1 ring-black/5" 
-                  : "bg-dark-secondary ring-1 ring-white/10"
-              }`}>
+              <div className={`about-card ${theme === "light" ? "light" : "dark"} p-4 sm:p-6 max-w-sm rounded-xl backdrop-blur-sm border border-gray-200/20 bg-white/30 dark:bg-[#1f2937]/50 shadow-lg`}>
                 <img
                   src="/images/foto-perfil.png"
                   alt="Carlos Rábago"
-                  className="w-full h-full object-cover"
+                  className="w-full h-auto rounded-lg"
                 />
               </div>
             </motion.div>
 
             <motion.div
-              variants={fadeIn("left", "tween", 0.3, 1)}
+              variants={fadeIn("left", "spring", 0.5, 0.75)}
               className="flex-1"
             >
-              <div className={`h-full p-8 rounded-3xl transform transition-transform duration-300 hover:scale-[1.01] ${
-                theme === "light" 
-                  ? "bg-light-secondary shadow-xl ring-1 ring-black/5" 
-                  : "bg-dark-secondary shadow-xl ring-1 ring-white/10"
-              }`}>
+              <div className={`about-card ${theme === "light" ? "light" : "dark"} h-full p-8 rounded-xl backdrop-blur-sm border border-gray-200/20 bg-white/30 dark:bg-[#1f2937]/50 shadow-lg`}>
                 <h3 className="text-3xl font-bold mb-6 text-light-text dark:text-dark-text md:text-left text-center tracking-tight">
                   {t.about.role}
                 </h3>

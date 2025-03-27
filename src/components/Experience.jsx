@@ -32,23 +32,32 @@ const TimelineElement = ({ item, t }) => {
   return (
     <VerticalTimelineElement
       contentStyle={{
-        background: isDarkTheme ? "#1f2937" : "#f3f4f6",
-        color: isDarkTheme ? "#f9fafb" : "#111827",
+        background: isDarkTheme ? "rgba(31, 41, 55, 0.8)" : "rgba(255, 255, 255, 0.7)",
+        backdropFilter: "blur(12px)",
+        WebkitBackdropFilter: "blur(12px)",
+        border: isDarkTheme ? "1px solid rgba(255, 255, 255, 0.1)" : "1px solid rgba(255, 255, 255, 0.3)",
         boxShadow: isDarkTheme 
-          ? "0 10px 30px -15px rgba(0, 0, 0, 0.7)" 
-          : "0 10px 30px -15px rgba(0, 0, 0, 0.1)"
+          ? "0 4px 6px -1px rgba(0, 0, 0, 0.2), 0 2px 4px -1px rgba(0, 0, 0, 0.1)" 
+          : "0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06)"
       }}
-      contentArrowStyle={{ borderRight: `7px solid ${isDarkTheme ? "#1f2937" : "#f3f4f6"}` }}
+      contentArrowStyle={{ 
+        borderRight: isDarkTheme 
+          ? "7px solid rgba(31, 41, 55, 0.8)"
+          : "7px solid rgba(255, 255, 255, 0.7)"
+      }}
       date={item.period}
-      dateClassName={isDarkTheme ? "text-dark-text-light" : "text-light-text-light"}
+      dateClassName={isDarkTheme ? "text-gray-300" : "text-gray-600"}
       iconStyle={{ 
-        background: isDarkTheme ? "#374151" : "#e5e7eb", 
-        color: isDarkTheme ? "#f9fafb" : "#111827" 
+        background: isDarkTheme ? "#374151" : "#f3f4f6",
+        color: isDarkTheme ? "#f9fafb" : "#111827",
+        boxShadow: isDarkTheme
+          ? "0 0 0 4px rgba(255, 255, 255, 0.1)"
+          : "0 0 0 4px rgba(0, 0, 0, 0.1)"
       }}
       icon={item.type === 'education' ? <FaGraduationCap /> : <FaBriefcase />}
     >
       <div>
-        <h3 className="text-xl font-bold" style={{ color: isDarkTheme ? "#f9fafb" : "#111827" }}>
+        <h3 className="text-xl font-bold tracking-tight" style={{ color: isDarkTheme ? "#f9fafb" : "#111827" }}>
           {item.title}
         </h3>
         <h4 className="text-base font-semibold" style={{ color: isDarkTheme ? "#d1d5db" : "#4b5563" }}>
@@ -175,17 +184,17 @@ const Experience = ({ standalone = false }) => {
   return (
     <section
       id="experiencia"
-      className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-10 bg-light-primary dark:bg-dark-primary`}
+      className={`${standalone ? 'pt-28' : ''} relative w-full mx-auto pb-16 bg-gray-50/80 dark:bg-[#1e293b]/90 overflow-hidden`}
     >
-      <div className="container mx-auto px-4 py-10 max-w-7xl">
+      <div className="container relative mx-auto px-4 py-16 max-w-7xl">
         <motion.div
           variants={fadeIn("", "", 0.1, 1)}
           initial="hidden"
           whileInView="show"
           viewport={{ once: true, amount: 0.25 }}
-          className="mb-10 text-center"
+          className="text-center mb-16"
         >
-          <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-light-text dark:text-dark-text">
+          <h2 className="text-4xl sm:text-5xl font-bold mb-6 text-light-text dark:text-dark-text tracking-tight">
             {t.experience.title}
           </h2>
           <p className="text-light-text-light dark:text-dark-text-light max-w-2xl mx-auto text-lg">
@@ -194,7 +203,7 @@ const Experience = ({ standalone = false }) => {
         </motion.div>
 
         <div className="mt-10">
-          <VerticalTimeline lineColor={theme === "dark" ? "#374151" : "#e5e7eb"}>
+          <VerticalTimeline lineColor={theme === "dark" ? "rgba(55, 65, 81, 0.5)" : "rgba(229, 231, 235, 0.5)"}>
             {timelineItems[language].map((item, index) => (
               <TimelineElement
                 key={index}
