@@ -10,8 +10,8 @@ const CONFIG = {
   PARTICLE_DENSITY: 4,         // Densidad de partículas (más alto = menos partículas)
   
   // Física
-  SPRING_FACTOR: 0.015,        // Velocidad de retorno a posición original
-  FRICTION: 0.50,              // Fricción de las partículas
+  SPRING_FACTOR: 0.045,        // Velocidad de retorno a posición original (aumentado de 0.015)
+  FRICTION: 0.60,              // Fricción de las partículas (reducido de 0.50 para menos resistencia)
   DAMPING: 0.9,                // Factor de amortiguación para reducir oscilaciones
   
   // Efecto repulsión del cursor
@@ -26,12 +26,12 @@ const CONFIG = {
   
   // Rendimiento
   ANIMATION_DELAY: 100,
-  FPS_TARGET: 60,              // Nuevo: FPS objetivo
+  FPS_TARGET: 30,              // Nuevo: FPS objetivo
   
   // Animación de implosión inicial
   IMPLOSION_ENABLED: true,
-  IMPLOSION_DISTANCE: 700,
-  IMPLOSION_SPEED: 0.12,
+  IMPLOSION_DISTANCE: 500,
+  IMPLOSION_SPEED: 0.22,
   IMPLOSION_STAGGER: 4
 };
 
