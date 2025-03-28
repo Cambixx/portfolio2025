@@ -10,13 +10,13 @@ const CONFIG = {
   PARTICLE_DENSITY: 4,         // Densidad de partículas (más alto = menos partículas)
   
   // Física
-  SPRING_FACTOR: 0.045,        // Velocidad de retorno a posición original (aumentado de 0.015)
-  FRICTION: 0.60,              // Fricción de las partículas (reducido de 0.50 para menos resistencia)
+  SPRING_FACTOR: 0.105,        // Velocidad de retorno a posición original (aumentado de 0.015)
+  FRICTION: 0.80,              // Fricción de las partículas (reducido de 0.50 para menos resistencia)
   DAMPING: 0.9,                // Factor de amortiguación para reducir oscilaciones
   
   // Efecto repulsión del cursor
   REPULSION_RADIUS: 50,       // Radio de repulsión en píxeles
-  REPULSION_FORCE: 12,         // Fuerza de repulsión
+  REPULSION_FORCE: 16,         // Fuerza de repulsión
   
   // Texto
   FONT_FAMILY: 'sans-serif',
@@ -30,7 +30,7 @@ const CONFIG = {
   
   // Animación de implosión inicial
   IMPLOSION_ENABLED: true,
-  IMPLOSION_DISTANCE: 500,
+  IMPLOSION_DISTANCE: 400,
   IMPLOSION_SPEED: 0.22,
   IMPLOSION_STAGGER: 4
 };
