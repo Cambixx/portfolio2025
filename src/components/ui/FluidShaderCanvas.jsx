@@ -3,45 +3,38 @@ import * as THREE from 'three';
 
 const FluidShaderCanvas = () => {
   const canvasRef = useRef(null);
+  const frameRef = useRef(null);
+  const lastFrameTimeRef = useRef(0);
+  const FPS_LIMIT = 30; // Limitar a 30 FPS para mejor rendimiento
+  const FRAME_TIME = 1000 / FPS_LIMIT;
   
   useEffect(() => {
-    // Crear la escena, cámara y renderer
     const scene = new THREE.Scene();
     const camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
     
-    // Configurar el renderer
     const renderer = new THREE.WebGLRenderer({ 
       canvas: canvasRef.current,
       alpha: true,
-      antialias: true,
-      precision: 'highp' // Alta precisión para mejor calidad
+      antialias: false, // Desactivar antialiasing para mejor rendimiento
+      precision: 'mediump' // Usar precisión media para mejor rendimiento
     });
     
-    // Usar pixel ratio del dispositivo para mejorar la nitidez en pantallas de alta densidad
-    const pixelRatio = window.devicePixelRatio || 1;
+    const pixelRatio = Math.min(window.devicePixelRatio, 2); // Limitar pixel ratio a 2
     renderer.setPixelRatio(pixelRatio);
     
-    // Ajustar tamaño al contenedor considerando el pixel ratio
     const resizeCanvas = () => {
       const canvas = renderer.domElement;
       const parent = canvas.parentElement;
-      
-      // Obtener el tamaño real del contenedor
       const displayWidth = parent ? parent.clientWidth : window.innerWidth;
       const displayHeight = parent ? parent.clientHeight : window.innerHeight;
       
-      // Verificar si necesita cambio de tamaño
-      const needResize = canvas.width !== displayWidth || canvas.height !== displayHeight;
-      
-      if (needResize) {
-        // Configurar el renderizador con el nuevo tamaño
-        renderer.setSize(displayWidth, displayHeight, false);
-      }
-      
-      return needResize;
+      // Reducir la resolución de render para mejor rendimiento
+      const scale = 0.75;
+      renderer.setSize(displayWidth * scale, displayHeight * scale, false);
+      canvas.style.width = `${displayWidth}px`;
+      canvas.style.height = `${displayHeight}px`;
     };
 
-    // Crear geometría y material con el shader
     const geometry = new THREE.PlaneGeometry(2, 2);
     
     const uniforms = {
@@ -49,32 +42,24 @@ const FluidShaderCanvas = () => {
       iResolution: { value: new THREE.Vector2() }
     };
     
+    // Shader simplificado para mejor rendimiento
     const fragmentShader = `
       uniform float iTime;
       uniform vec2 iResolution;
       
       void mainImage( out vec4 O, in vec2 I )
       {
-          //Resolution for scaling
           vec2 r = iResolution.xy,
-          //Centered, ratio corrected, coordinates
-          p = (I+I-r) / r.y / 1.2, // Dividido por 1.2 para reducir el tamaño
-          //Z depth
+          p = (I+I-r) / r.y / 1.5,
           z,
-          //Iterator (x=0)
           i,
-          //Fluid coordinates
-          f = p*(z+=4.-4.*abs(.6-dot(p,p))); // Cambiado de .7 a .6 para reducir tamaño
+          f = p*(z+=3.-3.*abs(.5-dot(p,p)));
           
-          //Clear frag color and loop 8 times
-          for(O *= 0.; i.y++<8.;
-              //Set color waves and line brightness
+          for(O *= 0.; i.y++<6.; // Reducido de 8 a 6 iteraciones
               O += (sin(f)+1.).xyyx * abs(f.x-f.y))
-              //Add fluid waves
-              f += cos(f.yx*i.y+i+iTime)/i.y+.7;
+              f += cos(f.yx*i.y+i+iTime)/i.y+.5;
           
-          //Tonemap, fade edges and color gradient
-          O = tanh(7.*exp(z.x-4.-p.y*vec4(-1,1,2,0))/O);
+          O = tanh(5.*exp(z.x-3.-p.y*vec4(-1,1,2,0))/O);
       }
       
       void main() {
@@ -99,45 +84,32 @@ const FluidShaderCanvas = () => {
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
     
-    // Configurar la animación
-    let animationFrameId;
     const clock = new THREE.Clock();
     
-    const animate = () => {
-      // Comprobar y actualizar el tamaño si es necesario
-      const resized = resizeCanvas();
+    const animate = (currentTime) => {
+      if (currentTime - lastFrameTimeRef.current >= FRAME_TIME) {
+        uniforms.iTime.value = clock.getElapsedTime() * 0.75; // Reducir velocidad de animación
+        uniforms.iResolution.value.set(
+          renderer.domElement.width, 
+          renderer.domElement.height
+        );
+        
+        renderer.render(scene, camera);
+        lastFrameTimeRef.current = currentTime;
+      }
       
-      // Actualizar el tiempo
-      uniforms.iTime.value = clock.getElapsedTime();
-      
-      // Actualizar resolución con el tamaño real del canvas
-      uniforms.iResolution.value.set(
-        renderer.domElement.width, 
-        renderer.domElement.height
-      );
-      
-      // Renderizar la escena
-      renderer.render(scene, camera);
-      
-      // Solicitar el siguiente frame
-      animationFrameId = window.requestAnimationFrame(animate);
+      frameRef.current = requestAnimationFrame(animate);
     };
     
-    // Realizar el resize inicial para asegurar que comience con el tamaño correcto
     resizeCanvas();
+    animate(0);
     
-    // Comenzar animación
-    animate();
+    const debouncedResize = debounce(resizeCanvas, 250);
+    window.addEventListener('resize', debouncedResize);
     
-    // Manejar cambios de tamaño
-    window.addEventListener('resize', resizeCanvas);
-    
-    // Limpieza al desmontar
     return () => {
-      window.cancelAnimationFrame(animationFrameId);
-      window.removeEventListener('resize', resizeCanvas);
-      
-      // Liberar memoria
+      cancelAnimationFrame(frameRef.current);
+      window.removeEventListener('resize', debouncedResize);
       geometry.dispose();
       material.dispose();
       renderer.dispose();
@@ -152,5 +124,18 @@ const FluidShaderCanvas = () => {
     />
   );
 };
+
+// Función de debounce para optimizar el resize
+function debounce(func, wait) {
+  let timeout;
+  return function executedFunction(...args) {
+    const later = () => {
+      clearTimeout(timeout);
+      func(...args);
+    };
+    clearTimeout(timeout);
+    timeout = setTimeout(later, wait);
+  };
+}
 
 export default FluidShaderCanvas; 
