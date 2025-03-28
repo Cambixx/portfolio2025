@@ -180,13 +180,15 @@ const MusicShaderCanvas = () => {
       uniform sampler2D iChannel0;
 
       // Constantes para ajustar el comportamiento visual - ajustar estos valores según sea necesario
-      const float CUBE_HEIGHT_FACTOR = 3.2;      // Factor de altura para los cubos (era 2.5)
-      const float TIME_SPEED = 0.12;            // Velocidad de animación (era 0.1)
-      const float FREQ_IMPACT = 1.2;            // Impacto de las frecuencias (multiplica todos los valores de freq)
+      const float CUBE_HEIGHT_FACTOR = 3.2;      // Factor de altura para los cubos (aumentado para más impacto visual)
+      const float TIME_SPEED = 0.35;            // Velocidad de animación (ligeramente más rápido)
+      const float FREQ_IMPACT = 1.6;            // Impacto de las frecuencias (más sensibilidad)
+      const float SMOOTHING = 0.5;              // Factor de suavizado para transiciones (0-1, mayor = más suave)
+      const float BOUNCE_FACTOR = 0.7;          // Intensidad del efecto rebote
       
       // Factores para cada banda de frecuencia
-      const float FREQ_0_FACTOR = 0.6 * FREQ_IMPACT;
-      const float FREQ_1_FACTOR = 0.5 * FREQ_IMPACT;
+      const float FREQ_0_FACTOR = 0.45 * FREQ_IMPACT;
+      const float FREQ_1_FACTOR = 0.32 * FREQ_IMPACT;
       const float FREQ_2_FACTOR = 0.4 * FREQ_IMPACT;
       const float FREQ_3_FACTOR = 0.35 * FREQ_IMPACT;
       const float FREQ_4_FACTOR = 0.3 * FREQ_IMPACT;
@@ -221,25 +223,56 @@ const MusicShaderCanvas = () => {
         
         float f = 0.0;	
         float id = hash(ipos.x + ipos.y*57.0);
-        f += freqs[0] * clamp(1.0 - abs(id-0.10)/BAND_WIDTH, 0.0, 1.0);
-        f += freqs[1] * clamp(1.0 - abs(id-0.23)/BAND_WIDTH, 0.0, 1.0);
-        f += freqs[2] * clamp(1.0 - abs(id-0.36)/BAND_WIDTH, 0.0, 1.0);
-        f += freqs[3] * clamp(1.0 - abs(id-0.49)/BAND_WIDTH, 0.0, 1.0);
-        f += freqs[4] * clamp(1.0 - abs(id-0.62)/BAND_WIDTH, 0.0, 1.0);
-        f += freqs[5] * clamp(1.0 - abs(id-0.75)/BAND_WIDTH, 0.0, 1.0);
-        f += freqs[6] * clamp(1.0 - abs(id-0.88)/BAND_WIDTH, 0.0, 1.0);
-        f += freqs[7] * clamp(1.0 - abs(id-1.01)/BAND_WIDTH, 0.0, 1.0);
+        
+        // Efecto de onda que se propaga desde el centro
+        float dist = length(pos * 0.1);
+        float wave = sin(dist * 3.0 - iTime * 2.0) * 0.1;
+        
+        // Añadir variación temporal basada en la posición para más dinamismo
+        float timeFactor = sin(iTime * 0.5 + id * 6.28) * 0.2 + 0.8;
+        
+        // Aplicar frecuencias con variación espacial y temporal
+        f += freqs[0] * clamp(1.0 - abs(id-0.10)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
+        f += freqs[1] * clamp(1.0 - abs(id-0.23)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
+        f += freqs[2] * clamp(1.0 - abs(id-0.36)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
+        f += freqs[3] * clamp(1.0 - abs(id-0.49)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
+        f += freqs[4] * clamp(1.0 - abs(id-0.62)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
+        f += freqs[5] * clamp(1.0 - abs(id-0.75)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
+        f += freqs[6] * clamp(1.0 - abs(id-0.88)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
+        f += freqs[7] * clamp(1.0 - abs(id-1.01)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
 
-        f = pow(clamp(f, 0.0, 1.0), 2.0);
-        float h = CUBE_HEIGHT_FACTOR * f;
+        // Curva de respuesta mejorada con más elasticidad
+        f = pow(clamp(f, 0.0, 1.0), 1.8);
+        
+        // Añadir un ligero rebote global
+        float bounce = sin(iTime * 3.0) * 0.05 * max(freqs[0] + freqs[1], 0.1);
+        
+        float h = CUBE_HEIGHT_FACTOR * f + bounce;
 
         return vec3(h, id, f);
       }
 
+      // Función para SDF de un cilindro vertical
+      float sdCylinder(vec3 p, vec2 h) {
+        // h.x = radio, h.y = altura/2
+        vec2 d = abs(vec2(length(p.xz), p.y)) - h;
+        return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));
+      }
+      
       vec3 map(in vec3 pos) {
         vec2 p = fract(pos.xz); 
         vec3 m = mapH(pos.xz);
-        float d = udBox(vec3(p.x-0.5,pos.y-0.5*m.x,p.y-0.5), vec3(0.3,m.x*0.5,0.3), 0.1);
+        
+        // Posición relativa para el cilindro centrado
+        vec3 rp = vec3(p.x-0.5, pos.y-0.5*m.x, p.y-0.5);
+        
+        // Usar cilindro en lugar de caja
+        // sdCylinder espera (radio, altura/2)
+        float d = sdCylinder(rp, vec2(0.25, m.x*0.5));
+        
+        // Añadir redondeo a los bordes del cilindro
+        d -= 0.05;
+        
         return vec3(d, m.yz);
       }
 
@@ -266,8 +299,9 @@ const MusicShaderCanvas = () => {
           if((tmin+s)>tmax) break;
           
           vec3 ce = vec3(pos.x+0.5, 0.5*cub.x, pos.y+0.5);
-          vec3 rb = vec3(0.3,cub.x*0.5,0.3);
-          vec3 ra = rb + 0.12;
+          // Para cilindros, rb contiene (radio, altura/2, radio)
+          vec3 rb = vec3(0.25, cub.x*0.5, 0.25);
+          vec3 ra = vec3(rb.x + 0.08, rb.y, rb.z + 0.08);
           vec3 rc = ro - ce;
           float tN = maxcomp(-rdi*rc - rda*ra);
           float tF = maxcomp(-rdi*rc + rda*ra);
@@ -275,7 +309,9 @@ const MusicShaderCanvas = () => {
             float s = tN;
             float h = 1.0;
             for(int j=0; j<24; j++) {
-              h = udBox(rc+s*rd, rb, 0.1); 
+              // Calcular distancia para un cilindro en lugar de una caja
+              vec3 rcp = rc+s*rd;
+              h = sdCylinder(rcp, vec2(rb.x, rb.y)) - 0.05; 
               s += h;
               if(s>tF) break;
             }
@@ -475,15 +511,20 @@ const MusicShaderCanvas = () => {
         const frequencies = new Float32Array(8);
         const time = Date.now() * 0.001;
         
-        // Simular datos de audio si no hay datos reales - valores aumentados para más movimiento
-        frequencies[0] = (Math.sin(time * 1.0) * 0.5 + 0.5) * 0.5;   // Aumentado de 0.4 a 0.5
-        frequencies[1] = (Math.sin(time * 1.5) * 0.5 + 0.5) * 0.45;  // Aumentado de 0.3 a 0.45
-        frequencies[2] = (Math.sin(time * 2.2) * 0.5 + 0.5) * 0.4;   // Aumentado de 0.25 a 0.4
-        frequencies[3] = (Math.sin(time * 3.2) * 0.5 + 0.5) * 0.35;  // Aumentado de 0.22 a 0.35
-        frequencies[4] = (Math.sin(time * 3.7) * 0.5 + 0.5) * 0.3;   // Aumentado de 0.2 a 0.3
-        frequencies[5] = (Math.sin(time * 4.2) * 0.5 + 0.5) * 0.25;  // Aumentado de 0.18 a 0.25
-        frequencies[6] = (Math.sin(time * 4.8) * 0.5 + 0.5) * 0.2;   // Aumentado de 0.15 a 0.2
-        frequencies[7] = (Math.sin(time * 5.5) * 0.5 + 0.5) * 0.15;  // Aumentado de 0.12 a 0.15
+        // Crear patrones más complejos para la simulación
+        const beat = Math.sin(time * 2.0) * 0.5 + 0.5;
+        const pulse = Math.pow(Math.sin(time * 0.8) * 0.5 + 0.5, 3);
+        const bump = Math.max(0, Math.sin(time * 1.2));
+        
+        // Crear un ritmo más interesante con diferentes patrones
+        frequencies[0] = (Math.sin(time * 3.0) * 0.5 + 0.5) * 0.6 + pulse * 0.3;
+        frequencies[1] = (Math.sin(time * 3.5 + 0.2) * 0.5 + 0.5) * 0.5 + bump * 0.3;
+        frequencies[2] = (Math.sin(time * 4.2 + 0.4) * 0.5 + 0.5) * 0.45 + beat * 0.25;
+        frequencies[3] = (Math.sin(time * 3.2 + 0.6) * 0.5 + 0.5) * 0.4 + pulse * 0.2;
+        frequencies[4] = (Math.sin(time * 3.7 + 0.8) * 0.5 + 0.5) * 0.35 + bump * 0.2;
+        frequencies[5] = (Math.sin(time * 4.2 + 1.0) * 0.5 + 0.5) * 0.3 + beat * 0.15;
+        frequencies[6] = (Math.sin(time * 4.8 + 1.2) * 0.5 + 0.5) * 0.25 + pulse * 0.1;
+        frequencies[7] = (Math.sin(time * 5.5 + 1.4) * 0.5 + 0.5) * 0.2 + bump * 0.1;
         
         audioTexture.image.data = frequencies;
         audioTexture.needsUpdate = true;
@@ -497,13 +538,25 @@ const MusicShaderCanvas = () => {
         const frequencies = new Float32Array(8);
         const binSize = Math.floor(frequencyData.length / 8);
         
+        let lastFrequencies = new Array(8).fill(0);
+        
         for (let i = 0; i < 8; i++) {
           let sum = 0;
           for (let j = 0; j < binSize; j++) {
             sum += frequencyData[i * binSize + j];
           }
-          // Aplicar un factor de amplificación a los valores de frecuencia para mayor movimiento
-          frequencies[i] = (sum / (binSize * 255)) * 0.8; // Aumentado de 0.6 a 0.8
+          
+          // Obtener el valor bruto
+          const rawValue = (sum / (binSize * 255));
+          
+          // Aplicar un factor de amplificación para mayor movimiento
+          const amplifiedValue = rawValue * 0.9;
+          
+          // Procesar los picos para mayor dinamismo
+          const withPeaks = Math.pow(amplifiedValue, 0.7);
+          
+          // Almacenar el valor procesado
+          frequencies[i] = withPeaks;
         }
         
         audioTexture.image.data = frequencies;
