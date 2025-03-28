@@ -11,7 +11,7 @@ const FluidShaderCanvas = lazy(() => import('./ui/FluidShaderCanvas'));
 const ParticleTextEffect = lazy(() => import('./ui/ParticleTextEffect'));
 
 // Cambia el tipo de shader: 'abstract', 'blackhole', 'fluid' o 'none'
-const SHADER_TYPE = 'fluid';
+const SHADER_TYPE = 'blackhole';
 
 const Hero = ({ standalone = false }) => {
   const { t } = useLanguage();
