@@ -42,6 +42,25 @@ export default {
         "hero-pattern-dark": "linear-gradient(to right bottom, rgba(31, 41, 55, 0.8), rgba(17, 24, 39, 0.8))",
         "gradient-conic": "conic-gradient(var(--tw-gradient-stops))",
       },
+      animation: {
+        'gradient': 'gradient 15s ease infinite',
+      },
+      keyframes: {
+        gradient: {
+          '0%, 100%': {
+            'background-position': '0% 50%',
+          },
+          '50%': {
+            'background-position': '100% 50%',
+          },
+        },
+      },
+      backgroundSize: {
+        'auto': 'auto',
+        'cover': 'cover',
+        'contain': 'contain',
+        '200%': '200% 200%',
+      },
     },
   },
   plugins: [

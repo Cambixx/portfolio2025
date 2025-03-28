@@ -11,7 +11,7 @@ const FluidShaderCanvas = lazy(() => import('./ui/FluidShaderCanvas'));
 const ParticleTextEffect = lazy(() => import('./ui/ParticleTextEffect'));
 
 // Cambia el tipo de shader: 'abstract', 'blackhole', 'fluid' o 'none'
-const SHADER_TYPE = 'blackhole';
+const SHADER_TYPE = 'none';
 
 const Hero = ({ standalone = false }) => {
   const { t } = useLanguage();
@@ -22,11 +22,19 @@ const Hero = ({ standalone = false }) => {
   useEffect(() => {
     // Detectar capacidades del dispositivo
     const checkDeviceCapabilities = () => {
+      // Si SHADER_TYPE es 'none', no necesitamos verificar capacidades
+      if (SHADER_TYPE === 'none') {
+        setCanUseShader(false);
+        setIsLoading(false);
+        return;
+      }
+
       const canvas = document.createElement('canvas');
       const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
       
       if (!gl) {
         setCanUseShader(false);
+        setIsLoading(false);
         return;
       }
 
@@ -37,10 +45,10 @@ const Hero = ({ standalone = false }) => {
       if (isMobile && isLowEnd) {
         setCanUseShader(false);
       }
+      setIsLoading(false);
     };
 
     checkDeviceCapabilities();
-    setIsLoading(false);
   }, []);
 
   // Función para renderizar el shader seleccionado
@@ -50,7 +58,7 @@ const Hero = ({ standalone = false }) => {
     }
 
     return (
-      <Suspense fallback={<div className="absolute inset-0 bg-gradient-to-b from-blue-500/20 to-purple-500/20" />}>
+      <Suspense fallback={<div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-gradient" />}>
         {(() => {
           switch(SHADER_TYPE) {
             case 'abstract':
@@ -60,15 +68,31 @@ const Hero = ({ standalone = false }) => {
             case 'fluid':
               return <FluidShaderCanvas />;
             default:
-              return <ShaderCanvas />;
+              return null;
           }
         })()}
       </Suspense>
     );
   };
 
+  // Función para renderizar el fondo cuando no hay shader
+  const renderBackground = () => {
+    if (canUseShader && SHADER_TYPE !== 'none') return null;
+
+    return (
+      <div className="absolute inset-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-gradient" />
+        <div className="absolute inset-0 backdrop-blur-3xl" />
+      </div>
+    );
+  };
+
   if (isLoading) {
-    return <div className="w-full h-screen bg-gradient-to-b from-blue-500/20 to-purple-500/20" />;
+    return (
+      <div className="w-full h-screen">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/20 to-pink-500/20 animate-gradient" />
+      </div>
+    );
   }
 
   return (
@@ -76,11 +100,9 @@ const Hero = ({ standalone = false }) => {
       id="inicio" 
       className={`${standalone ? 'pt-20' : ''} relative w-full h-screen mx-auto flex flex-col items-center justify-center overflow-hidden`}
     >
-      {/* Shader Canvas o Fondo Alternativo */}
+      {/* Fondo: Shader o Gradiente */}
+      {renderBackground()}
       {renderShader()}
-      {!canUseShader && (
-        <div className="absolute inset-0 bg-gradient-to-b from-blue-500/20 to-purple-500/20" />
-      )}
       
       {/* Texto formado por partículas */}
       <div className="absolute inset-0 flex items-center justify-center z-10">
