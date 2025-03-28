@@ -44,8 +44,12 @@ const ParticleTextEffect = ({ text, subtitle = "WEB DEVELOPER", isDarkMode = tru
   const touchStartTimeRef = useRef(0);
   const lastFrameTimeRef = useRef(0);
   const frameIntervalRef = useRef(1000 / CONFIG.FPS_TARGET);
+  const isMobileRef = useRef(false);
 
   useEffect(() => {
+    // Detectar si es un dispositivo móvil
+    isMobileRef.current = /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+    
     const canvas = canvasRef.current;
     const ctx = canvas.getContext('2d', { alpha: true });
     
@@ -67,7 +71,7 @@ const ParticleTextEffect = ({ text, subtitle = "WEB DEVELOPER", isDarkMode = tru
     };
     
     const handleTouchMove = (e) => {
-      if (e.touches && e.touches[0]) {
+      if (!isMobileRef.current && e.touches && e.touches[0]) {
         mouseRef.current.x = e.touches[0].clientX;
         mouseRef.current.y = e.touches[0].clientY;
         e.preventDefault();
@@ -75,7 +79,7 @@ const ParticleTextEffect = ({ text, subtitle = "WEB DEVELOPER", isDarkMode = tru
     };
     
     const handleTouchStart = (e) => {
-      if (e.touches && e.touches[0]) {
+      if (!isMobileRef.current && e.touches && e.touches[0]) {
         mouseRef.current.x = e.touches[0].clientX;
         mouseRef.current.y = e.touches[0].clientY;
         touchStartTimeRef.current = Date.now();
@@ -174,6 +178,8 @@ const ParticleTextEffect = ({ text, subtitle = "WEB DEVELOPER", isDarkMode = tru
       }
       
       handleRepulsion(mouseX, mouseY) {
+        if (isMobileRef.current) return;
+
         if (typeof mouseX !== 'number' || typeof mouseY !== 'number' || 
             isNaN(mouseX) || isNaN(mouseY)) return;
         
