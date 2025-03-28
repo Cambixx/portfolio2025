@@ -8,9 +8,10 @@ import { useLanguage } from '../context/LanguageContext';
 const ShaderCanvas = lazy(() => import('./ui/ShaderCanvas'));
 const BlackholeShaderCanvas = lazy(() => import('./ui/BlackholeShaderCanvas'));
 const FluidShaderCanvas = lazy(() => import('./ui/FluidShaderCanvas'));
+const MusicShaderCanvas = lazy(() => import('./ui/MusicShaderCanvas'));
 const ParticleTextEffect = lazy(() => import('./ui/ParticleTextEffect'));
 
-// Cambia el tipo de shader: 'abstract', 'blackhole', 'fluid' o 'none'
+// Cambia el tipo de shader: 'abstract', 'blackhole', 'fluid', 'music' o 'none'
 const SHADER_TYPE = 'fluid';
 
 const Hero = ({ standalone = false }) => {
@@ -67,6 +68,8 @@ const Hero = ({ standalone = false }) => {
               return <BlackholeShaderCanvas />;
             case 'fluid':
               return <FluidShaderCanvas />;
+            case 'music':
+              return <MusicShaderCanvas />;
             default:
               return null;
           }
