@@ -99,7 +99,7 @@ const ParticleTextEffect = ({ text, subtitle = "WEB DEVELOPER", isDarkMode = tru
         this.originX = x;
         this.originY = y;
         
-        if (CONFIG.IMPLOSION_ENABLED && !implosionCompleteRef.current) {
+        if (CONFIG.IMPLOSION_ENABLED && !implosionCompleteRef.current && !isMobileRef.current) {
           const angle = Math.random() * Math.PI * 2;
           const distance = CONFIG.IMPLOSION_DISTANCE * (0.8 + Math.random() * 0.4);
           
