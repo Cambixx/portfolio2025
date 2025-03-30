@@ -49,7 +49,7 @@ const Navbar = () => {
         className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${
           language === 'es'
             ? 'bg-light-text dark:bg-dark-text text-white dark:text-neutral-900'
-            : 'text-light-text/70 dark:text-dark-text/70 hover:text-light-text dark:hover:text-dark-text'
+            : 'text-white dark:text-neutral-300 hover:text-white dark:hover:text-white'
         }`}
       >
         ES
@@ -59,7 +59,7 @@ const Navbar = () => {
         className={`px-3 py-1.5 rounded-lg text-sm font-medium transition-all duration-300 ${
           language === 'en'
             ? 'bg-light-text dark:bg-dark-text text-white dark:text-neutral-900'
-            : 'text-light-text/70 dark:text-dark-text/70 hover:text-light-text dark:hover:text-dark-text'
+            : 'text-white dark:text-neutral-300 hover:text-white dark:hover:text-white'
         }`}
       >
         EN
@@ -87,11 +87,11 @@ const Navbar = () => {
             className="flex items-center cursor-pointer group"
             onClick={closeMenu}
           >
-            <span className="text-light-text/80 dark:text-dark-text/80 text-2xl transition-colors duration-300 group-hover:text-light-text dark:group-hover:text-dark-text">&lt;</span>
-            <span className="font-bold text-2xl bg-gradient-to-r from-light-text/90 to-light-text dark:from-dark-text/90 dark:to-dark-text bg-clip-text text-transparent">
+            <span className="text-neutral-100 dark:text-neutral-300 text-2xl transition-colors duration-300 group-hover:text-white dark:group-hover:text-white">&lt;</span>
+            <span className="font-bold text-2xl text-white dark:text-white mx-1">
               Carlos Rábago
             </span>
-            <span className="text-light-text/80 dark:text-dark-text/80 text-2xl transition-colors duration-300 group-hover:text-light-text dark:group-hover:text-dark-text">/&gt;</span>
+            <span className="text-neutral-100 dark:text-neutral-300 text-2xl transition-colors duration-300 group-hover:text-white dark:group-hover:text-white">/&gt;</span>
           </Link>
 
           {/* Enlaces de navegación - Desktop */}
@@ -104,8 +104,8 @@ const Navbar = () => {
                 smooth={true}
                 offset={-70}
                 duration={500}
-                activeClass="text-light-text dark:text-dark-text"
-                className="cursor-pointer text-light-text/70 dark:text-dark-text/70 hover:text-light-text dark:hover:text-dark-text transition-all duration-300 text-sm font-medium"
+                activeClass="text-white dark:text-white"
+                className="cursor-pointer text-neutral-200 dark:text-neutral-300 hover:text-white dark:hover:text-white transition-all duration-300 text-sm font-medium"
                 onSetActive={() => setActive(link.id)}
               >
                 {link.title}
@@ -120,7 +120,7 @@ const Navbar = () => {
           {/* Botón menú móvil */}
           <button
             onClick={() => setIsOpen(!isOpen)}
-            className="md:hidden p-2 rounded-lg text-light-text/70 dark:text-dark-text/70 hover:text-light-text dark:hover:text-dark-text hover:bg-light-text/5 dark:hover:bg-dark-text/5 transition-all duration-300 cursor-pointer"
+            className="md:hidden p-2 rounded-lg text-neutral-200 dark:text-neutral-300 hover:text-white dark:hover:text-white hover:bg-light-text/5 dark:hover:bg-dark-text/5 transition-all duration-300 cursor-pointer"
             aria-label={isOpen ? 'Cerrar menú' : 'Abrir menú'}
           >
             {isOpen ? (

@@ -3,10 +3,10 @@ import { useRef, useEffect } from 'react';
 // Constantes configurables para ajustes
 const CONFIG = {
   // Partículas
-  PARTICLE_SIZE_MIN: 0.8,      // Tamaño mínimo de partícula
-  PARTICLE_SIZE_MAX: 1.5,      // Tamaño máximo de partícula
+  PARTICLE_SIZE_MIN: 1.2,      // Tamaño mínimo de partícula
+  PARTICLE_SIZE_MAX: 1.4,      // Tamaño máximo de partícula
   PARTICLE_COLOR_DARK: '#ffffff',   // Color de las partículas en modo oscuro
-  PARTICLE_COLOR_LIGHT: '#333333',  // Color de las partículas en modo claro
+  PARTICLE_COLOR_LIGHT: '#ffffff',  // Color de las partículas en modo claro
   PARTICLE_DENSITY: 4,         // Densidad de partículas (más alto = menos partículas)
   
   // Física
