@@ -14,7 +14,7 @@ const MusicShaderCanvas = () => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [isAudioInitialized, setIsAudioInitialized] = useState(false);
   const { theme } = useTheme();
-  const FPS_LIMIT = 30;
+  const FPS_LIMIT = 24;
   const FRAME_TIME = 1000 / FPS_LIMIT;
 
   // Función para inicializar y conectar el contexto de audio
