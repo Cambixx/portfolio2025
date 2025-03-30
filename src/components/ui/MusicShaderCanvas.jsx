@@ -201,12 +201,33 @@ const MusicShaderCanvas = () => {
       const float FREQ_6_FACTOR = 0.2 * FREQ_IMPACT;
       const float FREQ_7_FACTOR = 0.15 * FREQ_IMPACT;
 
+      // Propiedades del vidrio esmerilado
+      const float GLASS_ROUGHNESS = 0.15;     // Rugosidad de la superficie
+      const float GLASS_IOR = 1.5;            // Índice de refracción
+      const float GLASS_TRANSPARENCY = 0.8;   // Transparencia del vidrio
+      const float INNER_LIGHT_INTENSITY = 1.2;  // Intensidad de la luz interna
+      const vec3 INNER_LIGHT_POS = vec3(0.0, 0.3, 0.0);  // Posición relativa de la luz interna
+
       // Distribución de bandas
       const float BAND_WIDTH = 0.15;
 
       float hash(float n) { return fract(sin(n)*13.5453123); }
+      float hash3(vec3 p) { return fract(sin(dot(p, vec3(127.1, 311.7, 74.9)))*43758.5453123); }
 
       float maxcomp(in vec3 v) { return max(max(v.x, v.y), v.z); }
+
+      // Función para crear textura de ruido para simular vidrio esmerilado
+      float fbm(vec3 p) {
+        float f = 0.0;
+        float scale = 1.0;
+        float amp = 1.0;
+        for (int i = 0; i < 4; i++) {
+          f += amp * hash3(p * scale);
+          scale *= 2.0;
+          amp *= 0.5;
+        }
+        return f;
+      }
 
       float udBox(vec3 p, vec3 b, float r) {
         return length(max(abs(p)-b,0.0))-r;
@@ -356,10 +377,18 @@ const MusicShaderCanvas = () => {
 
       vec3 calcNormal(in vec3 pos, in float t) {
         vec2 e = vec2(1.0,-1.0)*surface*t;
-        return normalize(e.xyy*map(pos + e.xyy).x + 
+        
+        // Añadir perturbación a la normal para efecto de vidrio esmerilado
+        float noiseFactor = GLASS_ROUGHNESS * fbm(pos * 50.0 + iTime * 0.05);
+        
+        vec3 normal = normalize(e.xyy*map(pos + e.xyy).x + 
                       e.yyx*map(pos + e.yyx).x + 
                       e.yxy*map(pos + e.yxy).x + 
                       e.xxx*map(pos + e.xxx).x);
+                      
+        // Perturbar normal con ruido
+        normal += vec3(noiseFactor) * vec3(0.3, 0.1, 0.3);
+        return normalize(normal);
       }
 
       const vec3 light1 = vec3(0.60, 0.48, -0.65);
@@ -381,13 +410,43 @@ const MusicShaderCanvas = () => {
         return tminmax;
       }
 
-      vec3 doLighting(in vec3 col, in float ks,
-                    in vec3 pos, in vec3 nor, in vec3 rd) {
+      // Función de Fresnel para efecto de vidrio
+      float fresnel(vec3 normal, vec3 viewDir, float F0) {
+        float cosTheta = clamp(dot(normal, viewDir), 0.0, 1.0);
+        return F0 + (1.0 - F0) * pow(1.0 - cosTheta, 5.0);
+      }
+
+      // Calcula luz interna para los cilindros
+      vec3 calculateInnerLight(vec3 pos, vec3 nor, vec3 rd, float height, float intensity, float id) {
+        // Posición de la luz interna relativa al centro del cilindro
+        vec3 lightDir = normalize(vec3(sin(iTime*2.0 + id*5.0)*0.3, 0.0, cos(iTime*1.5 + id*5.0)*0.3) - pos);
         
+        // Color base de la luz (varía según el ID del objeto y el tiempo)
+        vec3 innerColor;
+        if (isDarkMode) {
+            // Colores neón para tema oscuro
+            innerColor = 0.8 + 0.5*cos(6.2831*id + vec3(0.0, 0.5, 1.0) + iTime*0.3);
+        } else {
+            // Colores más cálidos para tema claro
+            innerColor = 0.8 + 0.5*cos(6.2831*id + vec3(0.5, 0.2, 0.0) + iTime*0.3);
+        }
+        
+        // Atenuación de la luz interna basada en altura y distancia
+        float heightFactor = smoothstep(0.0, 1.0, height); // Más brillo en barras más altas
+        float att = pow(heightFactor, 2.0) * intensity;
+        
+        // Combinar factores
+        return innerColor * att;
+      }
+
+      vec3 doLighting(in vec3 col, in float ks,
+                    in vec3 pos, in vec3 nor, in vec3 rd, float height, float id) {
+        
+        // Calcular iluminación exterior tradicional
         vec3 ldif = lpos - pos;
         float llen = length(ldif);
         ldif /= llen;
-        float con = dot(light1,ldif);
+        float con = dot(light1, ldif);
         float occ = mix(clamp(pos.y/4.0, 0.0, 1.0), 1.0, 0.2*max(0.0,nor.y));
         vec2 sminmax = vec2(0.01, 5.0);
 
@@ -410,21 +469,35 @@ const MusicShaderCanvas = () => {
               lamb *= 0.25 + 0.75*smoothstep(0.0, 0.8, con);
               lamb *= 0.25;
 
+        // Iluminación externa base
         vec3 lin = 1.0*vec3(0.80,0.90,1.60)*lkey*lkat*(0.5+0.5*occ);
              lin += 1.0*vec3(0.15,0.20,0.40)*lamb*occ*occ;
              lin += 1.0*vec3(0.40,0.30,0.80)*lbac*occ*occ;
              lin *= vec3(1.1,1.2,1.4);
         
-        col = col*lin;
-
+        // Factor fresnel para efecto de vidrio
+        float fresnelFactor = fresnel(nor, -rd, 0.04);
+        
+        // Color base con textura de vidrio (más translúcido)
+        vec3 baseCol = col * lin * (1.0 - GLASS_TRANSPARENCY);
+        
+        // Añadir reflejo especular externo
         vec3 hal = normalize(ldif-rd);
         vec3 spe = lkey*lkat*(0.5+0.5*occ)*5.0*
                    pow(clamp(dot(hal, nor),0.0,1.0), 6.0+6.0*ks) * 
                    (0.04+0.96*pow(clamp(1.0-dot(hal,ldif),0.0,1.0),5.0));
-
-        col += (0.4+0.6*ks)*spe*vec3(0.7,0.8,1.2);
-
-        col = 1.4*col/(1.0+col);
+        
+        // Luz interna
+        vec3 innerLight = calculateInnerLight(pos, nor, rd, height, INNER_LIGHT_INTENSITY, id);
+        
+        // Combinar todos los elementos
+        // Base de vidrio translúcido + brillo externo + luz interna
+        col = baseCol + 
+              (0.4+0.6*ks)*spe*vec3(0.7,0.8,1.2) * (1.0 + fresnelFactor) + 
+              innerLight * GLASS_TRANSPARENCY;
+              
+        // Toque final para hacer el vidrio más brillante
+        col = 1.6*col/(1.0+col);
         
         return col;
       }
@@ -450,20 +523,25 @@ const MusicShaderCanvas = () => {
           vec3 pos = ro + t*rd;
           vec3 nor = calcNormal(pos, t);
 
-          // Colores según el tema
+          // Obtener la altura actual de la barra (utilizada para iluminación interior)
+          vec3 m = mapH(floor(pos.xz));
+          float barHeight = m.x;
+
+          // Base color según tema, más transparente para efecto de vidrio
           vec3 baseColor;
           if (isDarkMode) {
-            // Tema oscuro: tonos ciberpunk con púrpuras y cyans
-            baseColor = 0.5 + 0.8*cos(6.2831*res.y + vec3(0.8, 0.27, 1.0));
+            // Tema oscuro: tonos cristalinos con toques fríos
+            baseColor = 0.2 + 0.3*cos(6.2831*res.y + vec3(0.8, 0.27, 1.0));
           } else {
-            // Tema claro: tonos naranjas y dorados más cálidos
-            baseColor = 0.5 + 0.7*cos(6.2831*res.y + vec3(0.1, 0.4, 0.7));
+            // Tema claro: tonos cristalinos con toques cálidos
+            baseColor = 0.2 + 0.3*cos(6.2831*res.y + vec3(0.1, 0.4, 0.7));
           }
           
           vec3 ff = vec3(0.5);
-          col = baseColor * ff.x;
+          col = baseColor * ff.x * GLASS_TRANSPARENCY;  // Reducir opacidad para efecto de vidrio
 
-          col = doLighting(col, ff.x*ff.x*ff.x*2.0, pos, nor, rd);
+          // Pasar la altura y el ID para iluminación interior
+          col = doLighting(col, ff.x*ff.x*ff.x*2.0, pos, nor, rd, barHeight, res.y);
           col *= 1.0 - smoothstep(20.0, 40.0, t);
         }
         return col;
@@ -497,13 +575,13 @@ const MusicShaderCanvas = () => {
         
         // Ajustar tono general según el tema
         if (isDarkMode) {
-          // Tema oscuro: más neón y vibrante
+          // Tema oscuro: más neón y vibrante, manteniendo transparencia
           col = pow(col, vec3(0.85, 0.75, 0.65));
           col *= vec3(0.7, 0.9, 1.4);
           // Añadir un toque de brillo extra para el efecto neón
           col += vec3(0.1, 0.05, 0.2) * pow(col, vec3(2.0));
         } else {
-          // Tema claro: más cálido y brillante
+          // Tema claro: más cálido y brillante, manteniendo transparencia
           col = pow(col, vec3(0.8, 0.9, 1.0));
           col *= vec3(1.2, 1.1, 0.9);
         }
