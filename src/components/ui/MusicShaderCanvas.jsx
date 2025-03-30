@@ -1,5 +1,6 @@
 import { useRef, useEffect, useState, useCallback } from 'react';
 import * as THREE from 'three';
+import { useTheme } from '../../context/ThemeContext';
 
 const MusicShaderCanvas = () => {
   const canvasRef = useRef(null);
@@ -9,8 +10,10 @@ const MusicShaderCanvas = () => {
   const audioSourceRef = useRef(null);
   const analyserRef = useRef(null);
   const nativeAudioRef = useRef(null);
+  const materialRef = useRef(null);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isAudioInitialized, setIsAudioInitialized] = useState(false);
+  const { theme } = useTheme();
   const FPS_LIMIT = 30;
   const FRAME_TIME = 1000 / FPS_LIMIT;
 
@@ -171,326 +174,346 @@ const MusicShaderCanvas = () => {
     const uniforms = {
       iTime: { value: 0 },
       iResolution: { value: new THREE.Vector2() },
-      iChannel0: { value: audioTexture }
+      iChannel0: { value: audioTexture },
+      isDarkMode: { value: theme === 'dark' }
     };
     
-    // ... existing code ...
-const fragmentShader = `
-uniform float iTime;
-uniform vec2 iResolution;
-uniform sampler2D iChannel0;
+    const fragmentShader = `
+      uniform float iTime;
+      uniform vec2 iResolution;
+      uniform sampler2D iChannel0;
+      uniform bool isDarkMode;
 
-// Constantes para ajustar el comportamiento visual
-const float CUBE_HEIGHT_FACTOR = 3.2;
-const float TIME_SPEED = 0.35;
-const float FREQ_IMPACT = 1.6;
-const float SMOOTHING = 0.5;
-const float BOUNCE_FACTOR = 0.7;
+      // Constantes para ajustar el comportamiento visual
+      const float CUBE_HEIGHT_FACTOR = 3.2;
+      const float TIME_SPEED = 0.35;
+      const float FREQ_IMPACT = 1.6;
+      const float SMOOTHING = 0.5;
+      const float BOUNCE_FACTOR = 0.7;
 
-// Factores para cada banda de frecuencia
-const float FREQ_0_FACTOR = 0.45 * FREQ_IMPACT;
-const float FREQ_1_FACTOR = 0.32 * FREQ_IMPACT;
-const float FREQ_2_FACTOR = 0.4 * FREQ_IMPACT;
-const float FREQ_3_FACTOR = 0.35 * FREQ_IMPACT;
-const float FREQ_4_FACTOR = 0.3 * FREQ_IMPACT;
-const float FREQ_5_FACTOR = 0.25 * FREQ_IMPACT;
-const float FREQ_6_FACTOR = 0.2 * FREQ_IMPACT;
-const float FREQ_7_FACTOR = 0.15 * FREQ_IMPACT;
+      // Factores para cada banda de frecuencia
+      const float FREQ_0_FACTOR = 0.45 * FREQ_IMPACT;
+      const float FREQ_1_FACTOR = 0.32 * FREQ_IMPACT;
+      const float FREQ_2_FACTOR = 0.4 * FREQ_IMPACT;
+      const float FREQ_3_FACTOR = 0.35 * FREQ_IMPACT;
+      const float FREQ_4_FACTOR = 0.3 * FREQ_IMPACT;
+      const float FREQ_5_FACTOR = 0.25 * FREQ_IMPACT;
+      const float FREQ_6_FACTOR = 0.2 * FREQ_IMPACT;
+      const float FREQ_7_FACTOR = 0.15 * FREQ_IMPACT;
 
-// Distribución de bandas
-const float BAND_WIDTH = 0.15;
+      // Distribución de bandas
+      const float BAND_WIDTH = 0.15;
 
-float hash(float n) { return fract(sin(n)*13.5453123); }
+      float hash(float n) { return fract(sin(n)*13.5453123); }
 
-float maxcomp(in vec3 v) { return max(max(v.x, v.y), v.z); }
+      float maxcomp(in vec3 v) { return max(max(v.x, v.y), v.z); }
 
-float udBox(vec3 p, vec3 b, float r) {
-  return length(max(abs(p)-b,0.0))-r;
-}
-
-vec4 texcube(sampler2D sam, in vec3 p, in vec3 n) {
-  vec3 a = n*n;
-  vec4 x = texture(sam, p.yz);
-  vec4 y = texture(sam, p.zx);
-  vec4 z = texture(sam, p.yx);
-  return (x*a.x + y*a.y + z*a.z) / (a.x + a.y + a.z);
-}
-
-float freqs[8];
-
-vec3 mapH(in vec2 pos) {
-  vec2 fpos = fract(pos); 
-  vec2 ipos = floor(pos);
-  
-  float f = 0.0;	
-  float id = hash(ipos.x + ipos.y*57.0);
-  
-  // Efecto de onda que se propaga desde el centro
-  float dist = length(pos * 0.1);
-  float wave = sin(dist * 3.0 - iTime * 2.0) * 0.1;
-  
-  // Añadir variación temporal basada en la posición para más dinamismo
-  float timeFactor = sin(iTime * 0.5 + id * 6.28) * 0.2 + 0.8;
-  
-  // Aplicar frecuencias con variación espacial y temporal
-  f += freqs[0] * clamp(1.0 - abs(id-0.10)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
-  f += freqs[1] * clamp(1.0 - abs(id-0.23)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
-  f += freqs[2] * clamp(1.0 - abs(id-0.36)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
-  f += freqs[3] * clamp(1.0 - abs(id-0.49)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
-  f += freqs[4] * clamp(1.0 - abs(id-0.62)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
-  f += freqs[5] * clamp(1.0 - abs(id-0.75)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
-  f += freqs[6] * clamp(1.0 - abs(id-0.88)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
-  f += freqs[7] * clamp(1.0 - abs(id-1.01)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
-
-  // Curva de respuesta mejorada con más elasticidad
-  f = pow(clamp(f, 0.0, 1.0), 1.8);
-  
-  // Añadir un ligero rebote global
-  float bounce = sin(iTime * 3.0) * 0.05 * max(freqs[0] + freqs[1], 0.1);
-  
-  float h = CUBE_HEIGHT_FACTOR * f + bounce;
-
-  return vec3(h, id, f);
-}
-
-// Función para SDF de un cilindro vertical
-float sdCylinder(vec3 p, vec2 h) {
-  // h.x = radio, h.y = altura/2
-  vec2 d = abs(vec2(length(p.xz), p.y)) - h;
-  return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));
-}
-
-vec3 map(in vec3 pos) {
-  vec2 p = fract(pos.xz); 
-  vec3 m = mapH(pos.xz);
-  
-  // Posición relativa para el cilindro centrado
-  vec3 rp = vec3(p.x-0.5, pos.y-0.5*m.x, p.y-0.5);
-  
-  // Usar cilindro en lugar de caja
-  // sdCylinder espera (radio, altura/2)
-  float d = sdCylinder(rp, vec2(0.25, m.x*0.5));
-  
-  // Añadir redondeo a los bordes del cilindro
-  d -= 0.05;
-  
-  return vec3(d, m.yz);
-}
-
-const float surface = 0.001;
-
-vec3 trace(vec3 ro, in vec3 rd, in float tmin, in float tmax) {
-  ro += tmin*rd;
-  
-  vec2 pos = floor(ro.xz);
-  vec3 rdi = 1.0/rd;
-  vec3 rda = abs(rdi);
-  vec2 rds = sign(rd.xz);
-  vec2 dis = (pos-ro.xz+ 0.5 + rds*0.5) * rdi.xz;
-  
-  vec3 res = vec3(-1.0);
-
-  vec2 mm = vec2(0.0);
-  for(int i=0; i<28; i++) {
-    vec3 cub = mapH(pos);
-    
-    vec2 pr = pos+0.5-ro.xz;
-    vec2 mini = (pr-0.5*rds)*rdi.xz;
-    float s = max(mini.x, mini.y);
-    if((tmin+s)>tmax) break;
-    
-    vec3 ce = vec3(pos.x+0.5, 0.5*cub.x, pos.y+0.5);
-    // Para cilindros, rb contiene (radio, altura/2, radio)
-    vec3 rb = vec3(0.25, cub.x*0.5, 0.25);
-    vec3 ra = vec3(rb.x + 0.08, rb.y, rb.z + 0.08);
-    vec3 rc = ro - ce;
-    float tN = maxcomp(-rdi*rc - rda*ra);
-    float tF = maxcomp(-rdi*rc + rda*ra);
-    if(tN < tF) {
-      float s = tN;
-      float h = 1.0;
-      for(int j=0; j<24; j++) {
-        // Calcular distancia para un cilindro en lugar de una caja
-        vec3 rcp = rc+s*rd;
-        h = sdCylinder(rcp, vec2(rb.x, rb.y)) - 0.05; 
-        s += h;
-        if(s>tF) break;
+      float udBox(vec3 p, vec3 b, float r) {
+        return length(max(abs(p)-b,0.0))-r;
       }
 
-      if(h < (surface*s*2.0)) {
-        res = vec3(s, cub.yz);
-        break; 
+      vec4 texcube(sampler2D sam, in vec3 p, in vec3 n) {
+        vec3 a = n*n;
+        vec4 x = texture(sam, p.yz);
+        vec4 y = texture(sam, p.zx);
+        vec4 z = texture(sam, p.yx);
+        return (x*a.x + y*a.y + z*a.z) / (a.x + a.y + a.z);
       }
-    }
 
-    mm = step(dis.xy, dis.yx); 
-    dis += mm*rda.xz;
-    pos += mm*rds;
-  }
+      float freqs[8];
 
-  res.x += tmin;
-  
-  return res;
-}
+      vec3 mapH(in vec2 pos) {
+        vec2 fpos = fract(pos); 
+        vec2 ipos = floor(pos);
+        
+        float f = 0.0;	
+        float id = hash(ipos.x + ipos.y*57.0);
+        
+        // Efecto de onda que se propaga desde el centro
+        float dist = length(pos * 0.1);
+        float wave = sin(dist * 3.0 - iTime * 2.0) * 0.1;
+        
+        // Añadir variación temporal basada en la posición para más dinamismo
+        float timeFactor = sin(iTime * 0.5 + id * 6.28) * 0.2 + 0.8;
+        
+        // Aplicar frecuencias con variación espacial y temporal
+        f += freqs[0] * clamp(1.0 - abs(id-0.10)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
+        f += freqs[1] * clamp(1.0 - abs(id-0.23)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
+        f += freqs[2] * clamp(1.0 - abs(id-0.36)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
+        f += freqs[3] * clamp(1.0 - abs(id-0.49)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
+        f += freqs[4] * clamp(1.0 - abs(id-0.62)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
+        f += freqs[5] * clamp(1.0 - abs(id-0.75)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
+        f += freqs[6] * clamp(1.0 - abs(id-0.88)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
+        f += freqs[7] * clamp(1.0 - abs(id-1.01)/BAND_WIDTH, 0.0, 1.0) * (1.0 + wave) * timeFactor;
 
-float usmoothstep(in float x) {
-  x = clamp(x,0.0,1.0);
-  return x*x*(3.0-2.0*x);
-}
+        // Curva de respuesta mejorada con más elasticidad
+        f = pow(clamp(f, 0.0, 1.0), 1.8);
+        
+        // Añadir un ligero rebote global
+        float bounce = sin(iTime * 3.0) * 0.05 * max(freqs[0] + freqs[1], 0.1);
+        
+        float h = CUBE_HEIGHT_FACTOR * f + bounce;
 
-float softshadow(in vec3 ro, in vec3 rd, in float mint, in float maxt, in float k) {
-  float res = 1.0;
-  float t = mint;
-  for(int i=0; i<50; i++) {
-    float h = map(ro + rd*t).x;
-    res = min(res, usmoothstep(k*h/t));
-    t += clamp(h, 0.05, 0.2);
-    if(res<0.001 || t>maxt) break;
-  }
-  return clamp(res, 0.0, 1.0);
-}
+        return vec3(h, id, f);
+      }
 
-vec3 calcNormal(in vec3 pos, in float t) {
-  vec2 e = vec2(1.0,-1.0)*surface*t;
-  return normalize(e.xyy*map(pos + e.xyy).x + 
-                  e.yyx*map(pos + e.yyx).x + 
-                  e.yxy*map(pos + e.yxy).x + 
-                  e.xxx*map(pos + e.xxx).x);
-}
+      // Función para SDF de un cilindro vertical
+      float sdCylinder(vec3 p, vec2 h) {
+        // h.x = radio, h.y = altura/2
+        vec2 d = abs(vec2(length(p.xz), p.y)) - h;
+        return min(max(d.x, d.y), 0.0) + length(max(d, 0.0));
+      }
 
-const vec3 light1 = vec3(0.60, 0.48, -0.65);
-const vec3 light2 = vec3(-0.60, -0.10, 0.80);
-const vec3 lpos = vec3(0.0) + 6.0*light1;
+      vec3 map(in vec3 pos) {
+        vec2 p = fract(pos.xz); 
+        vec3 m = mapH(pos.xz);
+        
+        // Posición relativa para el cilindro centrado
+        vec3 rp = vec3(p.x-0.5, pos.y-0.5*m.x, p.y-0.5);
+        
+        // Usar cilindro en lugar de caja
+        // sdCylinder espera (radio, altura/2)
+        float d = sdCylinder(rp, vec2(0.25, m.x*0.5));
+        
+        // Añadir redondeo a los bordes del cilindro
+        d -= 0.05;
+        
+        return vec3(d, m.yz);
+      }
 
-vec2 boundingVolume(vec2 tminmax, in vec3 ro, in vec3 rd) {
-  float bp = 2.7;
-  float tp = (bp-ro.y)/rd.y;
-  if(tp>0.0) {
-    if(ro.y>bp) tminmax.x = max(tminmax.x, tp);
-    else        tminmax.y = min(tminmax.y, tp);
-  }
-  bp = 0.0;
-  tp = (bp-ro.y)/rd.y;
-  if(tp>0.0) {
-    if(ro.y>bp) tminmax.y = min(tminmax.y, tp);
-  }
-  return tminmax;
-}
+      const float surface = 0.001;
 
-vec3 doLighting(in vec3 col, in float ks,
-                in vec3 pos, in vec3 nor, in vec3 rd) {
-  vec3 ldif = lpos - pos;
-  float llen = length(ldif);
-  ldif /= llen;
-  float con = dot(light1,ldif);
-  float occ = mix(clamp(pos.y/4.0, 0.0, 1.0), 1.0, 0.2*max(0.0,nor.y));
-  vec2 sminmax = vec2(0.01, 5.0);
+      vec3 trace(vec3 ro, in vec3 rd, in float tmin, in float tmax) {
+        ro += tmin*rd;
+        
+        vec2 pos = floor(ro.xz);
+        vec3 rdi = 1.0/rd;
+        vec3 rda = abs(rdi);
+        vec2 rds = sign(rd.xz);
+        vec2 dis = (pos-ro.xz+ 0.5 + rds*0.5) * rdi.xz;
+        
+        vec3 res = vec3(-1.0);
 
-  float sha = softshadow(pos, ldif, sminmax.x, sminmax.y, 32.0);
-  
-  float bb = smoothstep(0.5, 0.8, con);
-  float lkey = clamp(dot(nor,ldif), 0.0, 1.0);
-  vec3 lkat = vec3(1.0);
-        lkat *= vec3(bb*bb*0.5+0.5*bb,bb*0.6+0.4*bb*bb,bb*1.2).zyx;
-        lkat /= 1.0+0.25*llen*llen;		
-        lkat *= 30.0;
-        lkat *= vec3(sha,0.6*sha+0.4*sha*sha,0.3*sha+0.7*sha*sha);
-  
-  float lbac = clamp(0.5 + 0.5*dot(light2, nor), 0.0, 1.0);
-        lbac *= smoothstep(0.0, 0.8, con);
-        lbac /= 1.0+0.2*llen*llen;		
-        lbac *= 7.0;
-  float lamb = 1.0 - 0.5*nor.y;
-        lamb *= 1.0-smoothstep(10.0, 25.0, length(pos.xz));
-        lamb *= 0.25 + 0.75*smoothstep(0.0, 0.8, con);
-        lamb *= 0.25;
+        vec2 mm = vec2(0.0);
+        for(int i=0; i<28; i++) {
+          vec3 cub = mapH(pos);
+          
+          vec2 pr = pos+0.5-ro.xz;
+          vec2 mini = (pr-0.5*rds)*rdi.xz;
+          float s = max(mini.x, mini.y);
+          if((tmin+s)>tmax) break;
+          
+          vec3 ce = vec3(pos.x+0.5, 0.5*cub.x, pos.y+0.5);
+          // Para cilindros, rb contiene (radio, altura/2, radio)
+          vec3 rb = vec3(0.25, cub.x*0.5, 0.25);
+          vec3 ra = vec3(rb.x + 0.08, rb.y, rb.z + 0.08);
+          vec3 rc = ro - ce;
+          float tN = maxcomp(-rdi*rc - rda*ra);
+          float tF = maxcomp(-rdi*rc + rda*ra);
+          if(tN < tF) {
+            float s = tN;
+            float h = 1.0;
+            for(int j=0; j<24; j++) {
+              // Calcular distancia para un cilindro en lugar de una caja
+              vec3 rcp = rc+s*rd;
+              h = sdCylinder(rcp, vec2(rb.x, rb.y)) - 0.05; 
+              s += h;
+              if(s>tF) break;
+            }
 
-  vec3 lin = 1.0*vec3(0.80,0.90,1.60)*lkey*lkat*(0.5+0.5*occ);
-       lin += 1.0*vec3(0.15,0.20,0.40)*lamb*occ*occ;
-       lin += 1.0*vec3(0.40,0.30,0.80)*lbac*occ*occ;
-       lin *= vec3(1.1,1.2,1.4);
-  
-  col = col*lin;
+            if(h < (surface*s*2.0)) {
+              res = vec3(s, cub.yz);
+              break; 
+            }
+          }
 
-  vec3 hal = normalize(ldif-rd);
-  vec3 spe = lkey*lkat*(0.5+0.5*occ)*5.0*
-             pow(clamp(dot(hal, nor),0.0,1.0), 6.0+6.0*ks) * 
-             (0.04+0.96*pow(clamp(1.0-dot(hal,ldif),0.0,1.0),5.0));
+          mm = step(dis.xy, dis.yx); 
+          dis += mm*rda.xz;
+          pos += mm*rds;
+        }
 
-  col += (0.4+0.6*ks)*spe*vec3(0.7,0.8,1.2);
+        res.x += tmin;
+        
+        return res;
+      }
 
-  col = 1.4*col/(1.0+col);
-  
-  return col;
-}
+      float usmoothstep(in float x) {
+        x = clamp(x,0.0,1.0);
+        return x*x*(3.0-2.0*x);
+      }
 
-mat3 setLookAt(in vec3 ro, in vec3 ta, float cr) {
-  vec3 cw = normalize(ta-ro);
-  vec3 cp = vec3(sin(cr), cos(cr),0.0);
-  vec3 cu = normalize(cross(cw,cp));
-  vec3 cv = normalize(cross(cu,cw));
-  return mat3(cu, cv, cw);
-}
+      float softshadow(in vec3 ro, in vec3 rd, in float mint, in float maxt, in float k) {
+        float res = 1.0;
+        float t = mint;
+        for(int i=0; i<50; i++) {
+          float h = map(ro + rd*t).x;
+          res = min(res, usmoothstep(k*h/t));
+          t += clamp(h, 0.05, 0.2);
+          if(res<0.001 || t>maxt) break;
+        }
+        return clamp(res, 0.0, 1.0);
+      }
 
-vec3 render(in vec3 ro, in vec3 rd) {
-  vec3 col = vec3(0.0);
+      vec3 calcNormal(in vec3 pos, in float t) {
+        vec2 e = vec2(1.0,-1.0)*surface*t;
+        return normalize(e.xyy*map(pos + e.xyy).x + 
+                      e.yyx*map(pos + e.yyx).x + 
+                      e.yxy*map(pos + e.yxy).x + 
+                      e.xxx*map(pos + e.xxx).x);
+      }
 
-  vec2 tminmax = vec2(0.0, 40.0);
+      const vec3 light1 = vec3(0.60, 0.48, -0.65);
+      const vec3 light2 = vec3(-0.60, -0.10, 0.80);
+      const vec3 lpos = vec3(0.0) + 6.0*light1;
 
-  tminmax = boundingVolume(tminmax, ro, rd);
+      vec2 boundingVolume(vec2 tminmax, in vec3 ro, in vec3 rd) {
+        float bp = 2.7;
+        float tp = (bp-ro.y)/rd.y;
+        if(tp>0.0) {
+          if(ro.y>bp) tminmax.x = max(tminmax.x, tp);
+          else        tminmax.y = min(tminmax.y, tp);
+        }
+        bp = 0.0;
+        tp = (bp-ro.y)/rd.y;
+        if(tp>0.0) {
+          if(ro.y>bp) tminmax.y = min(tminmax.y, tp);
+        }
+        return tminmax;
+      }
 
-  vec3 res = trace(ro, rd, tminmax.x, tminmax.y);
-  if(res.y > -0.5) {
-    float t = res.x;
-    vec3 pos = ro + t*rd;
-    vec3 nor = calcNormal(pos, t);
+      vec3 doLighting(in vec3 col, in float ks,
+                    in vec3 pos, in vec3 nor, in vec3 rd) {
+        
+        vec3 ldif = lpos - pos;
+        float llen = length(ldif);
+        ldif /= llen;
+        float con = dot(light1,ldif);
+        float occ = mix(clamp(pos.y/4.0, 0.0, 1.0), 1.0, 0.2*max(0.0,nor.y));
+        vec2 sminmax = vec2(0.01, 5.0);
 
-    col = 0.5 + 0.5*cos(6.2831*res.y + vec3(0.3, 0.2, 0.8));
-    vec3 ff = vec3(0.5);
-    col *= ff.x;
+        float sha = softshadow(pos, ldif, sminmax.x, sminmax.y, 32.0);
+        
+        float bb = smoothstep(0.5, 0.8, con);
+        float lkey = clamp(dot(nor,ldif), 0.0, 1.0);
+        vec3 lkat = vec3(1.0);
+              lkat *= vec3(bb*bb*0.5+0.5*bb,bb*0.6+0.4*bb*bb,bb*1.2).zyx;
+              lkat /= 1.0+0.25*llen*llen;		
+              lkat *= 30.0;
+              lkat *= vec3(sha,0.6*sha+0.4*sha*sha,0.3*sha+0.7*sha*sha);
+        
+        float lbac = clamp(0.5 + 0.5*dot(light2, nor), 0.0, 1.0);
+              lbac *= smoothstep(0.0, 0.8, con);
+              lbac /= 1.0+0.2*llen*llen;		
+              lbac *= 7.0;
+        float lamb = 1.0 - 0.5*nor.y;
+              lamb *= 1.0-smoothstep(10.0, 25.0, length(pos.xz));
+              lamb *= 0.25 + 0.75*smoothstep(0.0, 0.8, con);
+              lamb *= 0.25;
 
-    col = doLighting(col, ff.x*ff.x*ff.x*2.0, pos, nor, rd);
-    col *= 1.0 - smoothstep(20.0, 40.0, t);
-  }
-  return col;
-}
+        vec3 lin = 1.0*vec3(0.80,0.90,1.60)*lkey*lkat*(0.5+0.5*occ);
+             lin += 1.0*vec3(0.15,0.20,0.40)*lamb*occ*occ;
+             lin += 1.0*vec3(0.40,0.30,0.80)*lbac*occ*occ;
+             lin *= vec3(1.1,1.2,1.4);
+        
+        col = col*lin;
 
-void main() {
-  freqs[0] = texture(iChannel0, vec2(0.01, 0.25)).x * FREQ_0_FACTOR;
-  freqs[1] = texture(iChannel0, vec2(0.07, 0.25)).x * FREQ_1_FACTOR;
-  freqs[2] = texture(iChannel0, vec2(0.15, 0.25)).x * FREQ_2_FACTOR;
-  freqs[3] = texture(iChannel0, vec2(0.23, 0.25)).x * FREQ_3_FACTOR;
-  freqs[4] = texture(iChannel0, vec2(0.33, 0.25)).x * FREQ_4_FACTOR;
-  freqs[5] = texture(iChannel0, vec2(0.45, 0.25)).x * FREQ_5_FACTOR;
-  freqs[6] = texture(iChannel0, vec2(0.60, 0.25)).x * FREQ_6_FACTOR;
-  freqs[7] = texture(iChannel0, vec2(0.80, 0.25)).x * FREQ_7_FACTOR;
+        vec3 hal = normalize(ldif-rd);
+        vec3 spe = lkey*lkat*(0.5+0.5*occ)*5.0*
+                   pow(clamp(dot(hal, nor),0.0,1.0), 6.0+6.0*ks) * 
+                   (0.04+0.96*pow(clamp(1.0-dot(hal,ldif),0.0,1.0),5.0));
 
-  float time = 5.0 + TIME_SPEED*iTime;
-  
-  vec2 fragCoord = gl_FragCoord.xy;
-  vec2 off = vec2(0.0);
-  vec2 xy = (-iResolution.xy + 2.0*(fragCoord+off)) / iResolution.y;
+        col += (0.4+0.6*ks)*spe*vec3(0.7,0.8,1.2);
 
-  vec3 ro = vec3(8.5*cos(0.2+.33*time), 5.0+2.0*cos(0.1*time), 8.5*sin(0.1+0.37*time));
-  vec3 ta = vec3(-2.5+3.0*cos(1.2+.41*time), 0.0, 2.0+3.0*sin(2.0+0.38*time));
-  float roll = 0.2*sin(0.1*time);
+        col = 1.4*col/(1.0+col);
+        
+        return col;
+      }
 
-  mat3 ca = setLookAt(ro, ta, roll);
-  vec3 rd = normalize(ca * vec3(xy.xy,1.75));
-  
-  vec3 col = render(ro, rd);
-  col = pow(col, vec3(0.4545));
-  
-  // Ajustar tono general hacia azules/morados
-  col = pow(col, vec3(1.0, 0.85, 0.7));
+      mat3 setLookAt(in vec3 ro, in vec3 ta, float cr) {
+        vec3 cw = normalize(ta-ro);
+        vec3 cp = vec3(sin(cr), cos(cr),0.0);
+        vec3 cu = normalize(cross(cw,cp));
+        vec3 cv = normalize(cross(cu,cw));
+        return mat3(cu, cv, cw);
+      }
 
-  vec2 q = fragCoord.xy/iResolution.xy;
-  col *= 0.2 + 0.8*pow(16.0*q.x*q.y*(1.0-q.x)*(1.0-q.y), 0.1);
+      vec3 render(in vec3 ro, in vec3 rd) {
+        vec3 col = vec3(0.0);
 
-  gl_FragColor = vec4(col, 1.0);
-}
-`;
-// ... existing code ...
+        vec2 tminmax = vec2(0.0, 40.0);
+
+        tminmax = boundingVolume(tminmax, ro, rd);
+
+        vec3 res = trace(ro, rd, tminmax.x, tminmax.y);
+        if(res.y > -0.5) {
+          float t = res.x;
+          vec3 pos = ro + t*rd;
+          vec3 nor = calcNormal(pos, t);
+
+          // Colores según el tema
+          vec3 baseColor;
+          if (isDarkMode) {
+            // Tema oscuro: tonos ciberpunk con púrpuras y cyans
+            baseColor = 0.5 + 0.8*cos(6.2831*res.y + vec3(0.8, 0.27, 1.0));
+          } else {
+            // Tema claro: tonos naranjas y dorados más cálidos
+            baseColor = 0.5 + 0.7*cos(6.2831*res.y + vec3(0.1, 0.4, 0.7));
+          }
+          
+          vec3 ff = vec3(0.5);
+          col = baseColor * ff.x;
+
+          col = doLighting(col, ff.x*ff.x*ff.x*2.0, pos, nor, rd);
+          col *= 1.0 - smoothstep(20.0, 40.0, t);
+        }
+        return col;
+      }
+
+      void main() {
+        freqs[0] = texture(iChannel0, vec2(0.01, 0.25)).x * FREQ_0_FACTOR;
+        freqs[1] = texture(iChannel0, vec2(0.07, 0.25)).x * FREQ_1_FACTOR;
+        freqs[2] = texture(iChannel0, vec2(0.15, 0.25)).x * FREQ_2_FACTOR;
+        freqs[3] = texture(iChannel0, vec2(0.23, 0.25)).x * FREQ_3_FACTOR;
+        freqs[4] = texture(iChannel0, vec2(0.33, 0.25)).x * FREQ_4_FACTOR;
+        freqs[5] = texture(iChannel0, vec2(0.45, 0.25)).x * FREQ_5_FACTOR;
+        freqs[6] = texture(iChannel0, vec2(0.60, 0.25)).x * FREQ_6_FACTOR;
+        freqs[7] = texture(iChannel0, vec2(0.80, 0.25)).x * FREQ_7_FACTOR;
+
+        float time = 5.0 + TIME_SPEED*iTime;
+        
+        vec2 fragCoord = gl_FragCoord.xy;
+        vec2 off = vec2(0.0);
+        vec2 xy = (-iResolution.xy + 2.0*(fragCoord+off)) / iResolution.y;
+
+        vec3 ro = vec3(8.5*cos(0.2+.33*time), 5.0+2.0*cos(0.1*time), 8.5*sin(0.1+0.37*time));
+        vec3 ta = vec3(-2.5+3.0*cos(1.2+.41*time), 0.0, 2.0+3.0*sin(2.0+0.38*time));
+        float roll = 0.2*sin(0.1*time);
+
+        mat3 ca = setLookAt(ro, ta, roll);
+        vec3 rd = normalize(ca * vec3(xy.xy,1.75));
+        
+        vec3 col = render(ro, rd);
+        col = pow(col, vec3(0.4545));
+        
+        // Ajustar tono general según el tema
+        if (isDarkMode) {
+          // Tema oscuro: más neón y vibrante
+          col = pow(col, vec3(0.85, 0.75, 0.65));
+          col *= vec3(0.7, 0.9, 1.4);
+          // Añadir un toque de brillo extra para el efecto neón
+          col += vec3(0.1, 0.05, 0.2) * pow(col, vec3(2.0));
+        } else {
+          // Tema claro: más cálido y brillante
+          col = pow(col, vec3(0.8, 0.9, 1.0));
+          col *= vec3(1.2, 1.1, 0.9);
+        }
+
+        vec2 q = fragCoord.xy/iResolution.xy;
+        col *= 0.2 + 0.8*pow(16.0*q.x*q.y*(1.0-q.x)*(1.0-q.y), 0.1);
+
+        gl_FragColor = vec4(col, 1.0);
+      }
+    `;
     
     const vertexShader = `
       void main() {
@@ -504,6 +527,7 @@ void main() {
       fragmentShader: fragmentShader
     });
     
+    materialRef.current = material;
     const mesh = new THREE.Mesh(geometry, material);
     scene.add(mesh);
 
@@ -602,6 +626,13 @@ void main() {
       renderer.dispose();
     };
   }, [isAudioInitialized, isPlaying]);
+
+  // Efecto para actualizar el uniform cuando cambia el tema
+  useEffect(() => {
+    if (materialRef.current) {
+      materialRef.current.uniforms.isDarkMode.value = theme === 'dark';
+    }
+  }, [theme]);
 
   // Método para reproducir o pausar el audio
   const handleClick = async () => {

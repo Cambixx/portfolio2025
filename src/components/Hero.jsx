@@ -12,7 +12,7 @@ const MusicShaderCanvas = lazy(() => import('./ui/MusicShaderCanvas'));
 const ParticleTextEffect = lazy(() => import('./ui/ParticleTextEffect'));
 
 // Cambia el tipo de shader: 'abstract', 'blackhole', 'fluid', 'music' o 'none'
-const SHADER_TYPE = 'fluid';
+const SHADER_TYPE = 'music';
 
 const Hero = ({ standalone = false }) => {
   const { t } = useLanguage();
