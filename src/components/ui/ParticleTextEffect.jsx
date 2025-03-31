@@ -3,16 +3,16 @@ import { useRef, useEffect } from 'react';
 // Constantes configurables para ajustes
 const CONFIG = {
   // Partículas
-  PARTICLE_SIZE_MIN: 1.0,      // Tamaño mínimo de partícula
-  PARTICLE_SIZE_MAX: 1.4,      // Tamaño máximo de partícula
+  PARTICLE_SIZE_MIN: 0.8,      // Tamaño mínimo de partícula
+  PARTICLE_SIZE_MAX: 2.2,      // Tamaño máximo de partícula
   PARTICLE_COLOR_DARK: '#ffffff',   // Color de las partículas en modo oscuro
   PARTICLE_COLOR_LIGHT: '#ffffff',  // Color de las partículas en modo claro
   PARTICLE_DENSITY: 3,         // Densidad de partículas (más alto = menos partículas)
   
   // Física
   SPRING_FACTOR: 0.105,        // Velocidad de retorno a posición original (aumentado de 0.015)
-  FRICTION: 0.80,              // Fricción de las partículas (reducido de 0.50 para menos resistencia)
-  DAMPING: 0.9,                // Factor de amortiguación para reducir oscilaciones
+  FRICTION: 0.90,              // Fricción de las partículas (reducido de 0.50 para menos resistencia)
+  DAMPING: 0.8,                // Factor de amortiguación para reducir oscilaciones
   
   // Efecto repulsión del cursor
   REPULSION_RADIUS: 50,       // Radio de repulsión en píxeles
@@ -30,9 +30,11 @@ const CONFIG = {
   
   // Animación de implosión inicial
   IMPLOSION_ENABLED: true,
-  IMPLOSION_DISTANCE: 400,
-  IMPLOSION_SPEED: 0.22,
-  IMPLOSION_STAGGER: 4
+  IMPLOSION_DISTANCE: 600,      // Aumentado de 400 para más dispersión
+  IMPLOSION_SPEED: 0.12,        // Reducido de 0.22 para más lentitud
+  IMPLOSION_STAGGER: 8,         // Aumentado de 4 para más variación en el tiempo de inicio
+  IMPLOSION_CHAOS: 0.3,         // Nuevo: Factor de caos en el movimiento
+  IMPLOSION_PATH_VARIATION: 0.4, // Nuevo: Variación en el camino de regreso
 };
 
 const ParticleTextEffect = ({ text, subtitle = "WEB DEVELOPER", isDarkMode = true }) => {
@@ -140,8 +142,28 @@ const ParticleTextEffect = ({ text, subtitle = "WEB DEVELOPER", isDarkMode = tru
               this.y = this.originY;
               this.implosionComplete = true;
             } else {
-              this.x += dx * this.implosionSpeed;
-              this.y += dy * this.implosionSpeed;
+              // Añadir variación al camino de regreso
+              const angle = Math.atan2(dy, dx);
+              const chaos = CONFIG.IMPLOSION_CHAOS * Math.sin(time * 2 + this.implosionDelay);
+              const pathVar = CONFIG.IMPLOSION_PATH_VARIATION;
+              
+              // Movimiento principal
+              const baseSpeed = this.implosionSpeed * (0.8 + Math.sin(time + this.implosionDelay) * 0.2);
+              
+              // Añadir movimiento circular aleatorio
+              const circularMotion = {
+                x: Math.cos(time * 2 + this.implosionDelay) * chaos * distance * 0.1,
+                y: Math.sin(time * 3 + this.implosionDelay) * chaos * distance * 0.1
+              };
+              
+              // Aplicar variación al camino
+              const pathVariation = {
+                x: Math.sin(time * 1.5 + this.implosionDelay * 2) * pathVar * distance * 0.05,
+                y: Math.cos(time * 2.5 + this.implosionDelay * 2) * pathVar * distance * 0.05
+              };
+              
+              this.x += (dx * baseSpeed) + circularMotion.x + pathVariation.x;
+              this.y += (dy * baseSpeed) + circularMotion.y + pathVariation.y;
             }
           }
         }
