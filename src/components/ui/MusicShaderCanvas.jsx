@@ -424,19 +424,49 @@ const MusicShaderCanvas = () => {
         // Color base de la luz (varía según el ID del objeto y el tiempo)
         vec3 innerColor;
         if (isDarkMode) {
-            // Colores neón para tema oscuro
-            innerColor = 0.8 + 0.5*cos(6.2831*id + vec3(0.0, 0.5, 1.0) + iTime*0.3);
+            // Paleta de colores neón para tema oscuro
+            vec3 color1 = vec3(1.0, 0.1, 0.3);  // Rojo neón
+            vec3 color2 = vec3(0.1, 1.0, 0.8);  // Cyan neón
+            vec3 color3 = vec3(0.8, 0.2, 1.0);  // Púrpura neón
+            vec3 color4 = vec3(0.1, 0.8, 1.0);  // Azul neón
+            vec3 color5 = vec3(1.0, 0.6, 0.1);  // Naranja neón
+            
+            // Usar el ID para seleccionar colores y mezclarlos suavemente
+            float t = fract(id * 1.23 + iTime * 0.1);
+            float blend = smoothstep(0.0, 1.0, fract(t * 5.0));
+            
+            if(t < 0.2) innerColor = mix(color1, color2, blend);
+            else if(t < 0.4) innerColor = mix(color2, color3, blend);
+            else if(t < 0.6) innerColor = mix(color3, color4, blend);
+            else if(t < 0.8) innerColor = mix(color4, color5, blend);
+            else innerColor = mix(color5, color1, blend);
         } else {
-            // Colores más cálidos para tema claro
-            innerColor = 0.8 + 0.5*cos(6.2831*id + vec3(0.5, 0.2, 0.0) + iTime*0.3);
+            // Paleta de colores pastel para tema claro
+            vec3 color1 = vec3(1.0, 0.6, 0.6);  // Rosa pastel
+            vec3 color2 = vec3(0.6, 0.9, 0.8);  // Menta pastel
+            vec3 color3 = vec3(0.8, 0.7, 1.0);  // Lavanda pastel
+            vec3 color4 = vec3(0.7, 0.8, 1.0);  // Azul pastel
+            vec3 color5 = vec3(1.0, 0.8, 0.6);  // Melocotón pastel
+            
+            float t = fract(id * 1.23 + iTime * 0.05);
+            float blend = smoothstep(0.0, 1.0, fract(t * 5.0));
+            
+            if(t < 0.2) innerColor = mix(color1, color2, blend);
+            else if(t < 0.4) innerColor = mix(color2, color3, blend);
+            else if(t < 0.6) innerColor = mix(color3, color4, blend);
+            else if(t < 0.8) innerColor = mix(color4, color5, blend);
+            else innerColor = mix(color5, color1, blend);
         }
+        
+        // Añadir pulsación suave al brillo
+        float pulse = 0.8 + 0.2 * sin(iTime * 2.0 + id * 3.0);
         
         // Atenuación de la luz interna basada en altura y distancia
         float heightFactor = smoothstep(0.0, 1.0, height); // Más brillo en barras más altas
-        float att = pow(heightFactor, 2.0) * intensity;
+        float att = pow(heightFactor, 2.0) * intensity * pulse;
         
         // Combinar factores
-        return innerColor * att;
+        return innerColor * att * 1.5; // Aumentado el brillo general
       }
 
       vec3 doLighting(in vec3 col, in float ks,

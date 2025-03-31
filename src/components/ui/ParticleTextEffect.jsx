@@ -3,11 +3,11 @@ import { useRef, useEffect } from 'react';
 // Constantes configurables para ajustes
 const CONFIG = {
   // Partículas
-  PARTICLE_SIZE_MIN: 1.2,      // Tamaño mínimo de partícula
+  PARTICLE_SIZE_MIN: 1.0,      // Tamaño mínimo de partícula
   PARTICLE_SIZE_MAX: 1.4,      // Tamaño máximo de partícula
   PARTICLE_COLOR_DARK: '#ffffff',   // Color de las partículas en modo oscuro
   PARTICLE_COLOR_LIGHT: '#ffffff',  // Color de las partículas en modo claro
-  PARTICLE_DENSITY: 4,         // Densidad de partículas (más alto = menos partículas)
+  PARTICLE_DENSITY: 3,         // Densidad de partículas (más alto = menos partículas)
   
   // Física
   SPRING_FACTOR: 0.105,        // Velocidad de retorno a posición original (aumentado de 0.015)
@@ -16,7 +16,7 @@ const CONFIG = {
   
   // Efecto repulsión del cursor
   REPULSION_RADIUS: 50,       // Radio de repulsión en píxeles
-  REPULSION_FORCE: 16,         // Fuerza de repulsión
+  REPULSION_FORCE: 26,         // Fuerza de repulsión
   
   // Texto
   FONT_FAMILY: 'sans-serif',
@@ -26,7 +26,7 @@ const CONFIG = {
   
   // Rendimiento
   ANIMATION_DELAY: 100,
-  FPS_TARGET: 30,              // Nuevo: FPS objetivo
+  FPS_TARGET: 24,              // Nuevo: FPS objetivo
   
   // Animación de implosión inicial
   IMPLOSION_ENABLED: true,
@@ -230,7 +230,7 @@ const ParticleTextEffect = ({ text, subtitle = "WEB DEVELOPER", isDarkMode = tru
       textCanvas.width = window.innerWidth;
       textCanvas.height = textTotalHeight * 1.5;
       
-      textCtx.font = `bold ${titleFontSize}px ${CONFIG.FONT_FAMILY}`;
+      textCtx.font = `${titleFontSize}px ${CONFIG.FONT_FAMILY}`;
       textCtx.fillStyle = 'white';
       textCtx.textAlign = 'center';
       textCtx.textBaseline = 'middle';
