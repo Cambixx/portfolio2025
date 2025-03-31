@@ -560,11 +560,11 @@ const MusicShaderCanvas = () => {
           // Base color según tema, más transparente para efecto de vidrio
           vec3 baseColor;
           if (isDarkMode) {
-            // Tema oscuro: tonos cristalinos con toques fríos
-            baseColor = 0.2 + 0.3*cos(6.2831*res.y + vec3(0.8, 0.27, 1.0));
+            // Tema oscuro: color base claro con alta transparencia
+            baseColor = vec3(0.9, 0.9, 0.92);
           } else {
-            // Tema claro: tonos cristalinos con toques cálidos
-            baseColor = 0.2 + 0.3*cos(6.2831*res.y + vec3(0.1, 0.4, 0.7));
+            // Tema claro: color base blanco puro con alta transparencia
+            baseColor = vec3(1.0, 1.0, 1.0);
           }
           
           vec3 ff = vec3(0.5);
