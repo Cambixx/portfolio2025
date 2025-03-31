@@ -204,7 +204,7 @@ const MusicShaderCanvas = () => {
       // Propiedades del vidrio esmerilado
       const float GLASS_ROUGHNESS = 0.45;     // Rugosidad de la superficie
       const float GLASS_IOR = 2.5;            // Índice de refracción
-      const float GLASS_TRANSPARENCY = 0.9;   // Transparencia del vidrio
+      const float GLASS_TRANSPARENCY = 0.8;   // Transparencia del vidrio
       const float INNER_LIGHT_INTENSITY = 1.2;  // Intensidad de la luz interna
       const vec3 INNER_LIGHT_POS = vec3(0.0, 0.3, 0.0);  // Posición relativa de la luz interna
 
@@ -297,7 +297,7 @@ const MusicShaderCanvas = () => {
         float d = sdCylinder(rp, vec2(0.25, m.x*0.5));
         
         // Añadir redondeo a los bordes del cilindro
-        d -= 0.05;
+        d -= 0.03;
         
         return vec3(d, m.yz);
       }
