@@ -202,9 +202,9 @@ const MusicShaderCanvas = () => {
       const float FREQ_7_FACTOR = 0.15 * FREQ_IMPACT;
 
       // Propiedades del vidrio esmerilado
-      const float GLASS_ROUGHNESS = 0.15;     // Rugosidad de la superficie
-      const float GLASS_IOR = 1.5;            // Índice de refracción
-      const float GLASS_TRANSPARENCY = 0.8;   // Transparencia del vidrio
+      const float GLASS_ROUGHNESS = 0.45;     // Rugosidad de la superficie
+      const float GLASS_IOR = 2.5;            // Índice de refracción
+      const float GLASS_TRANSPARENCY = 0.9;   // Transparencia del vidrio
       const float INNER_LIGHT_INTENSITY = 1.2;  // Intensidad de la luz interna
       const vec3 INNER_LIGHT_POS = vec3(0.0, 0.3, 0.0);  // Posición relativa de la luz interna
 
